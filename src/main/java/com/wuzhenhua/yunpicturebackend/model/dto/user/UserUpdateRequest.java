@@ -42,18 +42,22 @@ public class UserUpdateRequest implements Serializable {
     /**
      *
      */
+    @Schema(description = "用户手机号")
     private Long phoneNumber;
 
     /**
      *
      */
+    @Schema(description = "用户邮箱")
     private String email;
 
+    @Schema(description = "用户vip等级")
     private String vipLevel;
 
     /**
      *
      */
+    @Schema(description = "用户手机号国家代码")
     private String phoneCountryCode;
     @Serial
     private static final long serialVersionUID = 1L;

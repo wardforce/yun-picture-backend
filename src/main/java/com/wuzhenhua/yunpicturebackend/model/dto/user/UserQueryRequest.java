@@ -60,7 +60,8 @@ public class UserQueryRequest extends PageRequest implements Serializable {
      */
     @Schema(description = "手机号")
     private Long phoneNumber;
-
+    @Schema(description = "会员兑换码")
+    private String vipCode;
     /**
      *
      */

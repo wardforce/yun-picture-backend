@@ -104,7 +104,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         //不存在，抛出异常
         if (user == null) {
             log.info("用户不存在,用户名称与密码无法对应");
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户不存在或密码错误");
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户不存在或密码错误或该用户被封禁");
         }
         //5.保存用户的登录状态
         request.getSession().setAttribute(UserConstant.USER_LOGIN_STATE, user);
@@ -212,6 +212,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Long inviteUser = userQueryRequest.getInviteUser();
         String shareCode = userQueryRequest.getShareCode();
         Long phoneNumber = userQueryRequest.getPhoneNumber();
+        String vipCode = userQueryRequest.getVipCode();
         String email = userQueryRequest.getEmail();
         String phoneCountryCode = userQueryRequest.getPhoneCountryCode();
         Date editTime = userQueryRequest.getEditTime();
@@ -231,7 +232,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         queryWrapper.eq(ObjUtil.isNotNull(inviteUser), User::getInviteUser, inviteUser);
         queryWrapper.eq(StrUtil.isNotBlank(shareCode), User::getShareCode, shareCode);
         queryWrapper.eq(ObjUtil.isNotNull(vipNumber), User::getVipNumber, vipNumber);
-
+        queryWrapper.eq(StrUtil.isNotBlank(vipCode), User::getVipCode, vipCode);
         // phoneCountryCode and phoneNumber should be queried together
         if (ObjUtil.isNotNull(phoneNumber) && StrUtil.isNotBlank(phoneCountryCode)) {
             queryWrapper.eq(User::getPhoneCountryCode, phoneCountryCode)
@@ -255,6 +256,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             sortMap.put("phoneNumber", User::getPhoneNumber);
             sortMap.put("phoneCountryCode", User::getPhoneCountryCode);
             // 时间字段
+            sortMap.put("inviteUser", User::getInviteUser);
             sortMap.put("createTime", User::getCreateTime);
             sortMap.put("updateTime", User::getUpdateTime);
             sortMap.put("editTime", User::getEditTime);

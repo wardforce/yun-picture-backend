@@ -31,7 +31,8 @@ public class UserVO implements Serializable {
      */
     @Schema(description = "用户头像")
     private String userAvatar;
-
+    @Schema(description = "会员兑换码")
+    private String vipCode;
     /**
      * 简介
      */
