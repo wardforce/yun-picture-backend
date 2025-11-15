@@ -48,13 +48,18 @@ public class UserQueryRequest extends PageRequest implements Serializable {
 
     @Schema(description = "用户vip等级")
     private String vipLevel;
+
     @Schema(description = "会员过期时间")
     private Date vipExpireTime;
+    @Schema(description = "邀请人id")
+    private Long inviteUser;
+    @Schema(description = "分享码")
+    private String shareCode;
     /**
      *
      */
     @Schema(description = "手机号")
-    private Integer phoneNumber;
+    private Long phoneNumber;
 
     /**
      *
@@ -62,11 +67,26 @@ public class UserQueryRequest extends PageRequest implements Serializable {
     @Schema(description = "邮箱")
     private String email;
 
+
     /**
      *
      */
     @Schema(description = "手机国家代码")
     private String phoneCountryCode;
+
+    /**
+     * 编辑时间
+     */
+    @Schema(description = "编辑时间")
+    private Date editTime;
+
+    /**
+     * 创建时间
+     */
+    @Schema(description = "创建时间")
+    private Date createTime;
+    @Schema(description = "更新时间")
+    private Date updateTime;
 
 
     private static final long serialVersionUID = 1L;

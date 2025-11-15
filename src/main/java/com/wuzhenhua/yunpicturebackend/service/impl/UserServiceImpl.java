@@ -209,9 +209,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Long vipNumber = userQueryRequest.getVipNumber();
         String vipLevel = userQueryRequest.getVipLevel();
         Date vipExpireTime = userQueryRequest.getVipExpireTime();
-        Integer phoneNumber = userQueryRequest.getPhoneNumber();
+        Long inviteUser = userQueryRequest.getInviteUser();
+        String shareCode = userQueryRequest.getShareCode();
+        Long phoneNumber = userQueryRequest.getPhoneNumber();
         String email = userQueryRequest.getEmail();
         String phoneCountryCode = userQueryRequest.getPhoneCountryCode();
+        Date editTime = userQueryRequest.getEditTime();
+        Date createTime = userQueryRequest.getCreateTime();
+        Date updateTime = userQueryRequest.getUpdateTime();
         int current = userQueryRequest.getCurrent();
         int pageSize = userQueryRequest.getPageSize();
         String sortField = userQueryRequest.getSortField();
@@ -222,7 +227,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         queryWrapper.like(StrUtil.isNotBlank(userAccount), User::getUserAccount, userAccount);
         queryWrapper.like(StrUtil.isNotBlank(userName), User::getUserName, userName);
         queryWrapper.like(StrUtil.isNotBlank(userProfile), User::getUserProfile, userProfile);
+        queryWrapper.eq(ObjUtil.isNotNull(inviteUser), User::getInviteUser, inviteUser);
+        queryWrapper.eq(ObjUtil.isNotNull(shareCode), User::getShareCode, shareCode);
         queryWrapper.eq(ObjUtil.isNotNull(vipNumber), User::getVipNumber, vipNumber);
+
         // phoneCountryCode and phoneNumber should be queried together
         if (ObjUtil.isNotNull(phoneNumber) && StrUtil.isNotBlank(phoneCountryCode)) {
             queryWrapper.eq(User::getPhoneCountryCode, phoneCountryCode)
@@ -250,6 +258,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             sortMap.put("updateTime", User::getUpdateTime);
             sortMap.put("editTime", User::getEditTime);
             sortMap.put("vipExpireTime", User::getVipExpireTime);
+            sortMap.put("inviteUser", User::getInviteUser);
+            sortMap.put("shareCode", User::getShareCode);
+            sortMap.put("userProfile", User::getUserProfile);
             com.baomidou.mybatisplus.core.toolkit.support.SFunction<User, ?> column = sortMap.get(sortField);
             if (column != null) {
                 if (asc) {

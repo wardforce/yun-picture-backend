@@ -118,7 +118,7 @@ public class User {
      * 手机号
      */
     @Schema(description = "手机号")
-    private Integer phoneNumber;
+    private Long phoneNumber;
 
     /**
      * 邮箱

@@ -42,7 +42,7 @@ public class UserUpdateRequest implements Serializable {
     /**
      *
      */
-    private Integer phoneNumber;
+    private Long phoneNumber;
 
     /**
      *

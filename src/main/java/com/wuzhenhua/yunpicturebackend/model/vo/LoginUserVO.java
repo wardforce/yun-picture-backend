@@ -75,7 +75,7 @@ public class LoginUserVO implements Serializable {
     /**
      *
      */
-    private Integer phoneNumber;
+    private Long phoneNumber;
 
     /**
      *
