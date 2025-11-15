@@ -227,8 +227,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         queryWrapper.like(StrUtil.isNotBlank(userAccount), User::getUserAccount, userAccount);
         queryWrapper.like(StrUtil.isNotBlank(userName), User::getUserName, userName);
         queryWrapper.like(StrUtil.isNotBlank(userProfile), User::getUserProfile, userProfile);
+        queryWrapper.like(StrUtil.isNotBlank(email), User::getEmail, email);
         queryWrapper.eq(ObjUtil.isNotNull(inviteUser), User::getInviteUser, inviteUser);
-        queryWrapper.eq(ObjUtil.isNotNull(shareCode), User::getShareCode, shareCode);
+        queryWrapper.eq(StrUtil.isNotBlank(shareCode), User::getShareCode, shareCode);
         queryWrapper.eq(ObjUtil.isNotNull(vipNumber), User::getVipNumber, vipNumber);
 
         // phoneCountryCode and phoneNumber should be queried together
