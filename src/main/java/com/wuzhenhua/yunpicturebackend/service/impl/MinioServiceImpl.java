@@ -1,5 +1,6 @@
 package com.wuzhenhua.yunpicturebackend.service.impl;
 
+import com.wuzhenhua.yunpicturebackend.config.MinioConfig;
 import com.wuzhenhua.yunpicturebackend.service.MinioService;
 import io.minio.*;
 import io.minio.errors.*;
@@ -18,25 +19,58 @@ public class MinioServiceImpl implements MinioService {
 
     @Autowired
     private MinioClient minioClient;
+    @Autowired
+    private MinioConfig minioConfig;
 
-    public void uploadFile(String bucket, String objectName, String filePath) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+    /**
+     *测试上传桶
+     * @param bucket
+     * @param inputStream
+     * @throws ServerException
+     * @throws InsufficientDataException
+     * @throws ErrorResponseException
+     * @throws IOException
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeyException
+     * @throws InvalidResponseException
+     * @throws XmlParserException
+     * @throws InternalException
+     */
+    @Override
+    public ObjectWriteResponse putFile(String bucket, String objectName,InputStream inputStream) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
         boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucket).build());
         if (!found) {
             minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucket).build());
         }
-        minioClient.uploadObject(
-                UploadObjectArgs.builder()
+        return minioClient.putObject(
+                PutObjectArgs.builder()
                         .bucket(bucket)
                         .object(objectName)
-                        .filename(filePath)
+                        .stream(inputStream, inputStream.available(), -1)
                         .build()
         );
     }
 
-    public InputStream downloadFile(String bucket, String objectName) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+    /**
+     * 测试下载
+     *
+     * @param objectName
+     * @return
+     * @throws ServerException
+     * @throws InsufficientDataException
+     * @throws ErrorResponseException
+     * @throws IOException
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeyException
+     * @throws InvalidResponseException
+     * @throws XmlParserException
+     * @throws InternalException
+     */
+    @Override
+    public InputStream downloadFile(String objectName) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
         return minioClient.getObject(
                 GetObjectArgs.builder()
-                        .bucket(bucket)
+                        .bucket(minioConfig.getBucketName())
                         .object(objectName)
                         .build()
         );

@@ -9,6 +9,11 @@ spring:
       minimum-idle: 2
       idle-timeout: 600000
       max-lifetime: 1800000
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB       # 单个文件大小限制
+      max-request-size: 100MB   # 整个请求大小限制
 
 server:
   port: 8081
@@ -45,7 +50,7 @@ minio:
   endpoint: http://127.0.0.1:9000   # MinIO 服务地址
   accessKey: admin           # 账号
   secretKey: password           # 密码
-  bucket: mybucket                  # 默认桶名
+  bucketName: yun-picture-bucket                  # 默认桶名
 
 ## knife4j的增强配置，不需要增强可以不配
 #knife4j:

@@ -16,6 +16,7 @@ import com.wuzhenhua.yunpicturebackend.service.UserService;
 import com.wuzhenhua.yunpicturebackend.utill.ResultUtils;
 import com.wuzhenhua.yunpicturebackend.utill.ThrowUtill;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -61,10 +62,11 @@ public class UserController {
      * @return 登录状态
      */
     @PostMapping("/login")
-    @Operation(summary = "用户登录", description = "传入用户请求")
+    @Operation(summary = "用户登录", description = "传入用户账号与密码进行登录")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "0", description = "ok"),
-            @ApiResponse(responseCode = "40000", description = "参数错误")
+            @ApiResponse(responseCode = "40000", description = "参数错误"),
+            @ApiResponse(responseCode = "50000", description = "系统内部异常"),
     })
     public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
         ThrowUtill.throwIf(userLoginRequest == null, ErrorCode.PARAMS_ERROR);
@@ -75,7 +77,7 @@ public class UserController {
     }
 
     @GetMapping("/get/login")
-    @Operation(summary = "获取当前登录用户", description = "")
+    @Operation(summary = "获取当前登录用户", description = "获取当前会话中的登录用户信息")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "0", description = "ok"),
             @ApiResponse(responseCode = "40100", description = "未登录"),
@@ -85,11 +87,12 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    @Operation(summary = "用户退出", description = "")
+    @Operation(summary = "用户退出", description = "退出当前登录会话")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "0", description = "ok"),
-            @ApiResponse(responseCode = "40100", description = "参数为空"),
-            @ApiResponse(responseCode = "50000", description = "未登录"),
+            @ApiResponse(responseCode = "40000", description = "参数错误"),
+            @ApiResponse(responseCode = "40100", description = "未登录"),
+            @ApiResponse(responseCode = "50000", description = "系统内部异常"),
     })
     public BaseResponse<Boolean> userLogout(HttpServletRequest request) {
         ThrowUtill.throwIf(request == null, ErrorCode.PARAMS_ERROR);
@@ -103,9 +106,12 @@ public class UserController {
      * @return 注册状态
      */
     @PostMapping("/add")
-    @Operation(summary = "创建用户", description = "")
+    @Operation(summary = "创建用户", description = "管理员创建新用户（默认密码：12345678）")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "0", description = "ok"),
+            @ApiResponse(responseCode = "40000", description = "参数错误"),
+            @ApiResponse(responseCode = "40101", description = "无权限"),
+            @ApiResponse(responseCode = "50001", description = "操作失败"),
     })
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Long> addUser(@RequestBody UserAddRequest userAddRequest) {
@@ -123,9 +129,15 @@ public class UserController {
      * 根据 id 获取用户（仅管理员）
      */
     @GetMapping("/get")
-    @Operation(description = "管理员根据 id 获取用户")
+    @Operation(summary = "根据 id 获取用户（仅管理员）", description = "管理员根据 id 获取用户详情")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "0", description = "ok"),
+            @ApiResponse(responseCode = "40000", description = "参数错误"),
+            @ApiResponse(responseCode = "40101", description = "无权限"),
+            @ApiResponse(responseCode = "40400", description = "请求数据不存在"),
+    })
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<User> getUserById(long id) {
+    public BaseResponse<User> getUserById(@Parameter(description = "用户ID", required = true) @RequestParam("id") long id) {
         ThrowUtill.throwIf(id <= 0, ErrorCode.PARAMS_ERROR);
         User user = userService.getById(id);
         ThrowUtill.throwIf(user == null, ErrorCode.NOT_FOUND_ERROR);
@@ -136,8 +148,14 @@ public class UserController {
      * 根据 id 获取包装类
      */
     @GetMapping("/get/vo")
-    @Operation(description = "普通用户根据 id 获取包装类")
-    public BaseResponse<UserVO> getUserVOById(long id) {
+    @Operation(summary = "根据 id 获取用户包装类", description = "普通用户根据 id 获取包装类（内部复用管理员接口）")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "0", description = "ok"),
+            @ApiResponse(responseCode = "40000", description = "参数错误"),
+            @ApiResponse(responseCode = "40101", description = "无权限"),
+            @ApiResponse(responseCode = "40400", description = "请求数据不存在"),
+    })
+    public BaseResponse<UserVO> getUserVOById(@Parameter(description = "用户ID", required = true) @RequestParam("id") long id) {
         BaseResponse<User> response = getUserById(id);
         User user = response.getData();
         return ResultUtils.success(userService.getUserVO(user));
@@ -146,7 +164,13 @@ public class UserController {
     /**
      * 删除用户
      */
-    @Operation(description = "管理员删除用户")
+    @Operation(summary = "删除用户", description = "管理员删除用户")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "0", description = "ok"),
+            @ApiResponse(responseCode = "40000", description = "参数错误"),
+            @ApiResponse(responseCode = "40101", description = "无权限"),
+            @ApiResponse(responseCode = "50001", description = "操作失败"),
+    })
     @PostMapping("/delete")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> deleteUser(@RequestBody DeleteRequest deleteRequest) {
@@ -161,7 +185,13 @@ public class UserController {
      * 更新用户
      */
     @PostMapping("/update")
-    @Operation(description = "管理员更新用户")
+    @Operation(summary = "更新用户", description = "管理员更新用户")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "0", description = "ok"),
+            @ApiResponse(responseCode = "40000", description = "参数错误"),
+            @ApiResponse(responseCode = "40101", description = "无权限"),
+            @ApiResponse(responseCode = "50001", description = "操作失败"),
+    })
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updateUser(@RequestBody UserUpdateRequest userUpdateRequest) {
         if (userUpdateRequest == null || userUpdateRequest.getId() == null) {
@@ -180,7 +210,13 @@ public class UserController {
      * @param userQueryRequest
      * @return
      */
-    @Operation(description = "分页查询用户")
+    @Operation(summary = "分页获取用户（VO）", description = "分页查询用户并返回 UserVO 列表")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "0", description = "ok"),
+            @ApiResponse(responseCode = "40000", description = "参数错误"),
+            @ApiResponse(responseCode = "40101", description = "无权限"),
+            @ApiResponse(responseCode = "50000", description = "系统内部异常"),
+    })
     @PostMapping("/list/page/vo")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<UserVO>> listUserPageVOByPage(@RequestBody UserQueryRequest userQueryRequest) {
