@@ -5,6 +5,8 @@ import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Data
 @Schema(description = "管理员用户更新请求DTO")
@@ -59,6 +61,11 @@ public class UserUpdateRequest implements Serializable {
      */
     @Schema(description = "用户手机号国家代码")
     private String phoneCountryCode;
+
+    @Schema(description = "会员过期时间")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", timezone = "GMT+8")
+    private Date vipExpireTime;
+
     @Serial
     private static final long serialVersionUID = 1L;
 }

@@ -5,6 +5,8 @@ import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Data
 @Schema(name = "UserAddRequest", description = "创建用户的请求体")
@@ -27,7 +29,13 @@ public class UserAddRequest implements Serializable {
 
     @Schema(description = "VIP 编号")
     private Long vipNumber;
+    @Schema(description = "用户等级", example = "standard", allowableValues = {"standard", "pro", "max"})
     private String vipLevel;
+
+    @Schema(description = "会员过期时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+//    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", timezone = "GMT+8")
+    private Date vipExpireTime;
 
     // 强烈建议手机号用 String 类型以保留前导 0、便于做长度/正则校验
     @Schema(description = "手机号", example = "13800138000", pattern = "^\\d{6,20}$")
