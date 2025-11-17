@@ -23,7 +23,8 @@ public class MinioServiceImpl implements MinioService {
     private MinioConfig minioConfig;
 
     /**
-     *测试上传桶
+     * 测试上传桶
+     *
      * @param bucket
      * @param inputStream
      * @throws ServerException
@@ -37,10 +38,31 @@ public class MinioServiceImpl implements MinioService {
      * @throws InternalException
      */
     @Override
-    public ObjectWriteResponse putFile(String bucket, String objectName,InputStream inputStream) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+    public ObjectWriteResponse putFile(String bucket, String objectName, InputStream inputStream) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
         boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucket).build());
         if (!found) {
             minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucket).build());
+            //公共读，私有写
+            String policy = """
+                    {
+                        "Version": "2012-10-17",
+                        "Statement": [
+                            {
+                                "Effect": "Allow",
+                                "Principal": {"AWS": ["*"]},
+                                "Action": ["s3:GetObject"],
+                                "Resource": ["arn:aws:s3:::%s/*"]
+                            }
+                        ]
+                    }
+                    """.formatted(bucket);
+
+            minioClient.setBucketPolicy(
+                    SetBucketPolicyArgs.builder()
+                            .bucket(bucket)
+                            .config(policy)
+                            .build()
+            );
         }
         return minioClient.putObject(
                 PutObjectArgs.builder()
