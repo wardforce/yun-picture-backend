@@ -21,13 +21,12 @@
             <result property="editTime" column="edit_time" />
             <result property="updateTime" column="update_time" />
             <result property="isDelete" column="is_delete" />
-            <result property="bucket" column="bucket" />
-            <result property="object" column="object" />
+
     </resultMap>
 
     <sql id="Base_Column_List">
         id,url,name,introduction,category,tags,
         pic_size,pic_width,pic_height,pic_scale,pic_format,
-        user_id,create_time,edit_time,update_time,is_delete,bucket,object
+        user_id,create_time,edit_time,update_time,is_delete
     </sql>
 </mapper>

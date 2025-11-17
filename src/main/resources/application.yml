@@ -46,11 +46,6 @@ springdoc:
       paths-to-match: '/**'
       packages-to-scan:
         - com.wuzhenhua.yunpicturebackend.controller
-minio:
-  endpoint: http://127.0.0.1:9000   # MinIO 服务地址
-  accessKey: admin           # 账号
-  secretKey: password           # 密码
-  bucketName: yun-picture-bucket                  # 默认桶名
 
 ## knife4j的增强配置，不需要增强可以不配
 #knife4j:

@@ -25,14 +25,12 @@
             <result property="email" column="email" />
             <result property="phoneCountryCode" column="phone_country_code" />
             <result property="vipLevel" column="vip_level"/>
-            <result property="userAvatarBucket" column="user_avatar_bucket"/>
-            <result property="userAvatarObject" column="user_avatar_object"/>
         </resultMap>
 
     <sql id="Base_Column_List">
         id,user_account,user_password,user_name,user_avatar,user_profile,
         user_role,edit_time,create_time,update_time,is_delete,
         vip_expire_time,vip_code,vip_number,share_code,invite_user,
-        phone_number,email,phone_country_code,vip_level,user_avatar_bucket,user_avatar_object
+        phone_number,email,phone_country_code,vip_level
     </sql>
 </mapper>

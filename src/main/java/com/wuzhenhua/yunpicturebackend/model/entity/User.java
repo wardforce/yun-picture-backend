@@ -40,10 +40,7 @@ public class User {
      */
     @Schema(description = "用户昵称",example = "wuzhenhua")
     private String userName;
-    @Schema(description = "minio对应桶")
-    private String userAvatarBucket;
-    @Schema(description = "minio对象名称")
-    private String userAvatarObject;
+
     /**
      * 用户头像
      */

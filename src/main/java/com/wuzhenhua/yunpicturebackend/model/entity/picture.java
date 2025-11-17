@@ -47,10 +47,7 @@ public class picture {
      */
     @Schema(description = "图片分类", example = "风景")
     private String category;
-    @Schema(description = "存储桶名称", example = "yun-picture-bucket")
-    private String bucket;
-    @Schema(description = "图片minio名称")
-    private String object;
+
 
     /**
      * 标签（JSON 数组）
