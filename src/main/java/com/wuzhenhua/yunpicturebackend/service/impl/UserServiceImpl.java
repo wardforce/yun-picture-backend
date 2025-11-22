@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuzhenhua.yunpicturebackend.constant.UserConstant;
 import com.wuzhenhua.yunpicturebackend.exception.BusinessException;
@@ -54,21 +53,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public Long userRegister(String userAccount, String userPassword, String checkPassword) {
-        //1.检验参数
+        // 1.检验参数
         if (StrUtil.isBlank(userAccount) || StrUtil.isBlank(userPassword) || StrUtil.isBlank(checkPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
         }
         ThrowUtill.throwIf(userAccount.length() < 4, ErrorCode.PARAMS_ERROR, "账号长度不能小于4");
         ThrowUtill.throwIf(userPassword.length() < 8, ErrorCode.PARAMS_ERROR, "用户密码过短");
         ThrowUtill.throwIf(!userPassword.equals(checkPassword), ErrorCode.PARAMS_ERROR, "两次输入的密码不一致");
-        //2.检查用户账号是否和数据库已知重复
+        // 2.检查用户账号是否和数据库已知重复
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(User::getUserAccount, userAccount);
         Long count = this.baseMapper.selectCount(queryWrapper);
         ThrowUtill.throwIf(count > 0, ErrorCode.PARAMS_ERROR, "账号重复");
-        //3.密码加密
+        // 3.密码加密
         String encodePassword = getEncodePassword(userPassword);
-        //4.插入数据到数据库中
+        // 4.插入数据到数据库中
         User user = new User();
         user.setUserAccount(userAccount);
         user.setUserPassword(encodePassword);
@@ -88,25 +87,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public LoginUserVO userLogin(String userAccount, String userPassword, HttpServletRequest request) {
-        //1.校验
+        // 1.校验
         if (StrUtil.isBlank(userAccount) || StrUtil.isBlank(userPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
         }
         ThrowUtill.throwIf(userAccount.length() < 4, ErrorCode.PARAMS_ERROR, "账号错误");
         ThrowUtill.throwIf(userPassword.length() < 8, ErrorCode.PARAMS_ERROR, "用户密码错误");
-        //2.加密
+        // 2.加密
         String encodePassword = getEncodePassword(userPassword);
-        //3.查询数据库中的用户是否存在，找到这个用户
+        // 3.查询数据库中的用户是否存在，找到这个用户
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(User::getUserAccount, userAccount);
         queryWrapper.eq(User::getUserPassword, encodePassword);
         User user = this.baseMapper.selectOne(queryWrapper);
-        //不存在，抛出异常
+        // 不存在，抛出异常
         if (user == null) {
             log.info("用户不存在,用户名称与密码无法对应");
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户不存在或密码错误或该用户被封禁");
         }
-        //5.保存用户的登录状态
+        // 5.保存用户的登录状态
         request.getSession().setAttribute(UserConstant.USER_LOGIN_STATE, user);
         return this.getLoginUserVO(user);
     }
@@ -165,11 +164,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public User getLoginUser(HttpServletRequest request) {
-        //判断是否登录
+        // 判断是否登录
         Object userObj = request.getSession().getAttribute(UserConstant.USER_LOGIN_STATE);
         User cuurentUser = (User) userObj;
         ThrowUtill.throwIf(cuurentUser == null || cuurentUser.getId() == null, ErrorCode.NOT_LOGIN_ERROR);
-        //刷新信息
+        // 刷新信息
         Long userId = cuurentUser.getId();
         cuurentUser = this.getById(userId);
         ThrowUtill.throwIf(cuurentUser == null, ErrorCode.NOT_LOGIN_ERROR);
@@ -184,10 +183,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public boolean userLogOut(HttpServletRequest request) {
-        //判断用户登录
+        // 判断用户登录
         Object userObj = request.getSession().getAttribute(UserConstant.USER_LOGIN_STATE);
         ThrowUtill.throwIf(userObj == null, ErrorCode.OPERATION_ERROR, "未登录");
-        //移除登录态
+        // 移除登录态
         request.getSession().removeAttribute(UserConstant.USER_LOGIN_STATE);
         return true;
     }
@@ -238,7 +237,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             queryWrapper.eq(User::getPhoneCountryCode, phoneCountryCode)
                     .eq(User::getPhoneNumber, phoneNumber);
         }
-        queryWrapper.eq(StrUtil.isNotBlank(vipLevel), User::getVipLevel , vipLevel);
+        queryWrapper.eq(StrUtil.isNotBlank(vipLevel), User::getVipLevel, vipLevel);
         queryWrapper.eq(StrUtil.isNotBlank(email), User::getEmail, email);
         // 安全的排序处理：仅允许白名单字段，避免 LambdaQueryWrapper 传入字符串导致的错误以及 SQL 注入风险
         if (StrUtil.isNotBlank(sortField)) {
@@ -277,9 +276,4 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return queryWrapper;
     }
 
-
 }
-
-
-
-

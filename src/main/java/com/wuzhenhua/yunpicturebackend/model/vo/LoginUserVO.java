@@ -1,6 +1,5 @@
 package com.wuzhenhua.yunpicturebackend.model.vo;
 
-import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 

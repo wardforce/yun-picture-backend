@@ -1,7 +1,6 @@
 package com.wuzhenhua.yunpicturebackend.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wuzhenhua.yunpicturebackend.model.dto.user.UserQueryRequest;
 import com.wuzhenhua.yunpicturebackend.model.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
