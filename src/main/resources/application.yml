@@ -12,9 +12,10 @@ spring:
   servlet:
     multipart:
       enabled: true
-      max-file-size: 10MB       # 单个文件大小限制
-      max-request-size: 100MB   # 整个请求大小限制
-
+      max-file-size: 10MB # 单个文件大小限制
+      max-request-size: 100MB # 整个请求大小限制
+  profiles:
+    active: local
 server:
   port: 8081
   servlet:
@@ -26,7 +27,7 @@ logging:
     org.hibernate.SQL: debug
 mybatis-plus:
   configuration:
-    map-underscore-to-camel-case: true    #自动从传统下划线命名转换驼峰命名
+    map-underscore-to-camel-case: true #自动从传统下划线命名转换驼峰命名
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     db-config:
@@ -42,11 +43,10 @@ springdoc:
   api-docs:
     path: /v3/api-docs
   group-configs:
-    - group: 'default'
-      paths-to-match: '/**'
+    - group: "default"
+      paths-to-match: "/**"
       packages-to-scan:
         - com.wuzhenhua.yunpicturebackend.controller
-
 ## knife4j的增强配置，不需要增强可以不配
 #knife4j:
 #  enable: true
