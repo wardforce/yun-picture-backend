@@ -1,7 +1,7 @@
 package com.wuzhenhua.yunpicturebackend.model.vo;
 
 import cn.hutool.json.JSONUtil;
-import com.wuzhenhua.yunpicturebackend.model.entity.picture;
+import com.wuzhenhua.yunpicturebackend.model.entity.Picture;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
@@ -102,11 +102,11 @@ public class PictureVO implements Serializable {
     /**
      * 封装类转对象
      */
-    public static picture voToObj(PictureVO pictureVO) {
+    public static Picture voToObj(PictureVO pictureVO) {
         if (pictureVO == null) {
             return null;
         }
-        picture picture = new picture();
+        Picture picture = new Picture();
         BeanUtils.copyProperties(pictureVO, picture);
         // 类型不同，需要转换
         picture.setTags(JSONUtil.toJsonStr(pictureVO.getTags()));
@@ -116,7 +116,7 @@ public class PictureVO implements Serializable {
     /**
      * 对象转封装类
      */
-    public static PictureVO objToVo(picture picture) {
+    public static PictureVO objToVo(Picture picture) {
         if (picture == null) {
             return null;
         }

@@ -13,8 +13,8 @@ import com.wuzhenhua.yunpicturebackend.model.entity.User;
 import com.wuzhenhua.yunpicturebackend.model.vo.LoginUserVO;
 import com.wuzhenhua.yunpicturebackend.model.vo.UserVO;
 import com.wuzhenhua.yunpicturebackend.service.UserService;
-import com.wuzhenhua.yunpicturebackend.utill.ResultUtils;
-import com.wuzhenhua.yunpicturebackend.utill.ThrowUtill;
+import com.wuzhenhua.yunpicturebackend.utils.ResultUtils;
+import com.wuzhenhua.yunpicturebackend.utils.ThrowUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -47,7 +47,7 @@ public class UserController {
             @ApiResponse(responseCode = "50000", description = "系统内部异常"),
     })
     public BaseResponse<Long> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
-        ThrowUtill.throwIf(userRegisterRequest == null, ErrorCode.PARAMS_ERROR);
+        ThrowUtils.throwIf(userRegisterRequest == null, ErrorCode.PARAMS_ERROR);
         Long result = userService.userRegister(
                 userRegisterRequest.getUserAccount(),
                 userRegisterRequest.getUserPassword(),
@@ -69,7 +69,7 @@ public class UserController {
             @ApiResponse(responseCode = "50000", description = "系统内部异常"),
     })
     public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
-        ThrowUtill.throwIf(userLoginRequest == null, ErrorCode.PARAMS_ERROR);
+        ThrowUtils.throwIf(userLoginRequest == null, ErrorCode.PARAMS_ERROR);
         String userAccount = userLoginRequest.getUserAccount();
         String userPassword = userLoginRequest.getUserPassword();
         LoginUserVO loginUserVO = userService.userLogin(userAccount, userPassword, request);
@@ -95,7 +95,7 @@ public class UserController {
             @ApiResponse(responseCode = "50000", description = "系统内部异常"),
     })
     public BaseResponse<Boolean> userLogout(HttpServletRequest request) {
-        ThrowUtill.throwIf(request == null, ErrorCode.PARAMS_ERROR);
+        ThrowUtils.throwIf(request == null, ErrorCode.PARAMS_ERROR);
         boolean loginUserVO = userService.userLogOut(request);
         return ResultUtils.success(loginUserVO);
     }
@@ -115,13 +115,13 @@ public class UserController {
     })
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Long> addUser(@RequestBody UserAddRequest userAddRequest) {
-        ThrowUtill.throwIf(userAddRequest == null, ErrorCode.PARAMS_ERROR);
+        ThrowUtils.throwIf(userAddRequest == null, ErrorCode.PARAMS_ERROR);
         User user = new User();
         BeanUtil.copyProperties(userAddRequest, user);
         final String DEFAULT_PASSWORD = "12345678";
         user.setUserPassword(DEFAULT_PASSWORD);
         boolean result = userService.save(user);
-        ThrowUtill.throwIf(!result, ErrorCode.OPERATION_ERROR);
+        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(user.getId());
     }
 
@@ -138,9 +138,9 @@ public class UserController {
     })
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<User> getUserById(@Parameter(description = "用户ID", required = true) @RequestParam("id") long id) {
-        ThrowUtill.throwIf(id <= 0, ErrorCode.PARAMS_ERROR);
+        ThrowUtils.throwIf(id <= 0, ErrorCode.PARAMS_ERROR);
         User user = userService.getById(id);
-        ThrowUtill.throwIf(user == null, ErrorCode.NOT_FOUND_ERROR);
+        ThrowUtils.throwIf(user == null, ErrorCode.NOT_FOUND_ERROR);
         return ResultUtils.success(user);
     }
 
@@ -200,7 +200,7 @@ public class UserController {
         User user = new User();
         BeanUtils.copyProperties(userUpdateRequest, user);
         boolean result = userService.updateById(user);
-        ThrowUtill.throwIf(!result, ErrorCode.OPERATION_ERROR);
+        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(true);
     }
 
@@ -220,10 +220,10 @@ public class UserController {
     @PostMapping("/list/page/vo")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<UserVO>> listUserPageVOByPage(@RequestBody UserQueryRequest userQueryRequest) {
-        ThrowUtill.throwIf(userQueryRequest == null, ErrorCode.PARAMS_ERROR);
+        ThrowUtils.throwIf(userQueryRequest == null, ErrorCode.PARAMS_ERROR);
         long current = userQueryRequest.getCurrent();
         long pageSize = userQueryRequest.getPageSize();
-        ThrowUtill.throwIf(current < 0 || pageSize < 0, ErrorCode.PARAMS_ERROR);
+        ThrowUtils.throwIf(current < 0 || pageSize < 0, ErrorCode.PARAMS_ERROR);
         Page<User> userPage = userService.page(new Page<>(current, pageSize), userService.getUserQueryWrapper(userQueryRequest));
         Page<UserVO> userVOPage = new Page<>(current, pageSize, userPage.getTotal());
         List<UserVO> userVOList = userService.getUserVOList(userPage.getRecords());

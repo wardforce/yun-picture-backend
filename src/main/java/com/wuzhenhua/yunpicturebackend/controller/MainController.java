@@ -1,7 +1,7 @@
 package com.wuzhenhua.yunpicturebackend.controller;
 
 import com.wuzhenhua.yunpicturebackend.common.BaseResponse;
-import com.wuzhenhua.yunpicturebackend.utill.ResultUtils;
+import com.wuzhenhua.yunpicturebackend.utils.ResultUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

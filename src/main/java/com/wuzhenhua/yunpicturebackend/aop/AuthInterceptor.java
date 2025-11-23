@@ -5,7 +5,7 @@ import com.wuzhenhua.yunpicturebackend.exception.ErrorCode;
 import com.wuzhenhua.yunpicturebackend.model.entity.User;
 import com.wuzhenhua.yunpicturebackend.model.enums.UserRoleEnum;
 import com.wuzhenhua.yunpicturebackend.service.UserService;
-import com.wuzhenhua.yunpicturebackend.utill.ThrowUtill;
+import com.wuzhenhua.yunpicturebackend.utils.ThrowUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -42,9 +42,9 @@ public class AuthInterceptor {
         }
         //一下代码，必须有权限，才能通过
         UserRoleEnum userRoleEnum = UserRoleEnum.getUserEnumByValue(loginuser.getUserRole());
-        ThrowUtill.throwIf(userRoleEnum == null, ErrorCode.NO_AUTH_ERROR);
+        ThrowUtils.throwIf(userRoleEnum == null, ErrorCode.NO_AUTH_ERROR);
         //要求必须有管理员权限，但是用户没有管理员权限，拒绝
-        ThrowUtill.throwIf(UserRoleEnum.ADMIN.equals(mustRoleEnum) && !UserRoleEnum.ADMIN.equals(userRoleEnum), ErrorCode.NO_AUTH_ERROR);
+        ThrowUtils.throwIf(UserRoleEnum.ADMIN.equals(mustRoleEnum) && !UserRoleEnum.ADMIN.equals(userRoleEnum), ErrorCode.NO_AUTH_ERROR);
         return joinPoint.proceed();
     }
 }

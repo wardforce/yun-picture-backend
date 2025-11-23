@@ -1,4 +1,4 @@
-package com.wuzhenhua.yunpicturebackend.utill;
+package com.wuzhenhua.yunpicturebackend.utils;
 
 import com.wuzhenhua.yunpicturebackend.exception.BusinessException;
 import com.wuzhenhua.yunpicturebackend.exception.ErrorCode;
@@ -6,7 +6,7 @@ import com.wuzhenhua.yunpicturebackend.exception.ErrorCode;
 /**
  * 异常处理工具类的静态方法，用于根据条件抛出不同类型的异常。
  */
-public class ThrowUtill {
+public class ThrowUtils {
 
     /**
      * 如果条件为 true，则抛出指定的 RuntimeException。

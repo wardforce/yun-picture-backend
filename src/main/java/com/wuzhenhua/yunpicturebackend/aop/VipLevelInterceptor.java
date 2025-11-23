@@ -6,7 +6,7 @@ import com.wuzhenhua.yunpicturebackend.model.entity.User;
 import com.wuzhenhua.yunpicturebackend.model.enums.UserRoleEnum;
 import com.wuzhenhua.yunpicturebackend.model.enums.UserVIPLevelEnum;
 import com.wuzhenhua.yunpicturebackend.service.UserService;
-import com.wuzhenhua.yunpicturebackend.utill.ThrowUtill;
+import com.wuzhenhua.yunpicturebackend.utils.ThrowUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -43,7 +43,7 @@ public class VipLevelInterceptor {
         }
         //以下代码，必须有权限，才能通过
         UserVIPLevelEnum userVIPLevelEnum = UserVIPLevelEnum.getUserVIPLevelEnumByValue(loginuser.getVipLevel());
-        ThrowUtill.throwIf(userVIPLevelEnum == null, ErrorCode.NO_AUTH_ERROR);
+        ThrowUtils.throwIf(userVIPLevelEnum == null, ErrorCode.NO_AUTH_ERROR);
 
         //检查用户的VIP等级是否满足要求
         //如果用户是管理员，直接通过
@@ -70,7 +70,7 @@ public class VipLevelInterceptor {
                 break;
         }
 
-        ThrowUtill.throwIf(!hasPermission, ErrorCode.NO_AUTH_ERROR, "VIP等级不足，需要" + mustVIPEnum.getText() + "及以上等级");
+        ThrowUtils.throwIf(!hasPermission, ErrorCode.NO_AUTH_ERROR, "VIP等级不足，需要" + mustVIPEnum.getText() + "及以上等级");
         return joinPoint.proceed();
     }
 }

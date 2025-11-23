@@ -1,4 +1,4 @@
-package com.wuzhenhua.yunpicturebackend.utill;
+package com.wuzhenhua.yunpicturebackend.utils;
 
 import com.wuzhenhua.yunpicturebackend.common.BaseResponse;
 import com.wuzhenhua.yunpicturebackend.exception.ErrorCode;

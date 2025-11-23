@@ -1,14 +1,15 @@
 package com.wuzhenhua.yunpicturebackend.service;
 
+import java.util.List;
+
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.wuzhenhua.yunpicturebackend.model.dto.user.UserQueryRequest;
 import com.wuzhenhua.yunpicturebackend.model.entity.User;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.wuzhenhua.yunpicturebackend.model.vo.LoginUserVO;
 import com.wuzhenhua.yunpicturebackend.model.vo.UserVO;
-import jakarta.servlet.http.HttpServletRequest;
 
-import java.util.List;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * @author ward
@@ -16,6 +17,7 @@ import java.util.List;
  * @createDate 2025-11-04 10:22:04
  */
 public interface UserService extends IService<User> {
+
     /**
      * @return 加密密码
      */
@@ -26,7 +28,7 @@ public interface UserService extends IService<User> {
     /**
      * 用户登录
      *
-     * @param userAccount  用户账户
+     * @param userAccount 用户账户
      * @param userPassword 用户密码
      * @param request
      * @return 脱敏后的用户信息
@@ -76,4 +78,50 @@ public interface UserService extends IService<User> {
      * @return
      */
     LambdaQueryWrapper<User> getUserQueryWrapper(UserQueryRequest userQueryRequest);
+
+    /**
+     * 是否为管理员
+     *
+     * @param user
+     * @return
+     */
+    boolean isAdmin(User user);
+
+    /**
+     * 是否为会员
+     *
+     * @param user
+     * @return
+     */
+    boolean isVIP(User user);
+
+    /**
+     * 是否为会员PRO
+     *
+     * @param user
+     * @return
+     */
+    boolean isVipPro(User user);
+
+    /**
+     * 是否为会员MAX
+     *
+     * @param user
+     * @return
+     */
+    boolean isVipMAX(User user);
+    /**
+     * 是否为会员Standard
+     *
+     * @param user
+     * @return
+     */
+    boolean isVipStandard(User user);
+    /**
+     * 是否为会员过期
+     *
+     * @param user
+     * @return
+     */
+    boolean isVipExpired(User user);
 }

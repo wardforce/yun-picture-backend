@@ -16,7 +16,7 @@ import java.util.Date;
 @TableName(value ="picture")
 @Data
 @Schema(description = "图片实体类")
-public class picture {
+public class Picture {
     /**
      * id
      */
