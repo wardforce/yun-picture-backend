@@ -9,11 +9,22 @@ spring:
       minimum-idle: 2
       idle-timeout: 600000
       max-lifetime: 1800000
-
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB # 单个文件大小限制
+      max-request-size: 100MB # 整个请求大小限制
+  # mandatory-file-encoding: UTF-8
+  profiles:
+    active: local
 server:
   port: 8081
   servlet:
     context-path: /api
+    # encoding:
+    #   charset: UTF-8
+    #   force: true
+    #   enabled: true
 
 logging:
   level:
@@ -21,7 +32,7 @@ logging:
     org.hibernate.SQL: debug
 mybatis-plus:
   configuration:
-    map-underscore-to-camel-case: true    #自动从传统下划线命名转换驼峰命名
+    map-underscore-to-camel-case: true #自动从传统下划线命名转换驼峰命名
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     db-config:
@@ -37,16 +48,10 @@ springdoc:
   api-docs:
     path: /v3/api-docs
   group-configs:
-    - group: 'default'
-      paths-to-match: '/**'
+    - group: "default"
+      paths-to-match: "/**"
       packages-to-scan:
         - com.wuzhenhua.yunpicturebackend.controller
-minio:
-  endpoint: http://127.0.0.1:9000   # MinIO 服务地址
-  accessKey: admin           # 账号
-  secretKey: password           # 密码
-  bucket: mybucket                  # 默认桶名
-
 ## knife4j的增强配置，不需要增强可以不配
 #knife4j:
 #  enable: true

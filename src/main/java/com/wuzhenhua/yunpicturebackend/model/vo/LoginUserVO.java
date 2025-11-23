@@ -1,6 +1,6 @@
 package com.wuzhenhua.yunpicturebackend.model.vo;
 
-import com.baomidou.mybatisplus.annotation.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -72,7 +72,11 @@ public class LoginUserVO implements Serializable {
     /**
      * 会员编号
      */
+    @Schema(description = "会员编号")
     private Long vipNumber;
+
+    @Schema(description = "会员等级")
+    private String vipLevel;
     /**
      * 邀请用户 id
      */
