@@ -1,9 +1,10 @@
 package com.wuzhenhua.yunpicturebackend.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wuzhenhua.yunpicturebackend.model.dto.picture.PictureReviewRequest;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wuzhenhua.yunpicturebackend.model.dto.picture.PictureQueryRequest;
 import com.wuzhenhua.yunpicturebackend.model.dto.picture.PictureUploadRequest;
@@ -37,7 +38,7 @@ public interface PictureService extends IService<Picture> {
      * @param pictureQueryRequest
      * @return
      */
-    public QueryWrapper<Picture> getQueryWrapper(PictureQueryRequest pictureQueryRequest);
+    public LambdaQueryWrapper<Picture> getQueryWrapper(PictureQueryRequest pictureQueryRequest);
     /**
      * 获取图片封装类
      * @param picture
@@ -54,4 +55,19 @@ public interface PictureService extends IService<Picture> {
     public Page<PictureVO> getPictureVOPage(Page<Picture> picturePage, HttpServletRequest request);
 
     void validPicture(Picture picture);
+
+    /**
+     * 图片审核
+     * @param pictureReviewRequest
+     * @param loginUser
+     */
+    void doPictureReview(PictureReviewRequest pictureReviewRequest,User loginUser);
+
+    /**
+     * 填充审核参数
+     * @param picture
+     * @param loginUser
+     */
+    public void fillReviewParams(Picture picture,User loginUser);
+
 }

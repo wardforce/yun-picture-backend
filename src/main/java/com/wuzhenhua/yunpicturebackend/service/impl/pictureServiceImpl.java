@@ -3,7 +3,8 @@ package com.wuzhenhua.yunpicturebackend.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuzhenhua.yunpicturebackend.exception.ErrorCode;
@@ -11,10 +12,11 @@ import com.wuzhenhua.yunpicturebackend.manager.FileManager;
 import com.wuzhenhua.yunpicturebackend.mapper.pictureMapper;
 import com.wuzhenhua.yunpicturebackend.model.dto.file.UploadPictureResult;
 import com.wuzhenhua.yunpicturebackend.model.dto.picture.PictureQueryRequest;
+import com.wuzhenhua.yunpicturebackend.model.dto.picture.PictureReviewRequest;
 import com.wuzhenhua.yunpicturebackend.model.dto.picture.PictureUploadRequest;
 import com.wuzhenhua.yunpicturebackend.model.entity.Picture;
 import com.wuzhenhua.yunpicturebackend.model.entity.User;
-
+import com.wuzhenhua.yunpicturebackend.model.enums.PictureReviewStatusEnum;
 import com.wuzhenhua.yunpicturebackend.model.vo.PictureVO;
 import com.wuzhenhua.yunpicturebackend.model.vo.UserVO;
 import com.wuzhenhua.yunpicturebackend.service.PictureService;
@@ -23,6 +25,7 @@ import com.wuzhenhua.yunpicturebackend.utils.ThrowUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -47,6 +50,7 @@ public class pictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
     @Resource
     private FileManager fileManager;
 
+
     /**
      * 上传图片
      *
@@ -67,9 +71,10 @@ public class pictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
         }
         //如果是更新，还要判断图片是否存在
         if (pictureId != null) {
-            //新增
-            boolean exists = this.lambdaQuery().eq(Picture::getId, pictureId).exists();
-            ThrowUtils.throwIf(!exists, ErrorCode.NOT_FOUND_ERROR, "图片不存在");
+            Picture oldPicture = this.getById(pictureId);
+            ThrowUtils.throwIf(oldPicture == null, ErrorCode.NOT_FOUND_ERROR, "图片不存在");
+            //仅仅只有本人或者管理员可以编辑图片
+            ThrowUtils.throwIf(!oldPicture.getUserId().equals(loginUser.getId()) && !userService.isAdmin(loginUser), ErrorCode.NO_AUTH_ERROR, "没有权限");
         }
         //上传图片,得到图片信息
         //安装用户id划分目录
@@ -105,8 +110,8 @@ public class pictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
      * @return
      */
     @Override
-    public QueryWrapper<Picture> getQueryWrapper(PictureQueryRequest pictureQueryRequest) {
-        QueryWrapper<Picture> queryWrapper = new QueryWrapper<>();
+    public LambdaQueryWrapper<Picture> getQueryWrapper(PictureQueryRequest pictureQueryRequest) {
+        LambdaQueryWrapper<Picture> queryWrapper = new LambdaQueryWrapper<>();
         if (pictureQueryRequest == null) {
             return queryWrapper;
         }
@@ -125,32 +130,61 @@ public class pictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
         Long userId = pictureQueryRequest.getUserId();
         String sortField = pictureQueryRequest.getSortField();
         String sortOrder = pictureQueryRequest.getSortOrder();
-        // 从多字段中搜索  
+        // 从多字段中搜索
         if (StrUtil.isNotBlank(searchText)) {
-            // 需要拼接查询条件  
-            queryWrapper.and(qw -> qw.like("name", searchText)
+            // 需要拼接查询条件
+            queryWrapper.and(qw -> qw.like(Picture::getName, searchText)
                     .or()
-                    .like("introduction", searchText)
+                    .like(Picture::getIntroduction, searchText)
             );
         }
-        queryWrapper.eq(ObjUtil.isNotEmpty(id), "id", id);
-        queryWrapper.eq(ObjUtil.isNotEmpty(userId), "userId", userId);
-        queryWrapper.like(StrUtil.isNotBlank(name), "name", name);
-        queryWrapper.like(StrUtil.isNotBlank(introduction), "introduction", introduction);
-        queryWrapper.like(StrUtil.isNotBlank(picFormat), "picFormat", picFormat);
-        queryWrapper.eq(StrUtil.isNotBlank(category), "category", category);
-        queryWrapper.eq(ObjUtil.isNotEmpty(picWidth), "picWidth", picWidth);
-        queryWrapper.eq(ObjUtil.isNotEmpty(picHeight), "picHeight", picHeight);
-        queryWrapper.eq(ObjUtil.isNotEmpty(picSize), "picSize", picSize);
-        queryWrapper.eq(ObjUtil.isNotEmpty(picScale), "picScale", picScale);
-        // JSON 数组查询  
+        queryWrapper.eq(ObjUtil.isNotEmpty(id), Picture::getId, id);
+        queryWrapper.eq(ObjUtil.isNotEmpty(userId), Picture::getUserId, userId);
+        queryWrapper.like(StrUtil.isNotBlank(name), Picture::getName, name);
+        queryWrapper.like(StrUtil.isNotBlank(introduction), Picture::getIntroduction, introduction);
+        queryWrapper.like(StrUtil.isNotBlank(picFormat), Picture::getPicFormat, picFormat);
+        queryWrapper.eq(StrUtil.isNotBlank(category), Picture::getCategory, category);
+        queryWrapper.eq(ObjUtil.isNotEmpty(picWidth), Picture::getPicWidth, picWidth);
+        queryWrapper.eq(ObjUtil.isNotEmpty(picHeight), Picture::getPicHeight, picHeight);
+        queryWrapper.eq(ObjUtil.isNotEmpty(picSize), Picture::getPicSize, picSize);
+        queryWrapper.eq(ObjUtil.isNotEmpty(picScale), Picture::getPicScale, picScale);
+        // JSON 数组查询
         if (CollUtil.isNotEmpty(tags)) {
             for (String tag : tags) {
-                queryWrapper.like("tags", "\"" + tag + "\"");
+                queryWrapper.like(Picture::getTags, "\"" + tag + "\"");
             }
         }
-        // 排序  
-        queryWrapper.orderBy(StrUtil.isNotEmpty(sortField), sortOrder.equals("ascend"), sortField);
+        // 安全的排序处理：仅允许白名单字段，避免 LambdaQueryWrapper 传入字符串导致的错误以及 SQL 注入风险
+        if (StrUtil.isNotBlank(sortField)) {
+            // 兼容前端常见的排序关键字：asc/desc 和 ascend/descend
+            boolean asc = "ascend".equalsIgnoreCase(sortOrder) || "asc".equalsIgnoreCase(sortOrder);
+
+            // 将可排序的前端字段映射到实体的 Getter（SFunction）
+            java.util.Map<String, SFunction<Picture, ?>> sortMap = new java.util.HashMap<>();
+            sortMap.put("id", Picture::getId);
+            sortMap.put("name", Picture::getName);
+            sortMap.put("introduction", Picture::getIntroduction);
+            sortMap.put("category", Picture::getCategory);
+            sortMap.put("picSize", Picture::getPicSize);
+            sortMap.put("picWidth", Picture::getPicWidth);
+            sortMap.put("picHeight", Picture::getPicHeight);
+            sortMap.put("picScale", Picture::getPicScale);
+            sortMap.put("picFormat", Picture::getPicFormat);
+            sortMap.put("userId", Picture::getUserId);
+            sortMap.put("createTime", Picture::getCreateTime);
+            sortMap.put("editTime", Picture::getEditTime);  // 修复的关键字段
+            sortMap.put("updateTime", Picture::getUpdateTime);
+
+            // 获取对应的列，如果存在则应用排序
+            SFunction<Picture, ?> column = sortMap.get(sortField);
+            if (column != null) {
+                if (asc) {
+                    queryWrapper.orderByAsc(column);
+                } else {
+                    queryWrapper.orderByDesc(column);
+                }
+            }
+        }
         return queryWrapper;
     }
 
@@ -203,6 +237,12 @@ public class pictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
         pictureVOPage.setRecords(pictureVOList);
         return pictureVOPage;
     }
+
+    /**
+     * 校验图片信息
+     *
+     * @param picture 图片信息
+     */
     @Override
     public void validPicture(Picture picture) {
         ThrowUtils.throwIf(picture == null, ErrorCode.PARAMS_ERROR);
@@ -220,4 +260,53 @@ public class pictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
         }
     }
 
+    /**
+     * 图片审核
+     *
+     * @param pictureReviewRequest
+     * @param loginUser
+     */
+    @Override
+    public void doPictureReview(PictureReviewRequest pictureReviewRequest, User loginUser) {
+        //1.校验参数
+        ThrowUtils.throwIf(pictureReviewRequest == null, ErrorCode.PARAMS_ERROR, "图片审核参数不能为空");
+        Long id = pictureReviewRequest.getId();
+        Integer reviewStatus = pictureReviewRequest.getReviewStatus();
+        String reviewMessage = pictureReviewRequest.getReviewMessage();
+        PictureReviewStatusEnum reviewStatusEnum = PictureReviewStatusEnum.getPictureReviewStatusEnumByValue(reviewStatus);
+        ThrowUtils.throwIf(id == null || reviewStatus == null || PictureReviewStatusEnum.REVIEWING.equals(reviewStatusEnum), ErrorCode.PARAMS_ERROR, "图片id和审核状态不能为空");
+        ThrowUtils.throwIf(loginUser == null, ErrorCode.PARAMS_ERROR, "登录用户不能为空");
+        //2.判断图片是否存在
+        com.wuzhenhua.yunpicturebackend.model.entity.Picture oldPicture = this.getById(id);
+        ThrowUtils.throwIf(oldPicture == null, ErrorCode.NOT_FOUND_ERROR, "图片不存在");
+        //3.校验审核状态是否重复，已经审核了
+        ThrowUtils.throwIf(oldPicture.getReviewStatus().equals(reviewStatusEnum), ErrorCode.PARAMS_ERROR, "请勿重复审核");
+        //4.数据库操作
+        Picture updatePicture = new Picture();
+        BeanUtils.copyProperties(pictureReviewRequest, updatePicture);
+        updatePicture.setReviewerId(loginUser.getId());
+        updatePicture.setReviewTime(new Date());
+        boolean result = this.updateById(updatePicture);
+        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR, "图片审核失败");
+    }
+
+    /**
+     * 填充审核参数
+     *
+     * @param picture
+     * @param loginUser
+     */
+    @Override
+    public void fillReviewParams(Picture picture, User loginUser) {
+        if (userService.isAdmin(loginUser)) {
+            //管理员自动过审
+            picture.setReviewStatus(PictureReviewStatusEnum.PASS.getValue());
+            picture.setReviewerId(loginUser.getId());
+            picture.setReviewTime(new Date());
+            picture.setReviewMessage("管理员自动过审");
+        }//非管理员，无论是编辑还是创建都需要审核
+        else {
+            picture.setReviewStatus(PictureReviewStatusEnum.REVIEWING.getValue());
+        }
+    }
 }

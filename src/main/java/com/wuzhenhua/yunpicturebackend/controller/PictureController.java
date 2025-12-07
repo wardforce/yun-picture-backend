@@ -2,34 +2,33 @@ package com.wuzhenhua.yunpicturebackend.controller;
 
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.wuzhenhua.yunpicturebackend.common.DeleteRequest;
-import com.wuzhenhua.yunpicturebackend.exception.BusinessException;
-import com.wuzhenhua.yunpicturebackend.exception.ErrorCode;
-import com.wuzhenhua.yunpicturebackend.model.dto.picture.PictureEditRequest;
-import com.wuzhenhua.yunpicturebackend.model.dto.picture.PictureQueryRequest;
-import com.wuzhenhua.yunpicturebackend.model.dto.picture.PictureUpdateRequest;
-import com.wuzhenhua.yunpicturebackend.model.entity.Picture;
-import com.wuzhenhua.yunpicturebackend.model.vo.PictureTagCategory;
-import com.wuzhenhua.yunpicturebackend.utils.ThrowUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.wuzhenhua.yunpicturebackend.annotation.AuthCheck;
 import com.wuzhenhua.yunpicturebackend.common.BaseResponse;
+import com.wuzhenhua.yunpicturebackend.common.DeleteRequest;
 import com.wuzhenhua.yunpicturebackend.constant.UserConstant;
-import com.wuzhenhua.yunpicturebackend.model.dto.picture.PictureUploadRequest;
+import com.wuzhenhua.yunpicturebackend.exception.BusinessException;
+import com.wuzhenhua.yunpicturebackend.exception.ErrorCode;
+import com.wuzhenhua.yunpicturebackend.model.dto.picture.*;
+import com.wuzhenhua.yunpicturebackend.model.entity.Picture;
 import com.wuzhenhua.yunpicturebackend.model.entity.User;
+import com.wuzhenhua.yunpicturebackend.model.vo.PictureTagCategory;
 import com.wuzhenhua.yunpicturebackend.model.vo.PictureVO;
 import com.wuzhenhua.yunpicturebackend.service.PictureService;
 import com.wuzhenhua.yunpicturebackend.service.UserService;
 import com.wuzhenhua.yunpicturebackend.utils.ResultUtils;
-
+import com.wuzhenhua.yunpicturebackend.utils.ThrowUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -44,15 +43,22 @@ public class PictureController {
     private UserService userService;
     @Resource
     private PictureService pictureService;
+    private User loginUser;
 
     /**
      * 上传图片（可重新上传）
      */
-    @PostMapping(value="/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    @io.swagger.v3.oas.annotations.Operation(summary = "上传图片（可重新上传）")
-    @io.swagger.v3.oas.annotations.Parameter(name = "file", description = "图片文件")
-    @io.swagger.v3.oas.annotations.Parameter(name = "pictureUploadRequest", description = "图片上传请求")
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @Operation(summary = "上传图片（可重新上传）", description = "管理员上传图片，已存在同名时覆盖更新")
+    @Parameter(name = "file", description = "图片文件")
+    @Parameter(name = "pictureUploadRequest", description = "图片上传请求体中的元信息，如名称/标签/分类等")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "0", description = "ok"),
+            @ApiResponse(responseCode = "40000", description = "参数错误"),
+            @ApiResponse(responseCode = "40101", description = "无权限"),
+            @ApiResponse(responseCode = "50000", description = "系统内部异常"),
+    })
     public BaseResponse<PictureVO> uploadPicture(
             @RequestPart("file") MultipartFile multipartFile,
             PictureUploadRequest pictureUploadRequest,
@@ -65,31 +71,48 @@ public class PictureController {
 
     /**
      * 删除图片
+     *
      * @param deleteRequest
      * @param request
      * @return
      */
     @DeleteMapping("/delete")
+    @Operation(summary = "删除图片", description = "仅本人或管理员可删除指定图片")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "0", description = "ok"),
+            @ApiResponse(responseCode = "40000", description = "参数错误"),
+            @ApiResponse(responseCode = "40101", description = "无权限"),
+            @ApiResponse(responseCode = "40400", description = "请求数据不存在"),
+            @ApiResponse(responseCode = "50001", description = "操作失败"),
+    })
     public BaseResponse<Boolean> deletePicture(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
-       ThrowUtils.throwIf(deleteRequest == null || deleteRequest.getId() <= 0, ErrorCode.PARAMS_ERROR);
-       User loginUser = userService.getLoginUser(request);
+        ThrowUtils.throwIf(deleteRequest == null || deleteRequest.getId() <= 0, ErrorCode.PARAMS_ERROR);
+        User loginUser = userService.getLoginUser(request);
         Long id = deleteRequest.getId();
         //判断是否存在
         Picture picture = pictureService.getById(id);
         Picture oldPicture = pictureService.getById(id);
         ThrowUtils.throwIf(oldPicture == null, ErrorCode.NOT_FOUND_ERROR);
         //仅本人和管理员可以删除
-        ThrowUtils.throwIf(!oldPicture.getUserId().equals(loginUser.getId())&&!userService.isAdmin(loginUser),
+        ThrowUtils.throwIf(!oldPicture.getUserId().equals(loginUser.getId()) && !userService.isAdmin(loginUser),
                 ErrorCode.NO_AUTH_ERROR);
         boolean result = pictureService.removeById(id);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(true);
     }
+
     /**
      * 更新图片（仅管理员可用）
      */
     @PostMapping("/update")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @Operation(summary = "更新图片（仅管理员）", description = "管理员更新图片的名称、描述、标签等信息")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "0", description = "ok"),
+            @ApiResponse(responseCode = "40000", description = "参数错误"),
+            @ApiResponse(responseCode = "40400", description = "请求数据不存在"),
+            @ApiResponse(responseCode = "50001", description = "操作失败"),
+    })
     public BaseResponse<Boolean> updatePicture(@RequestBody PictureUpdateRequest pictureUpdateRequest) {
         if (pictureUpdateRequest == null || pictureUpdateRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -116,7 +139,13 @@ public class PictureController {
      */
     @GetMapping("/get")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Picture> getPictureById(long id, HttpServletRequest request) {
+    @Operation(summary = "根据 id 获取图片（仅管理员）")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "0", description = "ok"),
+            @ApiResponse(responseCode = "40000", description = "参数错误"),
+            @ApiResponse(responseCode = "40400", description = "请求数据不存在"),
+    })
+    public BaseResponse<Picture> getPictureById(@Parameter(description = "图片ID", required = true) long id, HttpServletRequest request) {
         ThrowUtils.throwIf(id <= 0, ErrorCode.PARAMS_ERROR);
         // 查询数据库
         Picture picture = pictureService.getById(id);
@@ -129,7 +158,13 @@ public class PictureController {
      * 根据 id 获取图片（封装类）
      */
     @GetMapping("/get/vo")
-    public BaseResponse<PictureVO> getPictureVOById(long id, HttpServletRequest request) {
+    @Operation(summary = "根据 id 获取图片（VO）")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "0", description = "ok"),
+            @ApiResponse(responseCode = "40000", description = "参数错误"),
+            @ApiResponse(responseCode = "40400", description = "请求数据不存在"),
+    })
+    public BaseResponse<PictureVO> getPictureVOById(@Parameter(description = "图片ID", required = true) long id, HttpServletRequest request) {
         ThrowUtils.throwIf(id <= 0, ErrorCode.PARAMS_ERROR);
         // 查询数据库
         Picture picture = pictureService.getById(id);
@@ -143,6 +178,11 @@ public class PictureController {
      */
     @PostMapping("/list/page")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @Operation(summary = "分页获取图片列表（仅管理员）")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "0", description = "ok"),
+            @ApiResponse(responseCode = "40000", description = "参数错误"),
+    })
     public BaseResponse<Page<Picture>> listPictureByPage(@RequestBody PictureQueryRequest pictureQueryRequest) {
         long current = pictureQueryRequest.getCurrent();
         long size = pictureQueryRequest.getPageSize();
@@ -156,6 +196,11 @@ public class PictureController {
      * 分页获取图片列表（封装类）
      */
     @PostMapping("/list/page/vo")
+    @Operation(summary = "分页获取图片列表（VO）", description = "限制单页大小不超过20")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "0", description = "ok"),
+            @ApiResponse(responseCode = "40000", description = "参数错误"),
+    })
     public BaseResponse<Page<PictureVO>> listPictureVOByPage(@RequestBody PictureQueryRequest pictureQueryRequest,
                                                              HttpServletRequest request) {
         long current = pictureQueryRequest.getCurrent();
@@ -173,6 +218,14 @@ public class PictureController {
      * 编辑图片（给用户使用）
      */
     @PostMapping("/edit")
+    @Operation(summary = "编辑图片", description = "仅本人或管理员可以编辑图片")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "0", description = "ok"),
+            @ApiResponse(responseCode = "40000", description = "参数错误"),
+            @ApiResponse(responseCode = "40101", description = "无权限"),
+            @ApiResponse(responseCode = "40400", description = "请求数据不存在"),
+            @ApiResponse(responseCode = "50001", description = "操作失败"),
+    })
     public BaseResponse<Boolean> editPicture(@RequestBody PictureEditRequest pictureEditRequest, HttpServletRequest request) {
         if (pictureEditRequest == null || pictureEditRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -200,14 +253,39 @@ public class PictureController {
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(true);
     }
-    @GetMapping("/tag_category")  
-public BaseResponse<PictureTagCategory> listPictureTagCategory() {
-    PictureTagCategory pictureTagCategory = new PictureTagCategory();  
-    List<String> tagList = Arrays.asList("热门", "搞笑", "生活", "高清", "艺术", "校园", "背景", "简历", "创意");
-    List<String> categoryList = Arrays.asList("模板", "电商", "表情包", "素材", "海报");  
-    pictureTagCategory.setTagList (tagList);
-    pictureTagCategory.setCategoryList(categoryList);
-    return ResultUtils.success(pictureTagCategory);  
-}
 
+    @GetMapping("/tag_category")
+    @Operation(summary = "获取图片标签与分类枚举", description = "返回前端可用的标签和分类列表")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "0", description = "ok"),
+            @ApiResponse(responseCode = "40000", description = "参数错误"),
+            @ApiResponse(responseCode = "40100", description = "未登录"),
+            @ApiResponse(responseCode = "40300", description = "无权限"),
+
+    })
+    public BaseResponse<PictureTagCategory> listPictureTagCategory() {
+        PictureTagCategory pictureTagCategory = new PictureTagCategory();
+        List<String> tagList = Arrays.asList("热门", "搞笑", "生活", "高清", "艺术", "校园", "背景", "简历", "创意", "二次元");
+        List<String> categoryList = Arrays.asList("模板", "电商", "表情包", "素材", "海报", "二次元");
+        pictureTagCategory.setTagList(tagList);
+        pictureTagCategory.setCategoryList(categoryList);
+        return ResultUtils.success(pictureTagCategory);
+    }
+
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @PostMapping("/review")
+    @Operation(summary = "审核图片", description = "审核图片")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "0", description = "ok"),
+            @ApiResponse(responseCode = "40000", description = "参数错误"),
+            @ApiResponse(responseCode = "40400",description = "图片不存在"),
+            @ApiResponse(responseCode = "50001",description = "操作失败"),
+    })
+    public BaseResponse<Boolean> doPictureReview(@RequestBody PictureReviewRequest pictureReviewRequest,
+                                                         HttpServletRequest request) {
+        ThrowUtils.throwIf(pictureReviewRequest == null, ErrorCode.PARAMS_ERROR);
+        User loginUser = userService.getLoginUser(request);
+        pictureService.doPictureReview(pictureReviewRequest, loginUser);
+        return ResultUtils.success(true);
+    }
 }

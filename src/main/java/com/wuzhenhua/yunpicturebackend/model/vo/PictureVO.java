@@ -87,10 +87,7 @@ public class PictureVO implements Serializable {
      * 更新时间
      */
     private Date updateTime;
-    @Schema(description = "存储桶名称", example = "yun-picture-bucket")
-    private String bucket;
-    @Schema(description = "图片minio名称")
-    private String object;
+
 
     /**
      * 创建用户信息

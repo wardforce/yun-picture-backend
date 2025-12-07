@@ -106,7 +106,7 @@ public class FileManager {
         //校验文件大小
         long fileSize = multipartFile.getSize();
         final long MAX_FILE_SIZE = 1024 * 1024 * 10;
-        ThrowUtils.throwIf(fileSize > MAX_FILE_SIZE, ErrorCode.PARAMS_ERROR, "图片文件大小不能超过" + (MAX_FILE_SIZE / (1024 * 1024)) + "MB");
+        ThrowUtils.throwIf(fileSize > MAX_FILE_SIZE, ErrorCode.PARAMS_ERROR, "图片文件大小不能超过" + (MAX_FILE_SIZE / (1024 * 1024*10)) + "MB");
         //校验文件格式
         String fileSuffix = FileUtil.getSuffix(multipartFile.getOriginalFilename());
         //允许文件上传的集合或列表
