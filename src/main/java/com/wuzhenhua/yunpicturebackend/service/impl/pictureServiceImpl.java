@@ -8,12 +8,15 @@ import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuzhenhua.yunpicturebackend.exception.ErrorCode;
-import com.wuzhenhua.yunpicturebackend.manager.FileManager;
+import com.wuzhenhua.yunpicturebackend.manager.upload.FilePictureUpload;
+import com.wuzhenhua.yunpicturebackend.manager.upload.PictureUploadTemplate;
+import com.wuzhenhua.yunpicturebackend.manager.upload.UrlPictureUpload;
 import com.wuzhenhua.yunpicturebackend.mapper.pictureMapper;
 import com.wuzhenhua.yunpicturebackend.model.dto.file.UploadPictureResult;
 import com.wuzhenhua.yunpicturebackend.model.dto.picture.PictureQueryRequest;
 import com.wuzhenhua.yunpicturebackend.model.dto.picture.PictureReviewRequest;
 import com.wuzhenhua.yunpicturebackend.model.dto.picture.PictureUploadRequest;
+
 import com.wuzhenhua.yunpicturebackend.model.entity.Picture;
 import com.wuzhenhua.yunpicturebackend.model.entity.User;
 import com.wuzhenhua.yunpicturebackend.model.enums.PictureReviewStatusEnum;
@@ -27,7 +30,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
@@ -48,19 +50,20 @@ public class pictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
     @Resource
     private UserService userService;
     @Resource
-    private FileManager fileManager;
-
+    private FilePictureUpload filePictureUpload;
+    @Resource
+    private UrlPictureUpload urlPictureUpload;
 
     /**
      * 上传图片
      *
-     * @param multipartFile
+     * @param inpurSource
      * @param pictureUploadRequest
      * @param loginUser
      * @return
      */
     @Override
-    public PictureVO uploadPicture(MultipartFile multipartFile, PictureUploadRequest pictureUploadRequest, User loginUser) {
+    public PictureVO uploadPicture(Object inpurSource, PictureUploadRequest pictureUploadRequest, User loginUser) {
         //校验图片
         ThrowUtils.throwIf(loginUser == null, ErrorCode.NO_AUTH_ERROR, "用户不能为空");
         //判断是新增还是删除
@@ -79,7 +82,12 @@ public class pictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
         //上传图片,得到图片信息
         //安装用户id划分目录
         String uploadPathPrefix = String.format("public/%s", loginUser.getId());
-        UploadPictureResult uploadPicture = fileManager.uploadPicture(multipartFile, uploadPathPrefix);
+        //根据inpotSource上传类型区分上传方式
+        PictureUploadTemplate pictureUploadTemplate = filePictureUpload;
+        if (inpurSource instanceof String) {
+            pictureUploadTemplate = urlPictureUpload;
+        }
+        UploadPictureResult uploadPicture = pictureUploadTemplate.uploadPicture(inpurSource, uploadPathPrefix);
         //构造入库图片信息
         Picture picture = new Picture();
         log.info("uploadPicture result for userId={}, picName={}, size={}", loginUser.getId(), uploadPicture.getPicName(), uploadPicture.getPicSize());
@@ -132,6 +140,13 @@ public class pictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
         Long userId = pictureQueryRequest.getUserId();
         String sortField = pictureQueryRequest.getSortField();
         String sortOrder = pictureQueryRequest.getSortOrder();
+
+        Integer reviewStatus = pictureQueryRequest.getReviewStatus();
+        String reviewMessage = pictureQueryRequest.getReviewMessage();
+        Long reviewerId = pictureQueryRequest.getReviewerId();
+
+
+
         // 从多字段中搜索
         if (StrUtil.isNotBlank(searchText)) {
             // 需要拼接查询条件
@@ -150,6 +165,9 @@ public class pictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
         queryWrapper.eq(ObjUtil.isNotEmpty(picHeight), Picture::getPicHeight, picHeight);
         queryWrapper.eq(ObjUtil.isNotEmpty(picSize), Picture::getPicSize, picSize);
         queryWrapper.eq(ObjUtil.isNotEmpty(picScale), Picture::getPicScale, picScale);
+        queryWrapper.eq(ObjUtil.isNotEmpty(reviewStatus), Picture::getReviewStatus, reviewStatus);
+        queryWrapper.eq(ObjUtil.isNotEmpty(reviewerId), Picture::getReviewerId, reviewerId);
+        queryWrapper.like(StrUtil.isNotBlank(reviewMessage), Picture::getReviewMessage, reviewMessage);
         // JSON 数组查询
         if (CollUtil.isNotEmpty(tags)) {
             for (String tag : tags) {

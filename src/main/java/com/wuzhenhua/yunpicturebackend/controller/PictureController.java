@@ -11,6 +11,7 @@ import com.wuzhenhua.yunpicturebackend.exception.ErrorCode;
 import com.wuzhenhua.yunpicturebackend.model.dto.picture.*;
 import com.wuzhenhua.yunpicturebackend.model.entity.Picture;
 import com.wuzhenhua.yunpicturebackend.model.entity.User;
+import com.wuzhenhua.yunpicturebackend.model.enums.PictureReviewStatusEnum;
 import com.wuzhenhua.yunpicturebackend.model.vo.PictureTagCategory;
 import com.wuzhenhua.yunpicturebackend.model.vo.PictureVO;
 import com.wuzhenhua.yunpicturebackend.service.PictureService;
@@ -29,6 +30,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 
 import java.util.Arrays;
 import java.util.Date;
@@ -50,7 +52,7 @@ public class PictureController {
      */
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 //    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    @Operation(summary = "上传图片（可重新上传）", description = "管理员上传图片，已存在同名时覆盖更新")
+    @Operation(summary = "上传图片（可重新上传）", description = "已存在同名时覆盖更新")
     @Parameter(name = "file", description = "图片文件")
     @Parameter(name = "pictureUploadRequest", description = "图片上传请求体中的元信息，如名称/标签/分类等")
     @ApiResponses(value = {
@@ -66,6 +68,28 @@ public class PictureController {
         User loginUser = userService.getLoginUser(request);
         log.info("uploadPicture loginUserId={}", loginUser.getId());
         PictureVO pictureVO = pictureService.uploadPicture(multipartFile, pictureUploadRequest, loginUser);
+        return ResultUtils.success(pictureVO);
+    }
+    /**
+     * 通过url上传图片（可重新上传）
+     */
+    @PostMapping(value = "/upload/url")
+//    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @Operation(summary = "通过url上传图片（可重新上传）", description = "已存在同名时覆盖更新")
+    @Parameter(name = "pictureUploadRequest", description = "图片上传请求体中的元信息，如名称/标签/分类等")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "0", description = "ok"),
+            @ApiResponse(responseCode = "40000", description = "参数错误"),
+            @ApiResponse(responseCode = "40101", description = "无权限"),
+            @ApiResponse(responseCode = "50000", description = "系统内部异常"),
+    })
+    public BaseResponse<PictureVO> uploadPictureByUrl(
+            @RequestBody PictureUploadRequest pictureUploadRequest,
+            HttpServletRequest request) {
+        User loginUser = userService.getLoginUser(request);
+        String fileUrl = pictureUploadRequest.getFileUrl();
+        log.info("uploadPicture loginUserId={}", loginUser.getId());
+        PictureVO pictureVO = pictureService.uploadPicture(fileUrl, pictureUploadRequest, loginUser);
         return ResultUtils.success(pictureVO);
     }
 
@@ -211,6 +235,8 @@ public class PictureController {
         long size = pictureQueryRequest.getPageSize();
         // 限制爬虫
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
+        //普通用户默认只能看到审核通过的数据
+        pictureQueryRequest.setReviewStatus(PictureReviewStatusEnum.PASS.getValue());
         // 查询数据库
         Page<Picture> picturePage = pictureService.page(new Page<>(current, size),
                 pictureService.getQueryWrapper(pictureQueryRequest));
@@ -294,4 +320,5 @@ public class PictureController {
         pictureService.doPictureReview(pictureReviewRequest, loginUser);
         return ResultUtils.success(true);
     }
+    // todo 新增方法
 }

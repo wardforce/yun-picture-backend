@@ -8,5 +8,7 @@ import lombok.Data;
 public class PictureUploadRequest implements java.io.Serializable{
     @Schema(description = "图片 id", example = "123", type = "long")
     private Long id;
+    @Schema(description = "图片url")
+    private String fileUrl;
     private static final long serialVersionUID = 1L;
 }
