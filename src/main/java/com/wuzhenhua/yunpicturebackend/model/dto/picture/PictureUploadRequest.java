@@ -10,5 +10,7 @@ public class PictureUploadRequest implements java.io.Serializable{
     private Long id;
     @Schema(description = "图片url")
     private String fileUrl;
+    @Schema(description = "图片名称")
+    private String picName;
     private static final long serialVersionUID = 1L;
 }

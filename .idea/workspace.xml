@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="180595f5-f4b4-4bc3-9132-53808042d8e9" name="更改" comment="">
+      <change afterPath="$PROJECT_DIR$/.aider.context.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.aider.input.history" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.aider.tags.cache.v4/cache.db" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.aider.tags.cache.v4/cache.db-shm" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.aider.tags.cache.v4/cache.db-wal" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.cache/.Apifox_Helper/.toolWindow.db" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/ApifoxUploaderProjectSetting.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.agent.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.ask.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.ask2agent.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.edit.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/4d266ecb-1728-423e-b3a9-70a57653bf0e.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/4d266ecb-1728-423e-b3a9-70a57653bf0e/storage_v2/_src_/schema/information_schema.FNRwLQ.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/4d266ecb-1728-423e-b3a9-70a57653bf0e/storage_v2/_src_/schema/mysql.osA4Bg.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/4d266ecb-1728-423e-b3a9-70a57653bf0e/storage_v2/_src_/schema/performance_schema.kIw0nw.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/4d266ecb-1728-423e-b3a9-70a57653bf0e/storage_v2/_src_/schema/sys.zb4BAA.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/mybatisx/templates.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/yun-picture-backend.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.serena/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.serena/cache/java/document_symbols.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.serena/cache/java/raw_document_symbols.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.serena/project.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.vscode/launch.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.vscode/settings.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HELP.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/model/dto/picture/PictureUploadByBatchRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/application-local.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/META-INF/additional-spring-configuration-metadata.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/application-local.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/application.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/YunPictureBackendApplication.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/annotation/AuthCheck.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/annotation/VipLevelCheck.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/aop/AuthInterceptor.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/aop/VipLevelInterceptor$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/aop/VipLevelInterceptor.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/common/BaseResponse.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/common/DeleteRequest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/common/PageRequest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/config/CorsConfig.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/config/CosClientConfig.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/config/JsonConfig.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/config/MybatisPlusConfig.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/config/OpenApiConfig.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/constant/UserConstant.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/controller/FileController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/controller/MainController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/controller/PictureController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/controller/UserController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/exception/BusinessException.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/exception/ErrorCode.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/exception/GlobalExceptionHandler.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/manager/CosManager.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/manager/FileManager.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/manager/upload/FilePictureUpload.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/manager/upload/PictureUploadTemplate.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/manager/upload/UrlPictureUpload.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/mapper/UserMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/mapper/pictureMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/model/dto/file/UploadPictureResult.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/model/dto/picture/PictureEditRequest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/model/dto/picture/PictureQueryRequest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/model/dto/picture/PictureReviewRequest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/model/dto/picture/PictureUpdateRequest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/model/dto/picture/PictureUploadByBatchRequest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/model/dto/picture/PictureUploadRequest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/model/dto/user/UserAddRequest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/model/dto/user/UserLoginRequest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/model/dto/user/UserQueryRequest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/model/dto/user/UserRegisterRequest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/model/dto/user/UserUpdateRequest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/model/entity/Picture.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/model/entity/User.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/model/enums/PictureReviewStatusEnum.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/model/enums/UserRoleEnum.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/model/enums/UserVIPLevelEnum.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/model/vo/LoginUserVO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/model/vo/PictureTagCategory.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/model/vo/PictureVO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/model/vo/UserVO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/service/PictureService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/service/UserService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/service/impl/PictureServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/service/impl/UserServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/utils/ResultUtils.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/wuzhenhua/yunpicturebackend/utils/ThrowUtils.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/mapper/UserMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/mapper/pictureMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/test-classes/com/wuzhenhua/yunpicturebackend/YunPictureBackendApplicationTests.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/controller/PictureController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/controller/PictureController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/model/dto/picture/PictureUploadRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/model/dto/picture/PictureUploadRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/service/PictureService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/service/PictureService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/service/impl/pictureServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/service/impl/PictureServiceImpl.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="spring-beans.schema" />
+        <option value="AnnotationType" />
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="dev" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="jar://$PROJECT_DIR$/../../Maven/repository/com/baomidou/mybatis-plus-spring/3.5.14/mybatis-plus-spring-3.5.14.jar!/com/baomidou/mybatisplus/extension/service/IService.class" root0="SKIP_INSPECTION" />
+    <setting file="jar://$PROJECT_DIR$/../../Maven/repository/com/baomidou/mybatis-plus-spring/3.5.14/mybatis-plus-spring-3.5.14.jar!/com/baomidou/mybatisplus/extension/service/impl/ServiceImpl.class" root0="SKIP_INSPECTION" />
+  </component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+        <option name="userSettingsFile" value="E:\ProgramData\chocolatey\lib\maven\apache-maven-3.9.11\conf\settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="AISelfReview" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="34oz0ncYrAcp6qBFyqMOJIMBUwt" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Maven.yun-picture-backend [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.yun-picture-backend [compile].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.yun-picture-backend [install].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Spring Boot.YunPictureBackendApplication.executor&quot;: &quot;Run&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;pictureMoudle&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/workfile/yun-picture-backend/src/main/resources/mapper&quot;,
+    &quot;llm.McpServerEditPanel.switcher&quot;: &quot;1&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;SDK&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
+    ]
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\workfile\yun-picture-backend\src\main\resources\mapper" />
+      <recent name="E:\workfile\yun-picture-backend\src\main\resources" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\workfile\yun-picture-backend" />
+      <recent name="E:\workfile\yun-picture-backend\src\main\resources\mapper" />
+      <recent name="E:\workfile\yun-picture-backend\src\main\java\com\wuzhenhua\yunpicturebackend" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.wuzhenhua.yunpicturebackend.manager.upload" />
+      <recent name="com.wuzhenhua.yunpicturebackend.model.dto.picture" />
+      <recent name="com.wuzhenhua.yunpicturebackend.model.enums" />
+      <recent name="com.wuzhenhua.yunpicturebackend.service" />
+      <recent name="com.wuzhenhua.yunpicturebackend.mapper" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="YunPictureBackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="yun-picture-backend" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.wuzhenhua.yunpicturebackend.YunPictureBackendApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.28238.7" />
+        <option value="bundled-js-predefined-d6986cc7102b-a71380e98a7c-JavaScript-IU-252.28238.7" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="StructureViewState">
+    <option name="selectedTab" value="逻辑" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="180595f5-f4b4-4bc3-9132-53808042d8e9" name="更改" comment="" />
+      <created>1761894494373</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1761894494373</updated>
+      <workItem from="1761894497045" duration="5000" />
+      <workItem from="1761894580262" duration="2888000" />
+      <workItem from="1761897515719" duration="8434000" />
+      <workItem from="1762072401504" duration="3153000" />
+      <workItem from="1762075597393" duration="2605000" />
+      <workItem from="1762078228158" duration="585000" />
+      <workItem from="1762079030862" duration="3492000" />
+      <workItem from="1762135345470" duration="4088000" />
+      <workItem from="1762148269145" duration="8364000" />
+      <workItem from="1762166084769" duration="75000" />
+      <workItem from="1762166174530" duration="38000" />
+      <workItem from="1762166242998" duration="544000" />
+      <workItem from="1762188025131" duration="604000" />
+      <workItem from="1762188663083" duration="114000" />
+      <workItem from="1762222060853" duration="6375000" />
+      <workItem from="1762235325535" duration="1795000" />
+      <workItem from="1762240294307" duration="1083000" />
+      <workItem from="1762325668102" duration="465000" />
+      <workItem from="1762338534905" duration="33000" />
+      <workItem from="1762391823891" duration="29000" />
+      <workItem from="1762396423474" duration="5496000" />
+      <workItem from="1762404699235" duration="6237000" />
+      <workItem from="1762417923479" duration="16000" />
+      <workItem from="1762494325021" duration="14845000" />
+      <workItem from="1762589830864" duration="12261000" />
+      <workItem from="1762656278728" duration="5375000" />
+      <workItem from="1762688309631" duration="7236000" />
+      <workItem from="1762736778930" duration="1134000" />
+      <workItem from="1762747240272" duration="2324000" />
+      <workItem from="1762756163175" duration="937000" />
+      <workItem from="1762760037231" duration="1005000" />
+      <workItem from="1762831767319" duration="7019000" />
+      <workItem from="1762853358276" duration="2480000" />
+      <workItem from="1762911324029" duration="93000" />
+      <workItem from="1762942517732" duration="1161000" />
+      <workItem from="1762998020913" duration="13000" />
+      <workItem from="1763091641472" duration="936000" />
+      <workItem from="1763101600491" duration="15000" />
+      <workItem from="1763203793333" duration="15719000" />
+      <workItem from="1763263648538" duration="33812000" />
+      <workItem from="1763344849544" duration="5563000" />
+      <workItem from="1763362239254" duration="131000" />
+      <workItem from="1763371990880" duration="2923000" />
+      <workItem from="1763452255984" duration="1563000" />
+      <workItem from="1763522874668" duration="913000" />
+      <workItem from="1763791502239" duration="4290000" />
+      <workItem from="1763869466916" duration="1030000" />
+      <workItem from="1763871577066" duration="2255000" />
+      <workItem from="1763889359975" duration="2958000" />
+      <workItem from="1763905786514" duration="5855000" />
+      <workItem from="1763948161084" duration="332000" />
+      <workItem from="1764123726627" duration="681000" />
+      <workItem from="1764125588142" duration="7000" />
+      <workItem from="1764135508193" duration="4740000" />
+      <workItem from="1764215866613" duration="363000" />
+      <workItem from="1764222601474" duration="5336000" />
+      <workItem from="1764300300424" duration="24000" />
+      <workItem from="1764300434072" duration="1782000" />
+      <workItem from="1764309586340" duration="347000" />
+      <workItem from="1764309951118" duration="309000" />
+      <workItem from="1764310451692" duration="281000" />
+      <workItem from="1764395630942" duration="1859000" />
+      <workItem from="1764495253438" duration="633000" />
+      <workItem from="1764500009955" duration="1270000" />
+      <workItem from="1764504464223" duration="3747000" />
+      <workItem from="1764516339573" duration="20000" />
+      <workItem from="1764558815419" duration="429000" />
+      <workItem from="1764660912524" duration="6884000" />
+      <workItem from="1764726509547" duration="6224000" />
+      <workItem from="1764741859392" duration="11047000" />
+      <workItem from="1764820686984" duration="347000" />
+      <workItem from="1764996127343" duration="12000" />
+      <workItem from="1764996188178" duration="1434000" />
+      <workItem from="1765004253658" duration="1210000" />
+      <workItem from="1765051677873" duration="189000" />
+      <workItem from="1765051988135" duration="6099000" />
+      <workItem from="1765099247621" duration="2225000" />
+      <workItem from="1765104580299" duration="8972000" />
+      <workItem from="1765157780178" duration="3720000" />
+      <workItem from="1765172628380" duration="7822000" />
+      <workItem from="1765183507190" duration="6036000" />
+      <workItem from="1765246553302" duration="1435000" />
+      <workItem from="1765259728055" duration="2742000" />
+      <workItem from="1765267398578" duration="7949000" />
+      <workItem from="1765329927498" duration="7409000" />
+      <workItem from="1765345763724" duration="1569000" />
+    </task>
+    <task id="LOCAL-00001" summary="用户查询修复，使用claude code改动代码">
+      <option name="closed" value="true" />
+      <created>1763209517680</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1763209517680</updated>
+    </task>
+    <task id="LOCAL-00002" summary="彻底完成管理员用户编辑功能，还差会员过期时间的编辑功能，暂时不实现了">
+      <option name="closed" value="true" />
+      <created>1763228071288</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1763228071288</updated>
+    </task>
+    <task id="LOCAL-00003" summary="minio版本，正在尝试">
+      <option name="closed" value="true" />
+      <created>1763304531565</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1763304531565</updated>
+    </task>
+    <task id="LOCAL-00004" summary="minio版本，废弃">
+      <option name="closed" value="true" />
+      <created>1763372053650</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1763372053650</updated>
+    </task>
+    <task id="LOCAL-00005" summary="正在完善cos版本，方便后续开发图片编辑功能。如果是minio做对象存储就不方便开发图片编辑，获取图片信息">
+      <option name="closed" value="true" />
+      <created>1763375010591</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1763375010591</updated>
+    </task>
+    <task id="LOCAL-00006" summary="更改arrlist">
+      <option name="closed" value="true" />
+      <created>1764309879818</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1764309879818</updated>
+    </task>
+    <task id="LOCAL-00007" summary="图片模块已经完成，现在在做用户传图的审核功能">
+      <option name="closed" value="true" />
+      <created>1765118653110</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1765118653110</updated>
+    </task>
+    <task id="LOCAL-00008" summary="- Abstracted `PictureUploadTemplate` to streamline picture upload operations.&#10;- Added support for uploading pictures via URL (`UrlPictureUpload`) and files (`FilePictureUpload`).&#10;- Deprecated `FileManager` and replaced its functionality using new upload templates.&#10;- Enhanced `PictureService` and `PictureController` to support unified upload handling.&#10;- Updated mapper to reflect entity field changes for better consistency.">
+      <option name="closed" value="true" />
+      <created>1765189848875</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1765189848875</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="用户查询修复，使用claude code改动代码" />
+    <MESSAGE value="彻底完成管理员用户编辑功能，还差会员过期时间的编辑功能，暂时不实现了" />
+    <MESSAGE value="minio版本，正在尝试" />
+    <MESSAGE value="minio版本，废弃" />
+    <MESSAGE value="正在完善cos版本，方便后续开发图片编辑功能。如果是minio做对象存储就不方便开发图片编辑，获取图片信息" />
+    <MESSAGE value="更改arrlist" />
+    <MESSAGE value="图片模块已经完成，现在在做用户传图的审核功能" />
+    <MESSAGE value="后端url图片上传功能已经完成，图片上传方法已经被抽象工厂方法进行重构" />
+    <MESSAGE value="- Abstracted `PictureUploadTemplate` to streamline picture upload operations.&#10;- Added support for uploading pictures via URL (`UrlPictureUpload`) and files (`FilePictureUpload`).&#10;- Deprecated `FileManager` and replaced its functionality using new upload templates.&#10;- Enhanced `PictureService` and `PictureController` to support unified upload handling.&#10;- Updated mapper to reflect entity field changes for better consistency." />
+    <option name="LAST_COMMIT_MESSAGE" value="- Abstracted `PictureUploadTemplate` to streamline picture upload operations.&#10;- Added support for uploading pictures via URL (`UrlPictureUpload`) and files (`FilePictureUpload`).&#10;- Deprecated `FileManager` and replaced its functionality using new upload templates.&#10;- Enhanced `PictureService` and `PictureController` to support unified upload handling.&#10;- Updated mapper to reflect entity field changes for better consistency." />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="org.springframework.beans.factory.BeanCreationException" package="org.springframework.beans.factory" />
+          <option name="timeStamp" value="2" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
+  </component>
+</project>

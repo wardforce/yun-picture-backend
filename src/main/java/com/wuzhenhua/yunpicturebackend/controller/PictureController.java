@@ -320,5 +320,21 @@ public class PictureController {
         pictureService.doPictureReview(pictureReviewRequest, loginUser);
         return ResultUtils.success(true);
     }
-    // todo 新增方法
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @PostMapping("/upload/batch")
+    @Operation(summary = "批量上传图片,仅仅管理员可用", description = "批量上传图片")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "0", description = "ok"),
+            @ApiResponse(responseCode = "40000", description = "参数错误"),
+            @ApiResponse(responseCode = "40400",description = "图片不存在"),
+            @ApiResponse(responseCode = "50001",description = "操作失败"),
+    })
+    public BaseResponse<Integer> uploadPictureByBatch(@RequestBody PictureUploadByBatchRequest pictureUploadByBatchRequest,
+                                                 HttpServletRequest request) {
+        ThrowUtils.throwIf(pictureUploadByBatchRequest == null, ErrorCode.PARAMS_ERROR);
+        User loginUser = userService.getLoginUser(request);
+        Integer uploadCount = pictureService.uploadPictureByBatche(pictureUploadByBatchRequest, loginUser);
+        return ResultUtils.success(uploadCount);
+    }
+
 }

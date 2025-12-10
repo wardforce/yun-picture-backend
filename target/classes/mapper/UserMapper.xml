@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wuzhenhua.yunpicturebackend.mapper.UserMapper">
+
+    <resultMap id="BaseResultMap" type="com.wuzhenhua.yunpicturebackend.model.entity.User">
+            <id property="id" column="id" />
+            <result property="userAccount" column="user_account" />
+            <result property="userPassword" column="user_password" />
+            <result property="userName" column="user_name" />
+            <result property="userAvatar" column="user_avatar" />
+            <result property="userProfile" column="user_profile" />
+            <result property="userRole" column="user_role" />
+            <result property="editTime" column="edit_time" />
+            <result property="createTime" column="create_time" />
+            <result property="updateTime" column="update_time" />
+            <result property="isDelete" column="is_delete" />
+            <result property="vipExpireTime" column="vip_expire_time" />
+            <result property="vipCode" column="vip_code" />
+            <result property="vipNumber" column="vip_number" />
+            <result property="shareCode" column="share_code" />
+            <result property="inviteUser" column="invite_user" />
+            <result property="phoneNumber" column="phone_number" />
+            <result property="email" column="email" />
+            <result property="phoneCountryCode" column="phone_country_code" />
+            <result property="vipLevel" column="vip_level"/>
+        </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_account,user_password,user_name,user_avatar,user_profile,
+        user_role,edit_time,create_time,update_time,is_delete,
+        vip_expire_time,vip_code,vip_number,share_code,invite_user,
+        phone_number,email,phone_country_code,vip_level
+    </sql>
+</mapper>

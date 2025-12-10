@@ -2,6 +2,7 @@ package com.wuzhenhua.yunpicturebackend.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuzhenhua.yunpicturebackend.model.dto.picture.PictureReviewRequest;
+import com.wuzhenhua.yunpicturebackend.model.dto.picture.PictureUploadByBatchRequest;
 import com.wuzhenhua.yunpicturebackend.model.dto.picture.PictureUploadRequest;
 
 
@@ -70,5 +71,13 @@ public interface PictureService extends IService<Picture> {
      * @param loginUser
      */
     public void fillReviewParams(Picture picture,User loginUser);
+
+    /**
+     * 批量抓取图片
+     * @param pictureUploadRequest
+     * @param loginUser
+     * @return 成功的图片数量
+     */
+    Integer uploadPictureByBatche(PictureUploadByBatchRequest pictureUploadRequest, User loginUser);
 
 }

@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wuzhenhua.yunpicturebackend.exception.BusinessException;
 import com.wuzhenhua.yunpicturebackend.exception.ErrorCode;
 import com.wuzhenhua.yunpicturebackend.manager.upload.FilePictureUpload;
 import com.wuzhenhua.yunpicturebackend.manager.upload.PictureUploadTemplate;
@@ -15,8 +16,8 @@ import com.wuzhenhua.yunpicturebackend.mapper.pictureMapper;
 import com.wuzhenhua.yunpicturebackend.model.dto.file.UploadPictureResult;
 import com.wuzhenhua.yunpicturebackend.model.dto.picture.PictureQueryRequest;
 import com.wuzhenhua.yunpicturebackend.model.dto.picture.PictureReviewRequest;
+import com.wuzhenhua.yunpicturebackend.model.dto.picture.PictureUploadByBatchRequest;
 import com.wuzhenhua.yunpicturebackend.model.dto.picture.PictureUploadRequest;
-
 import com.wuzhenhua.yunpicturebackend.model.entity.Picture;
 import com.wuzhenhua.yunpicturebackend.model.entity.User;
 import com.wuzhenhua.yunpicturebackend.model.enums.PictureReviewStatusEnum;
@@ -28,9 +29,15 @@ import com.wuzhenhua.yunpicturebackend.utils.ThrowUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.jsoup.Jsoup;
+import org.jsoup.internal.StringUtil;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +51,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @Slf4j
-public class pictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
+public class PictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
         implements PictureService {
 
     @Resource
@@ -92,7 +99,12 @@ public class pictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
         Picture picture = new Picture();
         log.info("uploadPicture result for userId={}, picName={}, size={}", loginUser.getId(), uploadPicture.getPicName(), uploadPicture.getPicSize());
         picture.setUrl(uploadPicture.getUrl());
-        picture.setName(uploadPicture.getPicName());
+        //支持外层上传图片名称
+        if (pictureUploadRequest != null && StrUtil.isNotBlank(pictureUploadRequest.getPicName())) {
+            picture.setName(pictureUploadRequest.getPicName());
+        } else {
+            picture.setName(uploadPicture.getPicName());
+        }
         picture.setPicSize(uploadPicture.getPicSize());
         picture.setPicWidth(uploadPicture.getPicWidth());
         picture.setPicHeight(uploadPicture.getPicHeight());
@@ -144,7 +156,6 @@ public class pictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
         Integer reviewStatus = pictureQueryRequest.getReviewStatus();
         String reviewMessage = pictureQueryRequest.getReviewMessage();
         Long reviewerId = pictureQueryRequest.getReviewerId();
-
 
 
         // 从多字段中搜索
@@ -328,5 +339,66 @@ public class pictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
         else {
             picture.setReviewStatus(PictureReviewStatusEnum.REVIEWING.getValue());
         }
+    }
+
+    @Override
+    public Integer uploadPictureByBatche(PictureUploadByBatchRequest pictureUploadRequest, User loginUser) {
+        //校验参数
+        String searchText = pictureUploadRequest.getSearchText();
+        Integer count = pictureUploadRequest.getCount();
+        String namePrefix = pictureUploadRequest.getNamePrefix();
+        //名称前缀默认为搜索关键词
+        if (StrUtil.isBlank(namePrefix)) {
+            namePrefix = searchText;
+        }
+        ThrowUtils.throwIf(StringUtil.isBlank(searchText), ErrorCode.PARAMS_ERROR, "抓取内容不能为空");
+        ThrowUtils.throwIf(count == null || count <= 0, ErrorCode.PARAMS_ERROR, "抓取数量必须大于0");
+        ThrowUtils.throwIf(count > 30, ErrorCode.PARAMS_ERROR, "抓取数量不能超过30");
+        //抓取内容
+        String fetchUrl = String.format("https://www.bing.com/images/async?q=%s&mmasync=1", searchText);
+        Document document;
+        try {
+            document = Jsoup.connect(fetchUrl).get();
+        } catch (IOException e) {
+            log.error("获取页面失败", e);
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "获取页面失败");
+        }
+        //解析内容
+        Element div = document.getElementsByClass("dgControl").first();
+        if (div == null) {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "获取页面失败");
+        }
+        Elements imageElementsList = div.select("img.mimg");
+        //便利，依次上床图片
+        int uploadCount = 0;
+        for (Element imageElement : imageElementsList) {
+            String fileUrl = imageElement.attr("src");
+            if (StringUtil.isBlank(fileUrl)) {
+                log.info("当前连接为空，已跳过，{}", fileUrl);
+                continue;
+            }
+            //处理图片地址，反正转义和对象冲突等问题
+            int questionMarkIndex = fileUrl.indexOf("?");
+            if (questionMarkIndex > -1) {
+                fileUrl = fileUrl.substring(0, questionMarkIndex);
+            }
+            //上传图片
+            PictureUploadRequest pictureUploadByBatchRequest = new PictureUploadRequest();
+            pictureUploadByBatchRequest.setFileUrl(fileUrl);
+            pictureUploadByBatchRequest.setPicName(namePrefix + (uploadCount + 1));
+            try {
+                PictureVO pictureVO = this.uploadPicture(fileUrl, pictureUploadByBatchRequest, loginUser);
+                log.info("图片上传成功，id={}", pictureVO.getId());
+                uploadCount++;
+            } catch (Exception e) {
+                log.error("图片上传失败，url={}, error={}", fileUrl, e.getMessage());
+                continue;
+            }
+            if (uploadCount >= count) {
+                break;
+            }
+        }
+        //上传图片
+        return uploadCount;
     }
 }

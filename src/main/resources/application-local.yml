@@ -1,0 +1,8 @@
+# 对象存储配置（需要从腾讯云获取）
+cos:
+  client:
+    host: https://yun-picture-1311837973.cos.ap-guangzhou.myqcloud.com
+    secretId: AKIDELG1Zu1vjMmyxjHcjdJq9E6nJciaFhv0
+    secretKey: uc7LPGuKWaRCnCQRGsIXYZNyLVSFoAKH
+    region: ap-guangzhou
+    bucket: yun-picture-1311837973
