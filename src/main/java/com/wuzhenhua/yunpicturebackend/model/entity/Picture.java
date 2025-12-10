@@ -115,4 +115,28 @@ public class Picture {
     @TableLogic
     @Schema(description = "是否删除(0-未删除, 1-已删除)")
     private Integer isDelete;
+
+    /**
+     * 审核状态：0-待审核; 1-通过; 2-拒绝
+     */
+    @Schema(description = "审核状态(0-待审核,1-通过,2-拒绝)", example = "0")
+    private Integer reviewStatus;
+
+    /**
+     * 审核信息
+     */
+    @Schema(description = "审核信息", example = "图片内容不合规")
+    private String reviewMessage;
+
+    /**
+     * 审核人 ID
+     */
+    @Schema(description = "审核人 id")
+    private Long reviewerId;
+
+    /**
+     * 审核时间
+     */
+    @Schema(description = "审核时间")
+    private Date reviewTime;
 }

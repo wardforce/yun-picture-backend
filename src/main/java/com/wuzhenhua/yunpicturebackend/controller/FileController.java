@@ -23,10 +23,14 @@ import com.wuzhenhua.yunpicturebackend.manager.CosManager;
 import com.wuzhenhua.yunpicturebackend.utils.ResultUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
+@Tag(name = "FileController", description = "文件相关接口")
 @Slf4j
 @RestController
 @RequestMapping("/file")
@@ -42,7 +46,13 @@ public class FileController {
      * @return
      */
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-   @Operation(summary = "测试上传文件")   
+    @Operation(summary = "测试上传文件", description = "管理员测试上传文件至对象存储")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "0", description = "ok"),
+            @ApiResponse(responseCode = "40000", description = "参数错误"),
+            @ApiResponse(responseCode = "40101", description = "无权限"),
+            @ApiResponse(responseCode = "50000", description = "系统内部异常"),
+    })
     @PostMapping(value = "/test/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public BaseResponse<String> testUploadFile(@RequestParam("file") MultipartFile multipartFile) {
         // 文件目录  
@@ -76,7 +86,13 @@ public class FileController {
      * @param response
      */
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-   @Operation(summary = "测试下载文件")   
+    @Operation(summary = "测试下载文件", description = "管理员测试从对象存储下载文件")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "0", description = "ok"),
+            @ApiResponse(responseCode = "40000", description = "参数错误"),
+            @ApiResponse(responseCode = "40101", description = "无权限"),
+            @ApiResponse(responseCode = "50000", description = "系统内部异常"),
+    })
     @GetMapping(value = "/test/download")
     public void testDownloadFile(String filepath,HttpServletResponse response) {
         // 下载文件  
