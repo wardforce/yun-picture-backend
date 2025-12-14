@@ -2,6 +2,7 @@ package com.wuzhenhua.yunpicturebackend.model.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -14,7 +15,7 @@ import lombok.Data;
 @TableName(value ="user")
 @Data
 @Schema(description = "用户实体类")
-public class User {
+public class User implements Serializable {
     /**
      * id
      */

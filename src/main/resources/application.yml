@@ -14,9 +14,17 @@ spring:
       enabled: true
       max-file-size: 10MB # 单个文件大小限制
       max-request-size: 100MB # 整个请求大小限制
-  # mandatory-file-encoding: UTF-8
   profiles:
     active: local
+  data:
+    redis:
+      database: 0
+      host: 127.0.0.1
+      port: 6379
+      timeout: 50000
+  session:
+    store-type: redis
+    timeout: 2592000
 server:
   port: 8081
   servlet:
@@ -25,6 +33,9 @@ server:
     #   charset: UTF-8
     #   force: true
     #   enabled: true
+    session:
+      cookie:
+        max-age: 2592000
 
 logging:
   level:
@@ -57,3 +68,11 @@ springdoc:
 #  enable: true
 #  setting:
 #    language: zh_cn
+# 对象存储配置（需要从腾讯云获取）
+#cos:
+#  client:
+#    host:
+#    secretId:
+#    secretKey:
+#    region:
+#    bucket:

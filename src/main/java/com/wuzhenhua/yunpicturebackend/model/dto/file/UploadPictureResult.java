@@ -5,6 +5,7 @@
 
 package com.wuzhenhua.yunpicturebackend.model.dto.file;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -17,7 +18,9 @@ public class UploadPictureResult {
     /**  
      * 图片地址  
      */  
-    private String url;  
+    private String url;
+    @Schema(description = "缩略图url")
+    private String thumbnailUrl;
   
     /**  
      * 图片名称  
