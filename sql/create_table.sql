@@ -84,7 +84,7 @@ create table if not exists space
 (
     id         bigint auto_increment comment 'id' primary key,
     space_name  varchar(128)                       null comment '空间名称',
-    spaceLevel int      default 0                 null comment '空间级别：0-普通版 1-专业版 2-旗舰版',
+    space_level int      default 0                 null comment '空间级别：0-普通版 1-专业版 2-旗舰版',
     maxSize    bigint   default 0                 null comment '空间图片的最大总大小',
     maxCount   bigint   default 0                 null comment '空间图片的最大数量',
     totalSize  bigint   default 0                 null comment '当前空间下图片的总大小',
