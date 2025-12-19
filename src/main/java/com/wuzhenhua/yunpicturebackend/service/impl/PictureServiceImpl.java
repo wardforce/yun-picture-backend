@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuzhenhua.yunpicturebackend.exception.BusinessException;
 import com.wuzhenhua.yunpicturebackend.exception.ErrorCode;
+import com.wuzhenhua.yunpicturebackend.manager.CosManager;
 import com.wuzhenhua.yunpicturebackend.manager.upload.FilePictureUpload;
 import com.wuzhenhua.yunpicturebackend.manager.upload.PictureUploadTemplate;
 import com.wuzhenhua.yunpicturebackend.manager.upload.UrlPictureUpload;
@@ -35,6 +36,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -60,6 +63,8 @@ public class PictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
     private FilePictureUpload filePictureUpload;
     @Resource
     private UrlPictureUpload urlPictureUpload;
+    @Autowired
+    private CosManager cosManager;
 
     /**
      * 上传图片
@@ -79,9 +84,10 @@ public class PictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
             //新增 
             pictureId = pictureUploadRequest.getId();
         }
+        Picture oldPicture =null;
         //如果是更新，还要判断图片是否存在
         if (pictureId != null) {
-            Picture oldPicture = this.getById(pictureId);
+            oldPicture = this.getById(pictureId);
             ThrowUtils.throwIf(oldPicture == null, ErrorCode.NOT_FOUND_ERROR, "图片不存在");
             //仅仅只有本人或者管理员可以编辑图片
             ThrowUtils.throwIf(!oldPicture.getUserId().equals(loginUser.getId()) && !userService.isAdmin(loginUser), ErrorCode.NO_AUTH_ERROR, "没有权限");
@@ -99,6 +105,7 @@ public class PictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
         Picture picture = new Picture();
         log.info("uploadPicture result for userId={}, picName={}, size={}", loginUser.getId(), uploadPicture.getPicName(), uploadPicture.getPicSize());
         picture.setUrl(uploadPicture.getUrl());
+        picture.setThumbnailUrl(uploadPicture.getThumbnailUrl());
         //支持外层上传图片名称
         if (pictureUploadRequest != null && StrUtil.isNotBlank(pictureUploadRequest.getPicName())) {
             picture.setName(pictureUploadRequest.getPicName());
@@ -121,6 +128,10 @@ public class PictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
             picture.setUpdateTime(new Date());
         }
         boolean saveOrUpdate = this.saveOrUpdate(picture);
+        //如果是更新，清理图片资源
+        if (pictureId != null) {
+            clearPictureFile(oldPicture);
+        }
         ThrowUtils.throwIf(!saveOrUpdate, ErrorCode.OPERATION_ERROR, "图片上传失败");
         return PictureVO.objToVo(picture);
     }
@@ -400,5 +411,26 @@ public class PictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
         }
         //上传图片
         return uploadCount;
+    }
+
+    /**
+     * 清理图片
+     * @param picture
+     */
+    @Async
+    @Override
+    public void clearPictureFile(Picture picture) {
+        //判断该图片是否被多条记录使用
+        String pictureUrl=picture.getUrl();
+        long count=this.lambdaQuery()
+                .eq(Picture::getUrl,pictureUrl)
+                .count();
+        //有不止一条记录，不清理
+        if (count>1){return;}
+        cosManager.deleteObject(pictureUrl);
+        String thumbnailUrl=picture.getThumbnailUrl();
+        if (StrUtil.isNotBlank(thumbnailUrl)){
+            cosManager.deleteObject(thumbnailUrl);
+        }
     }
 }

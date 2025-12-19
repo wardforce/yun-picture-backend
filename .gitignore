@@ -4,6 +4,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 .serena
+.idea
 ### STS ###
 .apt_generated
 .classpath
@@ -33,5 +34,5 @@ build/
 .vscode/
 .aider*
 .trae*
-
-application-local.yml
+.coding-aider-plans
+/src/main/resources/application-local.yml

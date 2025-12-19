@@ -29,6 +29,8 @@ public class Picture {
      */
     @Schema(description = "图片 url", example = "http://127.0.0.1:9000/yun-picture-bucket/xxx.jpg")
     private String url;
+    @Schema(description = "缩略图url")
+    private String thumbnailUrl;
 
     /**
      * 图片名称
