@@ -204,6 +204,29 @@ public class UserController {
         return ResultUtils.success(true);
     }
 
+    @PostMapping("/update/themself")
+    @Operation(summary = "用户编辑自己的信息", description = "管理员更新用户")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "0", description = "ok"),
+            @ApiResponse(responseCode = "40000", description = "参数错误"),
+            @ApiResponse(responseCode = "40101", description = "无权限"),
+            @ApiResponse(responseCode = "50001", description = "操作失败"),
+    })
+    public BaseResponse<Boolean> updateUserByThemself(@RequestBody UserUpdateByThemSelfRequest userUpdateRequest, HttpServletRequest request) {
+        if (userUpdateRequest == null || userUpdateRequest.getId() == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        User user = new User();
+        User loginUser = userService.getLoginUser(request);
+        BeanUtils.copyProperties(userUpdateRequest, user);
+        if (!user.getId().equals(loginUser.getId())) {
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "非本人无法修改");
+        }
+        boolean result = userService.updateById(user);
+        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+        return ResultUtils.success(true);
+    }
+
     /**
      * 分页获取用户
      *

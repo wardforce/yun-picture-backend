@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.wuzhenhua.yunpicturebackend.model.dto.user.UserUpdatePasswordRequest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -335,6 +336,34 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         boolean expired = !now.isBefore(expireTime);
         log.info("isVipExpired userId={}, now={}, expireTime={}, expired={}", user.getId(), now, expireTime, expired);
         return expired;
+    }
+
+    @Override
+    public boolean userUpdatePassword(UserUpdatePasswordRequest userUpdatePasswordRequest, HttpServletRequest request) {
+        String userOldPassword=userUpdatePasswordRequest.getUserOldPassword();
+        String userNewPassword=userUpdatePasswordRequest.getUserNewPassword();
+        String checkPassword=userUpdatePasswordRequest.getCheckPassword();
+        //检验用户登录
+        User user = (User) request.getSession().getAttribute(UserConstant.USER_LOGIN_STATE);
+        if (user == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR, "用户未登录");
+        }
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(User::getId, user.getId());
+        queryWrapper.eq(User::getUserPassword, getEncodePassword(userOldPassword));
+        User ifExistsuser = this.baseMapper.selectOne(queryWrapper);
+        ThrowUtils.throwIf(ifExistsuser == null, ErrorCode.PARAMS_ERROR, "用户密码错误");
+        // 1.校验新旧密码
+            if (StrUtil.isBlank(userOldPassword) || StrUtil.isBlank(userOldPassword)|| StrUtil.isBlank(checkPassword)) {
+                throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
+            }
+            ThrowUtils.throwIf(userNewPassword.length() < 8||checkPassword.length() < 8, ErrorCode.PARAMS_ERROR, "用户密码长度不足");
+            ThrowUtils.throwIf(!userNewPassword.equals(checkPassword), ErrorCode.PARAMS_ERROR, "用户密码输入不一致");
+            // 2.加密
+            String encodePassword = getEncodePassword(userNewPassword);
+            ifExistsuser.setUserPassword(encodePassword);
+            return true;
+
     }
 
 }

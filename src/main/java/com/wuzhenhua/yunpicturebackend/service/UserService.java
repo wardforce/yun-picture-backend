@@ -5,6 +5,7 @@ import java.util.List;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wuzhenhua.yunpicturebackend.model.dto.user.UserQueryRequest;
+import com.wuzhenhua.yunpicturebackend.model.dto.user.UserUpdatePasswordRequest;
 import com.wuzhenhua.yunpicturebackend.model.entity.User;
 import com.wuzhenhua.yunpicturebackend.model.vo.LoginUserVO;
 import com.wuzhenhua.yunpicturebackend.model.vo.UserVO;
@@ -124,4 +125,12 @@ public interface UserService extends IService<User> {
      * @return
      */
     boolean isVipExpired(User user);
+
+    /**
+     * 用户修改密码
+     *
+     * @param
+     * @param request
+     * @return
+     */boolean userUpdatePassword(UserUpdatePasswordRequest userUpdatePasswordRequest, HttpServletRequest request);
 }
