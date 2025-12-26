@@ -1,14 +1,11 @@
 package com.wuzhenhua.yunpicturebackend.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.wuzhenhua.yunpicturebackend.model.dto.picture.PictureReviewRequest;
-import com.wuzhenhua.yunpicturebackend.model.dto.picture.PictureUploadByBatchRequest;
-import com.wuzhenhua.yunpicturebackend.model.dto.picture.PictureUploadRequest;
+import com.wuzhenhua.yunpicturebackend.model.dto.picture.*;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.wuzhenhua.yunpicturebackend.model.dto.picture.PictureQueryRequest;
 import com.wuzhenhua.yunpicturebackend.model.entity.User;
 import com.wuzhenhua.yunpicturebackend.model.entity.Picture;
 import com.wuzhenhua.yunpicturebackend.model.vo.PictureVO;
@@ -30,8 +27,6 @@ public interface PictureService extends IService<Picture> {
      * @param loginUser
      * @return
      */
-
-
     PictureVO uploadPicture(Object inpurSource, PictureUploadRequest pictureUploadRequest, User loginUser);
 
     /**
@@ -56,6 +51,11 @@ public interface PictureService extends IService<Picture> {
      */
     public Page<PictureVO> getPictureVOPage(Page<Picture> picturePage, HttpServletRequest request);
 
+    /**
+     * 校验图片
+     *
+     * @param picture
+     */
     void validPicture(Picture picture);
 
     /**
@@ -84,5 +84,29 @@ public interface PictureService extends IService<Picture> {
      * @param picture
      */
     void clearPictureFile(Picture picture);
+
+    /**
+     * 校验空间图片的权限
+     *
+     * @param picture   the Picture object representing the image for which authorization needs to be checked
+     * @param loginUser the User object representing the currently logged-in user
+     */
+    void checkPictureAuth(Picture picture, User loginUser);
+
+    /**
+     * 删除图片
+     *
+     * @param pictureId
+     * @param loginUser
+     */
+    void deletePicture(long pictureId, User loginUser);
+
+    /**
+     * 编辑图片(用户接口)
+     *
+     * @param pictureEditRequest
+     * @param loginUser
+     */
+    void editorPicture(PictureEditRequest pictureEditRequest, User loginUser);
 
 }

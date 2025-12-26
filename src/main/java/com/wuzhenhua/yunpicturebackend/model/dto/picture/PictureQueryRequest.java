@@ -105,6 +105,10 @@ public class PictureQueryRequest extends PageRequest implements Serializable {
      * 审核时间
      */
     private Date reviewTime;
+    @Schema(description = "空间id")
+    private Long spaceId;
+    @Schema(description = "空间id是否为空")
+    private boolean nullSpaceId;
   
     private static final long serialVersionUID = 1L;  
 }
