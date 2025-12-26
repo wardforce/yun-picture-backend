@@ -141,4 +141,6 @@ public class Picture {
      */
     @Schema(description = "审核时间")
     private Date reviewTime;
+    @Schema(description = "空间 id")
+    private Long spaceId;
 }
