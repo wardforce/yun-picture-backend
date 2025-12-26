@@ -21,7 +21,7 @@ import com.wuzhenhua.yunpicturebackend.model.vo.PictureTagCategory;
 import com.wuzhenhua.yunpicturebackend.model.vo.PictureVO;
 import com.wuzhenhua.yunpicturebackend.service.PictureService;
 import com.wuzhenhua.yunpicturebackend.service.UserService;
-import com.wuzhenhua.yunpicturebackend.service.spaceService;
+import com.wuzhenhua.yunpicturebackend.service.SpaceService;
 import com.wuzhenhua.yunpicturebackend.utils.ResultUtils;
 import com.wuzhenhua.yunpicturebackend.utils.ThrowUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,7 +33,6 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.MediaType;
@@ -42,12 +41,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
-import java.security.Key;
-import java.time.Duration;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 @Tag(name = "PictureController", description = "图片控制器")
@@ -63,7 +58,7 @@ public class PictureController {
     @Resource
     private StringRedisTemplate stringRedisTemplate;
     @Resource
-    private spaceService spaceService;
+    private SpaceService spaceService;
     private final Cache<String, String> LOCAL_CACHE =
             Caffeine.newBuilder().initialCapacity(1024)
                     .maximumSize(10000L)

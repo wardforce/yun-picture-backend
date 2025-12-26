@@ -11,17 +11,14 @@ import com.wuzhenhua.yunpicturebackend.exception.BusinessException;
 import com.wuzhenhua.yunpicturebackend.exception.ErrorCode;
 import com.wuzhenhua.yunpicturebackend.model.dto.space.SpaceAddRequest;
 import com.wuzhenhua.yunpicturebackend.model.dto.space.SpaceQueryRequest;
-import com.wuzhenhua.yunpicturebackend.model.entity.Picture;
 import com.wuzhenhua.yunpicturebackend.model.entity.Space;
 import com.wuzhenhua.yunpicturebackend.model.entity.User;
 import com.wuzhenhua.yunpicturebackend.model.enums.SpaceLevelEnum;
-import com.wuzhenhua.yunpicturebackend.model.vo.PictureVO;
 import com.wuzhenhua.yunpicturebackend.model.vo.SpaceVO;
 import com.wuzhenhua.yunpicturebackend.model.vo.UserVO;
-import com.wuzhenhua.yunpicturebackend.service.PictureService;
 import com.wuzhenhua.yunpicturebackend.service.UserService;
-import com.wuzhenhua.yunpicturebackend.service.spaceService;
-import com.wuzhenhua.yunpicturebackend.mapper.spaceMapper;
+import com.wuzhenhua.yunpicturebackend.service.SpaceService;
+import com.wuzhenhua.yunpicturebackend.mapper.SpaceMapper;
 import com.wuzhenhua.yunpicturebackend.utils.ThrowUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,8 +35,8 @@ import java.util.stream.Collectors;
 * @createDate 2025-12-21 19:28:17
 */
 @Service
-public class spaceServiceImpl extends ServiceImpl<spaceMapper, Space>
-    implements spaceService{
+public class SpaceServiceImpl extends ServiceImpl<SpaceMapper, Space>
+    implements SpaceService {
     @Resource
     private UserService userService;
     @Resource

@@ -340,30 +340,37 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public boolean userUpdatePassword(UserUpdatePasswordRequest userUpdatePasswordRequest, HttpServletRequest request) {
-        String userOldPassword=userUpdatePasswordRequest.getUserOldPassword();
-        String userNewPassword=userUpdatePasswordRequest.getUserNewPassword();
-        String checkPassword=userUpdatePasswordRequest.getCheckPassword();
-        //检验用户登录
-        User user = (User) request.getSession().getAttribute(UserConstant.USER_LOGIN_STATE);
-        if (user == null) {
-            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR, "用户未登录");
-        }
-        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(User::getId, user.getId());
-        queryWrapper.eq(User::getUserPassword, getEncodePassword(userOldPassword));
-        User ifExistsuser = this.baseMapper.selectOne(queryWrapper);
-        ThrowUtils.throwIf(ifExistsuser == null, ErrorCode.PARAMS_ERROR, "用户密码错误");
-        // 1.校验新旧密码
-            if (StrUtil.isBlank(userOldPassword) || StrUtil.isBlank(userOldPassword)|| StrUtil.isBlank(checkPassword)) {
-                throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
-            }
-            ThrowUtils.throwIf(userNewPassword.length() < 8||checkPassword.length() < 8, ErrorCode.PARAMS_ERROR, "用户密码长度不足");
-            ThrowUtils.throwIf(!userNewPassword.equals(checkPassword), ErrorCode.PARAMS_ERROR, "用户密码输入不一致");
-            // 2.加密
-            String encodePassword = getEncodePassword(userNewPassword);
-            ifExistsuser.setUserPassword(encodePassword);
-            return true;
+        String userOldPassword = userUpdatePasswordRequest.getUserOldPassword();
+        String userNewPassword = userUpdatePasswordRequest.getUserNewPassword();
+        String checkPassword = userUpdatePasswordRequest.getCheckPassword();
 
+        // 1.参数校验（快速失败）
+        if (StrUtil.isBlank(userOldPassword) || StrUtil.isBlank(userNewPassword) || StrUtil.isBlank(checkPassword)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
+        }
+        ThrowUtils.throwIf(userNewPassword.length() < 8 || checkPassword.length() < 8,
+                ErrorCode.PARAMS_ERROR, "用户密码长度不足");
+        ThrowUtils.throwIf(!userNewPassword.equals(checkPassword),
+                ErrorCode.PARAMS_ERROR, "用户密码输入不一致");
+
+        // 2.检验用户登录
+        User loginUser = (User) request.getSession().getAttribute(UserConstant.USER_LOGIN_STATE);
+        ThrowUtils.throwIf(loginUser == null, ErrorCode.NOT_LOGIN_ERROR, "用户未登录");
+
+        // 3.加密密码
+        String oldPasswordEncoded = getEncodePassword(userOldPassword);
+        String newPasswordEncoded = getEncodePassword(userNewPassword);
+
+        // 4.链式更新（原子操作：验证旧密码并更新新密码）
+        boolean result = this.lambdaUpdate()
+                .set(User::getUserPassword, newPasswordEncoded)
+                .eq(User::getId, loginUser.getId())
+                .eq(User::getUserPassword, oldPasswordEncoded)
+                .update();
+
+        ThrowUtils.throwIf(!result, ErrorCode.PARAMS_ERROR, "旧密码错误或密码未变更");
+
+        return true;
     }
 
 }

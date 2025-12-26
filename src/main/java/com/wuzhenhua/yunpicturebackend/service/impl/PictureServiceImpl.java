@@ -25,7 +25,7 @@ import com.wuzhenhua.yunpicturebackend.model.vo.PictureVO;
 import com.wuzhenhua.yunpicturebackend.model.vo.UserVO;
 import com.wuzhenhua.yunpicturebackend.service.PictureService;
 import com.wuzhenhua.yunpicturebackend.service.UserService;
-import com.wuzhenhua.yunpicturebackend.service.spaceService;
+import com.wuzhenhua.yunpicturebackend.service.SpaceService;
 import com.wuzhenhua.yunpicturebackend.utils.ThrowUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.annotation.Resource;
@@ -47,7 +47,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 /**
@@ -65,7 +64,7 @@ public class PictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
     @Resource
     private FilePictureUpload filePictureUpload;
     @Resource
-    private spaceService spaceService;
+    private SpaceService spaceService;
     @Resource
     private UrlPictureUpload urlPictureUpload;
     @Autowired

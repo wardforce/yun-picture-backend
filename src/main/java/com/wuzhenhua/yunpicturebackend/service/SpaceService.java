@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import com.wuzhenhua.yunpicturebackend.model.dto.space.SpaceAddRequest;
 import com.wuzhenhua.yunpicturebackend.model.dto.space.SpaceQueryRequest;
-import com.wuzhenhua.yunpicturebackend.model.entity.Picture;
 import com.wuzhenhua.yunpicturebackend.model.entity.Space;
 
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -19,7 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 * @description 针对表【space(空间)】的数据库操作Service
 * @createDate 2025-12-21 19:28:17
 */
-public interface spaceService extends IService<Space> {
+public interface SpaceService extends IService<Space> {
     /**
      * 添加空间
      * @param spaceaddRequest

@@ -1,34 +1,22 @@
 package com.wuzhenhua.yunpicturebackend.controller;
 
 
-import cn.hutool.core.util.RandomUtil;
-import cn.hutool.json.JSONUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.segments.MergeSegments;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
 import com.wuzhenhua.yunpicturebackend.annotation.AuthCheck;
 import com.wuzhenhua.yunpicturebackend.common.BaseResponse;
 import com.wuzhenhua.yunpicturebackend.common.DeleteRequest;
 import com.wuzhenhua.yunpicturebackend.constant.UserConstant;
 import com.wuzhenhua.yunpicturebackend.exception.BusinessException;
 import com.wuzhenhua.yunpicturebackend.exception.ErrorCode;
-import com.wuzhenhua.yunpicturebackend.model.dto.picture.*;
 import com.wuzhenhua.yunpicturebackend.model.dto.space.*;
 import com.wuzhenhua.yunpicturebackend.model.entity.Picture;
 import com.wuzhenhua.yunpicturebackend.model.entity.Space;
 import com.wuzhenhua.yunpicturebackend.model.entity.User;
-import com.wuzhenhua.yunpicturebackend.model.enums.PictureReviewStatusEnum;
 import com.wuzhenhua.yunpicturebackend.model.enums.SpaceLevelEnum;
-import com.wuzhenhua.yunpicturebackend.model.vo.PictureTagCategory;
-import com.wuzhenhua.yunpicturebackend.model.vo.PictureVO;
 import com.wuzhenhua.yunpicturebackend.model.vo.SpaceVO;
 import com.wuzhenhua.yunpicturebackend.service.PictureService;
 import com.wuzhenhua.yunpicturebackend.service.UserService;
-import com.wuzhenhua.yunpicturebackend.service.spaceService;
+import com.wuzhenhua.yunpicturebackend.service.SpaceService;
 import com.wuzhenhua.yunpicturebackend.utils.ResultUtils;
 import com.wuzhenhua.yunpicturebackend.utils.ThrowUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,20 +29,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.http.MediaType;
-import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
-import static com.sun.tools.attach.VirtualMachine.list;
 
 @Tag(name = "SpaceController", description = "空间控制器")
 @Slf4j
@@ -64,7 +44,7 @@ public class SpaceController {
     @Resource
     private UserService userService;
     @Resource
-    private spaceService spaceService;
+    private SpaceService spaceService;
     @Resource
     private StringRedisTemplate stringRedisTemplate;
     @Resource

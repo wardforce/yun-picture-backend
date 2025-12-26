@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @createDate 2025-12-21 19:28:17
 * @Entity com.wuzhenhua.yunpicturebackend.model.entity.space
 */
-public interface spaceMapper extends BaseMapper<Space> {
+public interface SpaceMapper extends BaseMapper<Space> {
 }
 
 

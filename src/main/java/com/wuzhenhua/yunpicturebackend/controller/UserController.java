@@ -228,6 +228,23 @@ public class UserController {
     }
 
     /**
+     * 用户修改自己的密码
+     */
+    @PostMapping("/update/themself/password")
+    @Operation(summary = "用户修改自己的密码", description = "用户通过旧密码修改新密码")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "0", description = "ok"),
+            @ApiResponse(responseCode = "40000", description = "参数错误"),
+            @ApiResponse(responseCode = "40100", description = "未登录"),
+            @ApiResponse(responseCode = "50001", description = "操作失败"),
+    })
+    public BaseResponse<Boolean> updateUserPassword(@RequestBody UserUpdatePasswordRequest userUpdatePasswordRequest, HttpServletRequest request) {
+        ThrowUtils.throwIf(userUpdatePasswordRequest == null, ErrorCode.PARAMS_ERROR);
+        boolean result = userService.userUpdatePassword(userUpdatePasswordRequest, request);
+        return ResultUtils.success(result);
+    }
+
+    /**
      * 分页获取用户
      *
      * @param userQueryRequest
