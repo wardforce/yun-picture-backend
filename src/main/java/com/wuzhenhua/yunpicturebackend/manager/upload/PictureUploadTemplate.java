@@ -120,7 +120,7 @@ public abstract class PictureUploadTemplate {
                     // 删除失败不影响业务，仅记录日志
                     log.warn("原图删除失败：{}, error={}", uploadPath, e.getMessage());
                 }
-                return buildResult(ciObject, thumbnailCiobject, originalFilename);
+                return buildResult(ciObject, thumbnailCiobject, originalFilename, imageInfo);
             }
             return buildResult(uploadPath, originalFilename, file, imageInfo);
         } catch (Exception e) {
@@ -140,7 +140,7 @@ public abstract class PictureUploadTemplate {
      * @return
      * @
      */
-    private UploadPictureResult buildResult(CIObject ciObject, CIObject thumbnailCiobject, String originalFilename) {
+    private UploadPictureResult buildResult(CIObject ciObject, CIObject thumbnailCiobject, String originalFilename,ImageInfo imageInfo) {
         //返回压缩后图片信息
         UploadPictureResult uploadPictureResult = new UploadPictureResult();
         uploadPictureResult.setUrl(cosClientConfig.getHost() + "/" + ciObject.getKey());
@@ -150,6 +150,8 @@ public abstract class PictureUploadTemplate {
         uploadPictureResult.setPicHeight(ciObject.getHeight());
         uploadPictureResult.setPicScale((double) NumberUtil.round((double) ciObject.getWidth() / ciObject.getHeight(), 2).doubleValue());
         uploadPictureResult.setPicFormat(ciObject.getFormat());
+        //获取图片主色调
+        uploadPictureResult.setPicColor(imageInfo.getAve());
         //设置缩略图地址
         uploadPictureResult.setThumbnailUrl(cosClientConfig.getHost() + "/" + thumbnailCiobject.getKey());
         return uploadPictureResult;
@@ -174,6 +176,8 @@ public abstract class PictureUploadTemplate {
         uploadPictureResult.setPicHeight(imageInfo.getHeight());
         uploadPictureResult.setPicScale((double) NumberUtil.round((double) imageInfo.getWidth() / imageInfo.getHeight(), 2).doubleValue());
         uploadPictureResult.setPicFormat(imageInfo.getFormat());
+        //获取图片主色调
+        uploadPictureResult.setPicColor(imageInfo.getAve());
         return uploadPictureResult;
     }
 

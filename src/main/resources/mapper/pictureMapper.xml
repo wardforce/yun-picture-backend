@@ -27,6 +27,7 @@
         <result property="reviewerId" column="reviewer_id"/>
         <result property="reviewTime" column="review_time"/>
         <result property="spaceId" column="space_id"/>
+        <result property="picColor" column="pic_color"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -34,6 +35,6 @@
         pic_size,pic_width,pic_height,pic_scale,pic_format,
         user_id,create_time,edit_time,update_time,is_delete,
         review_status,review_message,reviewer_id,review_time,
-        space_id
+        space_id,pic_color
     </sql>
 </mapper>

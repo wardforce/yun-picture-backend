@@ -12,8 +12,10 @@ public class UserUpdateByThemSelfRequest{
     private String userName;
     @Schema(description = "用户简介")
     private String userProfile;
-    @Schema(description = "手机号")
-    private Long phoneNumber;
+//    @Schema(description = "手机号")
+//    private Long phoneNumber;
     @Schema(description = "邮箱")
     private String email;
+//    @Schema(description = "手机国家代码")
+//    private String phoneCountryCode;
 }

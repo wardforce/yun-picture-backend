@@ -105,3 +105,5 @@ ALTER TABLE picture
 
 -- 创建索引
 CREATE INDEX idx_spaceId ON picture (space_id);
+ALTER TABLE picture
+    ADD COLUMN pic_color varchar(16) null comment '图片主色调';

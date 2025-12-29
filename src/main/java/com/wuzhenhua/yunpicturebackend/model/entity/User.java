@@ -121,7 +121,7 @@ public class User implements Serializable {
     @TableField(fill = FieldFill.UPDATE)
     //注释效果：当前端设置为空数值时，自动设置为空
     @Schema(description = "手机号")
-    private Long phoneNumber;
+    private String phoneNumber;
 
     /**
      * 邮箱

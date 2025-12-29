@@ -40,7 +40,7 @@ public class UserVO implements Serializable {
     private String userProfile;
 
     /**
-     * 用户角色：user/admin/ban
+     * 用户角色：user/admin/vip
      */
     @Schema(description = "用户角色")
     private String userRole;

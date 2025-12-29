@@ -143,4 +143,10 @@ public class Picture {
     private Date reviewTime;
     @Schema(description = "空间 id")
     private Long spaceId;
+
+    /**
+     * 图片主色调
+     */
+    @Schema(description = "图片主色调", example = "0xFFFFFF")
+    private String picColor;
 }

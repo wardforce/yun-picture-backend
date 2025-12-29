@@ -222,6 +222,13 @@ public class UserController {
         if (!user.getId().equals(loginUser.getId())) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "非本人无法修改");
         }
+        // 邮箱格式验证
+        if (user.getEmail() != null && !user.getEmail().trim().isEmpty()) {
+            String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+            if (!user.getEmail().matches(emailRegex)) {
+                throw new BusinessException(ErrorCode.PARAMS_ERROR, "邮箱格式不合法");
+            }
+        }
         boolean result = userService.updateById(user);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(true);

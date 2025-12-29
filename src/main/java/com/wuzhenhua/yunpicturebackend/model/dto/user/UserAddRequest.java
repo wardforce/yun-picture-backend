@@ -39,7 +39,7 @@ public class UserAddRequest implements Serializable {
 
     // 强烈建议手机号用 String 类型以保留前导 0、便于做长度/正则校验
     @Schema(description = "手机号", example = "13800138000", pattern = "^\\d{6,20}$")
-    private Long phoneNumber; // 若可改动，建议改为 String
+    private String phoneNumber; // 若可改动，建议改为 String
 
     @Schema(description = "邮箱", example = "xiaoming@example.com", format = "email")
     private String email;

@@ -45,7 +45,7 @@ public class UserUpdateRequest implements Serializable {
      *
      */
     @Schema(description = "用户手机号")
-    private Long phoneNumber;
+    private String phoneNumber;
 
     /**
      *

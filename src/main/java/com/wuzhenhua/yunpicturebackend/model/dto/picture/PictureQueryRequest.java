@@ -109,6 +109,14 @@ public class PictureQueryRequest extends PageRequest implements Serializable {
     private Long spaceId;
     @Schema(description = "空间id是否为空")
     private boolean nullSpaceId;
+    private Date startEditTime;
+    private Date endEditTime;
+
+    /**
+     * 图片主色调
+     */
+    @Schema(description = "图片主色调", example = "0xFFFFFF")
+    private String picColor;
   
     private static final long serialVersionUID = 1L;  
 }

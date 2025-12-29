@@ -30,5 +30,8 @@ public class PictureUpdateRequest implements Serializable {
     @Schema(description = "图片标签列表", example = "[\"自然\",\"风景\",\"山川\"]")
     private List<String> tags;
 
+    @Schema(description = "图片主色调", example = "0xFFFFFF")
+    private String picColor;
+
     private static final long serialVersionUID = 1L;
 }

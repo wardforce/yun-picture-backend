@@ -149,6 +149,7 @@ public class PictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
         picture.setPicHeight(uploadPicture.getPicHeight());
         picture.setPicScale(uploadPicture.getPicScale());
         picture.setPicFormat(uploadPicture.getPicFormat());
+        picture.setPicColor(uploadPicture.getPicColor());
         picture.setUserId(loginUser.getId());
         //补充审核参数
         this.fillReviewParams(picture, loginUser);
@@ -215,8 +216,9 @@ public class PictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
         Integer reviewStatus = pictureQueryRequest.getReviewStatus();
         String reviewMessage = pictureQueryRequest.getReviewMessage();
         Long reviewerId = pictureQueryRequest.getReviewerId();
-
-
+        Date startEditTime = pictureQueryRequest.getStartEditTime();
+        Date endEditTime = pictureQueryRequest.getEndEditTime();
+        String picColor = pictureQueryRequest.getPicColor();
         // 从多字段中搜索
         if (StrUtil.isNotBlank(searchText)) {
             // 需要拼接查询条件
@@ -241,6 +243,11 @@ public class PictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
         queryWrapper.eq(ObjUtil.isNotEmpty(reviewerId), Picture::getReviewerId, reviewerId);
         queryWrapper.like(StrUtil.isNotBlank(reviewMessage), Picture::getReviewMessage, reviewMessage);
         queryWrapper.eq(ObjUtil.isNotEmpty(spaceId), Picture::getSpaceId, spaceId);
+        queryWrapper.eq(StrUtil.isNotBlank(picColor), Picture::getPicColor, picColor);
+        //>= startEditTime
+        queryWrapper.ge(ObjUtil.isNotEmpty(startEditTime), Picture::getEditTime, startEditTime);
+        //< endEditTime
+        queryWrapper.lt(ObjUtil.isNotEmpty(endEditTime), Picture::getEditTime, endEditTime);
         // JSON 数组查询
         if (CollUtil.isNotEmpty(tags)) {
             for (String tag : tags) {
@@ -271,6 +278,7 @@ public class PictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
             sortMap.put("reviewMessage", Picture::getReviewMessage);
             sortMap.put("reviewStatus", Picture::getReviewStatus);
             sortMap.put("spaceId", Picture::getSpaceId);
+            sortMap.put("picColor", Picture::getPicColor);
             // 获取对应的列，如果存在则应用排序
             SFunction<Picture, ?> column = sortMap.get(sortField);
             if (column != null) {
@@ -519,12 +527,14 @@ public class PictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
             boolean result = this.removeById(pictureId);
             ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR, "图片上传失败");
             //更新空间的使用额度，释放额度
-            boolean update = spaceService.lambdaUpdate()
-                    .eq(Space::getId, oldPicture.getSpaceId())
-                    .setSql("total_size=total_size-" + oldPicture.getPicSize())
-                    .setSql("total_count=total_count-1")
-                    .update();
-            ThrowUtils.throwIf(!update, ErrorCode.OPERATION_ERROR, "更新空间使用额度失败");
+            if (oldPicture.getSpaceId() != null) {
+                boolean update = spaceService.lambdaUpdate()
+                        .eq(Space::getId, oldPicture.getSpaceId())
+                        .setSql("total_size=total_size-" + oldPicture.getPicSize())
+                        .setSql("total_count=total_count-1")
+                        .update();
+                ThrowUtils.throwIf(!update, ErrorCode.OPERATION_ERROR, "更新空间使用额度失败");
+            }
         });
         //清理图片资源
         this.clearPictureFile(oldPicture);
@@ -538,6 +548,7 @@ public class PictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
         picture.setIntroduction(pictureEditRequest.getIntroduction());
         picture.setCategory(pictureEditRequest.getCategory());
         picture.setTags(JSONUtil.toJsonStr(pictureEditRequest.getTags()));
+        picture.setPicColor(pictureEditRequest.getPicColor());
         picture.setEditTime(new Date());
         // 数据校验
         this.validPicture(picture);

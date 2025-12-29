@@ -219,7 +219,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String vipLevel = userQueryRequest.getVipLevel();
         Long inviteUser = userQueryRequest.getInviteUser();
         String shareCode = userQueryRequest.getShareCode();
-        Long phoneNumber = userQueryRequest.getPhoneNumber();
+        String phoneNumber = userQueryRequest.getPhoneNumber();
         String vipCode = userQueryRequest.getVipCode();
         String email = userQueryRequest.getEmail();
         String phoneCountryCode = userQueryRequest.getPhoneCountryCode();

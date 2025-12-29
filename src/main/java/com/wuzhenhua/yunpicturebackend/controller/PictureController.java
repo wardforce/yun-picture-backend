@@ -2,11 +2,14 @@ package com.wuzhenhua.yunpicturebackend.controller;
 
 
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.wuzhenhua.yunpicturebackend.annotation.AuthCheck;
+import com.wuzhenhua.yunpicturebackend.api.imagesearch.SoImageSearchApiFacade;
+import com.wuzhenhua.yunpicturebackend.api.imagesearch.model.SoImageSearchResult;
 import com.wuzhenhua.yunpicturebackend.common.BaseResponse;
 import com.wuzhenhua.yunpicturebackend.common.DeleteRequest;
 import com.wuzhenhua.yunpicturebackend.constant.UserConstant;
@@ -41,6 +44,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -428,5 +432,29 @@ public class PictureController {
         Integer uploadCount = pictureService.uploadPictureByBatche(pictureUploadByBatchRequest, loginUser);
         return ResultUtils.success(uploadCount);
     }
+    /**
+     * 以图搜图
+     */
+    @PostMapping("/search/picture")
+    public BaseResponse<List<SoImageSearchResult>> searchPictureByPictureIsSo(@RequestBody SearchPictureByPictureRequest searchPictureByPictureRequest) {
+        ThrowUtils.throwIf(searchPictureByPictureRequest == null, ErrorCode.PARAMS_ERROR);
+        Long pictureId = searchPictureByPictureRequest.getPictureId();
+        ThrowUtils.throwIf(pictureId == null || pictureId <= 0, ErrorCode.PARAMS_ERROR);
+        Picture oldPicture = pictureService.getById(pictureId);
+        ThrowUtils.throwIf(oldPicture == null, ErrorCode.NOT_FOUND_ERROR);
+        List<SoImageSearchResult> resultList = new ArrayList<>();
+        // 这个 start 是控制查询多少页, 每页是 20 条
+        int start = 0;
+        while (resultList.size() <= 50) {
+            List<SoImageSearchResult> tempList = SoImageSearchApiFacade.searchImage(oldPicture.getUrl(), start);
+            if (tempList.isEmpty()) {
+                break;
+            }
+            resultList.addAll(tempList);
+            start += tempList.size();
+        }
+        return ResultUtils.success(resultList);
+    }
+
 
 }
