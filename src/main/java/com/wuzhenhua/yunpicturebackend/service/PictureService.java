@@ -12,6 +12,8 @@ import com.wuzhenhua.yunpicturebackend.model.vo.PictureVO;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.util.List;
+
 /**
  * @author ward
  * @description 针对表【picture(图片)】的数据库操作Service
@@ -108,5 +110,14 @@ public interface PictureService extends IService<Picture> {
      * @param loginUser
      */
     void editorPicture(PictureEditRequest pictureEditRequest, User loginUser);
+
+    /**
+     * 根据颜色搜索图片
+     * @param spaceId
+     * @param picColor
+     * @param loginuser
+     * @return
+     */
+    List<PictureVO> searchPictureByColor(Long spaceId, String picColor, User loginuser);
 
 }
