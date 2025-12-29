@@ -1,7 +1,6 @@
 package com.wuzhenhua.yunpicturebackend.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.img.ColorUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
@@ -32,7 +31,6 @@ import com.wuzhenhua.yunpicturebackend.utils.ThrowUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.internal.StringUtil;
@@ -53,8 +51,8 @@ import java.util.stream.Collectors;
 
 /**
  * @author ward
- * @description 针对表【picture(图片)】的数据库操作Service实现
- * @createDate 2025-11-16 23:07:18
+ * &#064;description  针对表【picture(图片)】的数据库操作Service实现
+ * &#064;createDate  2025-11-16 23:07:18
  */
 @Service
 @Slf4j
