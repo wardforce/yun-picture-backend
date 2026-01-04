@@ -1,6 +1,7 @@
 package com.wuzhenhua.yunpicturebackend.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wuzhenhua.yunpicturebackend.api.aliyun.model.CreateOutPaintingTaskResponse;
 import com.wuzhenhua.yunpicturebackend.model.dto.picture.*;
 
 
@@ -120,4 +121,21 @@ public interface PictureService extends IService<Picture> {
      */
     List<PictureVO> searchPictureByColor(Long spaceId, String picColor, User loginuser);
 
+    /**
+     * 批量编辑图片
+     *
+     * @param pictureEditByBatchRequest
+     * @param loginUser
+     */
+    void editPictureByBatch(PictureEditByBatchRequest pictureEditByBatchRequest, User loginUser);
+
+    /**
+     * 根据请求参数和用户信息，为指定图片创建新的扩图任务。
+     * 该操作通常用于通过内容生成来扩展图片的边界。
+     *
+     * @param createPictureOutPaintingTaskRequest 包含图片信息和扩图参数的请求对象
+     * @param loginUser                           发起任务的用户，用于授权或上下文判断
+     * @return 包含已创建扩图任务的任务 ID 与状态的响应对象
+     */
+    CreateOutPaintingTaskResponse createPictureOutPaintingTask(CreatePictureOutPaintingTaskRequest createPictureOutPaintingTaskRequest, User loginUser);
 }

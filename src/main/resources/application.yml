@@ -68,10 +68,10 @@ springdoc:
 
 
 ## knife4j的增强配置，不需要增强可以不配
-#knife4j:
-#  enable: true
-#  setting:
-#    language: zh_cn
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
 # 对象存储配置（需要从腾讯云获取）
 #cos:
 #  client:
@@ -92,3 +92,12 @@ springdoc:
 #          auth: true
 #          starttls:
 #            enable: true
+#gemini:
+#  baseUrl: https://generativelanguage.googleapis.com/v1beta2/models/gemini-pro:generateContent
+#  apikey:
+#  modelName:
+
+# 阿里云 AI 配置
+#aliYunAi:
+#  apiKey: xxxx
+

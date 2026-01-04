@@ -3,11 +3,15 @@ package com.wuzhenhua.yunpicturebackend.controller;
 
 import cn.hutool.core.util.RandomUtil;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.wuzhenhua.yunpicturebackend.annotation.AuthCheck;
+import com.wuzhenhua.yunpicturebackend.api.aliyun.AliYunAiApi;
+import com.wuzhenhua.yunpicturebackend.api.aliyun.model.CreateOutPaintingTaskResponse;
+import com.wuzhenhua.yunpicturebackend.api.aliyun.model.GetOutPaintingTaskResponse;
 import com.wuzhenhua.yunpicturebackend.api.imagesearch.SoImageSearchApiFacade;
 import com.wuzhenhua.yunpicturebackend.api.imagesearch.model.SoImageSearchResult;
 import com.wuzhenhua.yunpicturebackend.common.BaseResponse;
@@ -22,6 +26,7 @@ import com.wuzhenhua.yunpicturebackend.model.entity.User;
 import com.wuzhenhua.yunpicturebackend.model.enums.PictureReviewStatusEnum;
 import com.wuzhenhua.yunpicturebackend.model.vo.PictureTagCategory;
 import com.wuzhenhua.yunpicturebackend.model.vo.PictureVO;
+import com.wuzhenhua.yunpicturebackend.model.vo.UserVO;
 import com.wuzhenhua.yunpicturebackend.service.PictureService;
 import com.wuzhenhua.yunpicturebackend.service.UserService;
 import com.wuzhenhua.yunpicturebackend.service.SpaceService;
@@ -36,6 +41,7 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.MediaType;
@@ -46,6 +52,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -69,6 +76,8 @@ public class PictureController {
                     // 缓存 5 分钟移除
                     .expireAfterWrite(5L, TimeUnit.MINUTES)
                     .build();
+    @Autowired
+    private AliYunAiApi aliYunAiApi;
 
     /**
      * 上传图片（可重新上传）
@@ -436,6 +445,7 @@ public class PictureController {
      * 以图搜图
      */
     @PostMapping("/search/picture")
+    @Operation(description = "以图搜图", summary = "以图搜图")
     public BaseResponse<List<SoImageSearchResult>> searchPictureByPictureIsSo(@RequestBody SearchPictureByPictureRequest searchPictureByPictureRequest) {
         ThrowUtils.throwIf(searchPictureByPictureRequest == null, ErrorCode.PARAMS_ERROR);
         Long pictureId = searchPictureByPictureRequest.getPictureId();
@@ -456,6 +466,7 @@ public class PictureController {
         return ResultUtils.success(resultList);
     }
     @PostMapping("/search/color")
+    @Operation(description = "根据颜色搜索图片", summary = "根据颜色搜索图片")
     public BaseResponse<List<PictureVO>> searchPictureByColor(@RequestBody SearchPictureByColorRequest searchPictureByColorRequest,
                                                              HttpServletRequest request) {
         ThrowUtils.throwIf(searchPictureByColorRequest == null, ErrorCode.PARAMS_ERROR);
@@ -466,5 +477,42 @@ public class PictureController {
         return ResultUtils.success(sortedPictures);
     }
 
+    @PostMapping("/edit/batch")
+    @Operation(description = "批量编辑图片", summary = "批量编辑图片")
+    public BaseResponse<Boolean> editPictureByBatch(@RequestBody PictureEditByBatchRequest pictureEditByBatchRequest, HttpServletRequest request) {
+        ThrowUtils.throwIf(pictureEditByBatchRequest == null, ErrorCode.PARAMS_ERROR);
+        User loginUser = userService.getLoginUser(request);
+        pictureService.editPictureByBatch(pictureEditByBatchRequest, loginUser);
+        return ResultUtils.success(true);
+    }
 
+    /**
+     * 创建AI扩图任务
+     *
+     * @param createPictureOutPaintingTaskRequest
+     * @param request
+     * @return
+     */
+    @PostMapping("/out_painting/create_task")
+    @Operation(description = "扩图", summary = "扩图")
+    public BaseResponse<CreateOutPaintingTaskResponse> createOutPaintingTask(@RequestBody CreatePictureOutPaintingTaskRequest createPictureOutPaintingTaskRequest, HttpServletRequest request) {
+        ThrowUtils.throwIf(createPictureOutPaintingTaskRequest == null || createPictureOutPaintingTaskRequest.getPictureId() == null, ErrorCode.PARAMS_ERROR);
+        User loginUser = userService.getLoginUser(request);
+        CreateOutPaintingTaskResponse createOutPaintingTaskResponse = pictureService.createPictureOutPaintingTask(createPictureOutPaintingTaskRequest, loginUser);
+        return ResultUtils.success(createOutPaintingTaskResponse);
+    }
+
+    /**
+     * 获取AI扩图任务
+     *
+     * @param taskId
+     * @return
+     */
+    @GetMapping("/out_painting/get_task")
+    @Operation(description = "获取扩图任务", summary = "获取扩图任务")
+    public BaseResponse<GetOutPaintingTaskResponse> getOutPaintingTask(String taskId) {
+        ThrowUtils.throwIf(StrUtil.isBlank(taskId), ErrorCode.PARAMS_ERROR);
+        GetOutPaintingTaskResponse outPaintingTask = aliYunAiApi.getOutPaintingTask(taskId);
+        return ResultUtils.success(outPaintingTask);
+    }
 }

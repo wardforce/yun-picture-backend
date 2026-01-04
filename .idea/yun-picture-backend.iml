@@ -3,6 +3,11 @@
   <component name="AdditionalModuleElements">
     <content url="file://$MODULE_DIR$" dumb="true">
       <excludeFolder url="file://$MODULE_DIR$/.aider.tags.cache.v4" />
+      <excludeFolder url="file://$MODULE_DIR$/.coding-aider-plans" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea/codeStyles" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea/dataSources" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea/queries" />
+      <excludeFolder url="file://$MODULE_DIR$/.serena" />
     </content>
   </component>
 </module>
