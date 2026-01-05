@@ -37,7 +37,7 @@ server:
     session:
       cookie:
         max-age: 2592000
-
+  max-http-request-header-size: 1024KB
 
 logging:
   level:
@@ -65,7 +65,6 @@ springdoc:
       paths-to-match: "/**"
       packages-to-scan:
         - com.wuzhenhua.yunpicturebackend.controller
-
 
 ## knife4j的增强配置，不需要增强可以不配
 knife4j:

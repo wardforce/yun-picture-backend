@@ -1,9 +1,11 @@
 # 项目上下文
 
 ## 项目目的
+
 云图（Yun Picture）是一个云端图片管理平台，为用户提供图片上传、管理、组织和搜索功能。系统支持高级特性如按颜色搜索、相似度搜索（反向图搜）、批量操作和基于空间的组织管理，同时提供角色的访问控制。
 
 ## 技术栈
+
 - **编程语言**: Java 17
 - **框架**: Spring Boot 3.5.7
 - **Web 框架**: Spring Web / Spring MVC
@@ -21,14 +23,16 @@
 ## 项目约定
 
 ### 代码风格
+
 - **包结构**: `com.wuzhenhua.yunpicturebackend.[layer]`
+
   - `controller`: REST API 端点
   - `service`: 业务逻辑接口和实现
   - `mapper`: MyBatis Plus 数据访问层
   - `model`: 域模型、DTO、枚举类
     - `entity`: JPA 数据库实体
     - `dto`: 请求/响应 数据传输对象
-    - `vo`: 值对象（用于API响应）
+    - `vo`: 值对象（用于 API 响应）
     - `enums`: 状态和类型枚举
   - `api`: 外部 API 集成门面
   - `manager`: 业务协调和编排
@@ -41,6 +45,7 @@
   - `common`: 通用基类（如 BaseResponse）
 
 - **命名约定**:
+
   - 类名: PascalCase (例: `PictureController`, `PictureService`, `PictureServiceImpl`)
   - 方法名: camelCase
   - 常量: UPPER_SNAKE_CASE
@@ -55,6 +60,7 @@
   - API 文档: OpenAPI 3.0 注解 (@Tag, @Operation, @ApiResponse)
 
 ### 架构模式
+
 - **分层架构**: Controller → Service → Mapper/Manager → Entity
 - **DTO 模式**: 所有 REST 端点使用 DTO 来解耦请求/响应
 - **Entity-VO 模式**: Entity 映射到 VO 用于 API 响应（使用 BeanUtils.copyProperties）
@@ -69,11 +75,13 @@
 - **异步操作**: @EnableAsync 用于非阻塞操作（文件上传、批量处理）
 
 ### 测试策略
+
 - **单元测试**: 待定（当前无测试目录；建议使用 JUnit 5 + Mockito）
 - **集成测试**: 待定
 - **API 测试**: 手工测试或 Postman 集合（待定）
 
 ### Git 工作流
+
 - **分支策略**: 从 main 或 develop 创建特性分支
 - **提交信息**:
   - 主要语言: **中文**
@@ -89,12 +97,14 @@
 ## 业务领域知识
 
 ### 核心实体
+
 - **Picture（图片）**: 代表一张图像及其元数据（名称、大小、颜色、尺寸、URL、状态）
 - **Space（空间）**: 工作区/文件夹容器，用于组织图片，支持配额管理
 - **User（用户）**: 应用用户，包含身份验证、角色和 VIP 等级
 - **Tags（标签）**: 图片分类系统，支持父子层级
 
 ### 核心业务概念
+
 - **PictureReviewStatus（审核状态）**: 图片审核工作流状态（待审、已批准、已拒绝）
 - **UserRole（用户角色）**: 授权级别（普通用户、管理员、VIP）
 - **VipLevel（VIP 等级）**: 订阅层级，决定功能访问权限和配额
@@ -102,6 +112,7 @@
 - **图片相似度搜索**: 通过 360 搜图 API 进行反向图像搜索
 
 ### 数据模型
+
 - 图片存储元数据: url, size, width, height, color（十六进制字符串）, dominant_color
 - Space 提供用户隔离和配额管理
 - 图片与空间和用户关联
@@ -111,6 +122,7 @@
 ## 重要约束
 
 ### 技术约束
+
 - **Java 版本**: 必须 17+ (pom.xml 中配置)
 - **Spring Boot 版本**: 3.5.7 (主版本固定)
 - **数据库**: MySQL 8.0+ 必需（字符集 UTF-8，时区 Asia/Shanghai）
@@ -119,6 +131,7 @@
 - **文件存储**: 生产环境需要腾讯云 COS
 
 ### 业务约束
+
 - **身份验证**: 除登录外所有端点都需要有效的用户会话
 - **授权**: 根据用户和空间所有权进行资源访问检查
 - **VIP 功能**: 某些端点需要特定 VIP 等级（@VipLevelCheck）
@@ -126,6 +139,7 @@
 - **配额管理**: 必须强制执行空间级存储配额
 
 ### 安全约束
+
 - **会话超时**: 30 天 (2592000 秒)
 - **密码**: 已加密（使用 bcrypt 或等效方案；需在 UserService 中验证）
 - **CORS**: 已配置（见 CorsConfig.java）
@@ -134,28 +148,39 @@
 ## 外部依赖
 
 ### API 集成
+
 - **360 搜图 API** (SoImageSearchApiFacade):
+
   - 用于反向图像搜索功能
   - 返回: 相似图片列表及其 URL 和元数据
   - 配置: BaseUrl 和凭证（待确认）
 
+- **Google Gemini API** (Gemini.java & AiPictureGeneratorService):
+  - 用于 AI 图片生成和多模态图像理解
+  - **核心准则**: 严禁在 `Gemini` 基础类中预设全局 `config`；所有调用必须在 Service 层基于业务需要显示构建并传递 `GenerateContentConfig`。
+  - 配置: 模型名、API Key、BaseUrl
+
 ### 云服务
+
 - **腾讯云 COS** (对象存储):
   - 文件上传和存储
   - 配置: CosClientConfig.java
   - 凭证: 待确认（检查 application.yml 或环境变量）
 
 ### 外部库
+
 - **Hutool**: 通用工具库（DateUtil、RandomUtil、JSONUtil 等）
 - **Caffeine**: 本地缓存库
 - **MyBatis Plus**: ORM 和查询构建器
 - **SpringDoc OpenAPI**: 自动生成 Swagger 文档
 
 ### 基础设施
+
 - **MySQL**: 主数据存储
 - **Redis**: 缓存存储
 
 ### 配置文件
+
 - **活跃配置**: `local`（开发环境）
 - **其他配置**: dev、prod、staging（待定）
 - **服务端口**: 8081（可配置）
