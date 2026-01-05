@@ -4,24 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="180595f5-f4b4-4bc3-9132-53808042d8e9" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/aliyun/AliYunAiApi.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/aliyun/model/CreateOutPaintingTaskRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/aliyun/model/CreateOutPaintingTaskResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/aliyun/model/GetOutPaintingTaskResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/service/AiPictureGeneratorService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/model/dto/picture/CreatePictureOutPaintingTaskRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/model/dto/picture/PictureEditByBatchRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/utils/ColorTransformUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/prompt/prompt.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/mybatisx/templates.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/mybatisx/templates.xml" afterDir="false" />
+    <list default="true" id="180595f5-f4b4-4bc3-9132-53808042d8e9" name="更改" comment="实现 AI 图片生成服务&#10;&#10;- 添加 `AiPictureGeneratorServiceImpl` 类，实现基于文字和图片输入生成 AI 图片的功能。&#10;- 集成 Gemini 客户端支持，构建图片生成和多模态对话逻辑。&#10;- 支持上传、存储和返回生成的图片，并优化文件扩展名处理逻辑。&#10;- 提高用户验证和错误处理的完善性，增强代码可读性和扩展性。">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/yun-picture-backend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/yun-picture-backend.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/controller/PictureController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/controller/PictureController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/service/PictureService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/service/PictureService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/service/impl/PictureServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/service/impl/PictureServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/openspec/project.md" beforeDir="false" afterPath="$PROJECT_DIR$/openspec/project.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sql/create_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql/create_table.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/Gemini.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/Gemini.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/service/Impl/AiPictureGeneratorServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/service/Impl/AiPictureGeneratorServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -30,7 +18,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="191" />
+    <option name="cachedIndexableFilesCount" value="203" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
@@ -67,6 +55,7 @@
 }</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="jar://$PROJECT_DIR$/../../Maven/repository/com/baomidou/mybatis-plus-core/3.5.14/mybatis-plus-core-3.5.14.jar!/com/baomidou/mybatisplus/core/conditions/AbstractWrapper.class" root0="SKIP_INSPECTION" />
+    <setting file="jar://$PROJECT_DIR$/../../Maven/repository/dev/langchain4j/langchain4j-google-ai-gemini-spring-boot-starter/1.10.0-beta18/langchain4j-google-ai-gemini-spring-boot-starter-1.10.0-beta18.jar!/dev/langchain4j/googleaigemini/spring/ChatModelProperties.class" root0="SKIP_INSPECTION" />
   </component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
@@ -95,60 +84,60 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "JUnit.AiPictureGeneratorServiceFactoryTest.aiPictureGeneratorService.executor": "Run",
-    "JUnit.AiPictureGeneratorServiceFactoryTest.executor": "Run",
-    "Maven.yun-picture-backend [org.apache.maven.plugins:maven-clean-plugin:3.4.1:clean].executor": "Run",
-    "Maven.yun-picture-backend [org.apache.maven.plugins:maven-compiler-plugin:3.14.1:compile].executor": "Run",
-    "Maven.yun-picture-backend [org.apache.maven.plugins:maven-install-plugin:3.1.4:install].executor": "Run",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "Spring Boot.YunPictureBackendApplication.executor": "Run",
-    "checkBoxType": "false",
-    "cidr.known.project.marker": "true",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
-    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
-    "git-widget-placeholder": "de",
-    "ignore.virus.scanning.warn.message": "true",
-    "junie.onboarding.icon.badge.shown": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "E:/workfile/yun-picture-backend",
-    "llm.McpServerEditPanel.switcher": "1",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "模块",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.31954023",
-    "settings.editor.selected.configurable": "junie.application.models",
-    "to.speed.mode.migration.done": "true",
-    "vue.rearranger.settings.migration": "true",
-    "应用程序.GetImagePageUrlApi.executor": "Run",
-    "应用程序.GetSoImageListApi.executor": "Run",
-    "应用程序.GetSoImageUrlApi.executor": "Run",
-    "应用程序.SoImageSearchApiFacade.executor": "Run"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;JUnit.AiPictureGeneratorServiceFactoryTest.aiPictureGeneratorService.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AiPictureGeneratorServiceFactoryTest.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.yun-picture-backend [org.apache.maven.plugins:maven-clean-plugin:3.4.1:clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.yun-picture-backend [org.apache.maven.plugins:maven-compiler-plugin:3.14.1:compile].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.yun-picture-backend [org.apache.maven.plugins:maven-install-plugin:3.1.4:install].executor&quot;: &quot;Run&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;Spring Boot.YunPictureBackendApplication.executor&quot;: &quot;Run&quot;,
+    &quot;checkBoxType&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;de&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/workfile/yun-picture-backend&quot;,
+    &quot;llm.McpServerEditPanel.switcher&quot;: &quot;1&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;模块&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.31954023&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;ml.llm.AIAssistantPromptsLibrary&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;,
+    &quot;应用程序.GetImagePageUrlApi.executor&quot;: &quot;Run&quot;,
+    &quot;应用程序.GetSoImageListApi.executor&quot;: &quot;Run&quot;,
+    &quot;应用程序.GetSoImageUrlApi.executor&quot;: &quot;Run&quot;,
+    &quot;应用程序.SoImageSearchApiFacade.executor&quot;: &quot;Run&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mysql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
     ],
-    "com.intellij.ide.scratch.LRUPopupBuilder$1/SQL 方言": [
-      "MySQL"
+    &quot;com.intellij.ide.scratch.LRUPopupBuilder$1/SQL 方言&quot;: [
+      &quot;MySQL&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecapSpentCounter">
     <option name="endsOfQuotaMs" value="1769094007935" />
     <option name="spentUsd" value="0.06238265" />
@@ -173,7 +162,7 @@
       <recent name="com.wuzhenhua.yunpicturebackend.controller" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.AiPictureGeneratorServiceFactoryTest.aiPictureGeneratorService">
+  <component name="RunManager" selected="Spring Boot.YunPictureBackendApplication">
     <configuration name="GetSoImageListApi" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.wuzhenhua.yunpicturebackend.api.imagesearch.sub.GetSoImageListApi" />
       <module name="yun-picture-backend" />
@@ -255,8 +244,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.AiPictureGeneratorServiceFactoryTest.aiPictureGeneratorService" />
         <item itemvalue="JUnit.AiPictureGeneratorServiceFactoryTest" />
+        <item itemvalue="JUnit.AiPictureGeneratorServiceFactoryTest.aiPictureGeneratorService" />
         <item itemvalue="应用程序.SoImageSearchApiFacade" />
         <item itemvalue="应用程序.GetSoImageUrlApi" />
         <item itemvalue="应用程序.GetSoImageListApi" />
@@ -336,6 +325,9 @@
       <workItem from="1767423960892" duration="2633000" />
       <workItem from="1767426711372" duration="23704000" />
       <workItem from="1767488877105" duration="11205000" />
+      <workItem from="1767522985790" duration="424000" />
+      <workItem from="1767577812238" duration="6870000" />
+      <workItem from="1767594542352" duration="4374000" />
     </task>
     <task id="LOCAL-00001" summary="Add thumbnail URL support and implement image cleanup after updates">
       <option name="closed" value="true" />
