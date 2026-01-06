@@ -53,6 +53,48 @@
   - 响应 VO: `[实体名]VO`
   - 枚举: `[实体名][类型]Enum` (例: `PictureReviewStatusEnum`)
 
+- **Controller 参数封装规范**:
+  - **强制封装**: 除以下例外情况外,所有业务参数必须封装到 Request/Response/VO 对象中
+  - **例外情况**:
+    - 只有单个参数的简单接口
+    - 框架级参数: `MultipartFile`, `HttpServletRequest`, `HttpServletResponse` 等
+    - 路径变量: `@PathVariable` 标注的参数
+  - **禁止**: 在 Controller 方法签名中使用多个 `@RequestParam` 或 `@RequestBody` 字段
+  - **示例**:
+
+    ```java
+    // ✅ 正确: 参数封装到 Request 对象
+    @PostMapping("/generate_ai_image")
+    public BaseResponse<AiGenerateResponse> generateAiImage(
+            @RequestBody CreateChatRequest request,
+            HttpServletRequest httpServletRequest) { ... }
+    
+    // ❌ 错误: 多个散装参数
+    @PostMapping("/generate_ai_image")
+    public BaseResponse<AiGenerateResponse> generateAiImage(
+            @RequestParam String prompt,
+            @RequestParam Long pictureId,
+            @RequestParam Long sessionId,
+            HttpServletRequest httpServletRequest) { ... }
+    ```
+
+- **Serializable 实现规范**:
+  - **强制实现**: 所有 Request/Response/VO 类必须实现 `Serializable` 接口
+  - **原因**: 支持 Redis 缓存存储、Session 持久化、分布式系统数据传输
+  - **版本控制**: 建议显式声明 `serialVersionUID` 以确保序列化兼容性
+  - **示例**:
+
+    ```java
+    @Data
+    public class LoginUserVO implements Serializable {
+        private static final long serialVersionUID = 1L;
+        
+        private Long id;
+        private String userName;
+        // ... 其他字段
+    }
+    ```
+
 - **开发工具**:
   - Lombok: 使用 @Data, @Slf4j, @AllArgsConstructor 等注解减少样板代码
   - 异常处理: 自定义 BusinessException 配合 ErrorCode 枚举

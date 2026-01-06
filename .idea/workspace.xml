@@ -4,13 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="180595f5-f4b4-4bc3-9132-53808042d8e9" name="更改" comment="实现 AI 图片生成服务&#10;&#10;- 添加 `AiPictureGeneratorServiceImpl` 类，实现基于文字和图片输入生成 AI 图片的功能。&#10;- 集成 Gemini 客户端支持，构建图片生成和多模态对话逻辑。&#10;- 支持上传、存储和返回生成的图片，并优化文件扩展名处理逻辑。&#10;- 提高用户验证和错误处理的完善性，增强代码可读性和扩展性。">
+    <list default="true" id="180595f5-f4b4-4bc3-9132-53808042d8e9" name="更改" comment="添加 AI 图片生成控制器与对话历史功能&#10;&#10;- 新增 `AiPictureGeneratorController`，提供基于文本或文本+图片生成 AI 图片的 API。&#10;- 增加 `ChatHistory` 实体类，设计并实现支持对话历史记录。&#10;- 更新服务逻辑以优化 Gemini 配置管理，增强生成图片任务的灵活性。&#10;- 扩展数据库，新增 `chat_history` 表存储对话历史，包含索引优化。&#10;- 添加相关 OpenSpec 文档，定义 AI 图片生成集成和配置标准。">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/model/CreateChatRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/mybatisx/templates.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/mybatisx/templates.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/openspec/project.md" beforeDir="false" afterPath="$PROJECT_DIR$/openspec/project.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sql/create_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql/create_table.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/Gemini.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/Gemini.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/model/CreateImageRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/model/CreateImageRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/model/ImageResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/model/ImageResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/service/AiPictureGeneratorService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/service/AiPictureGeneratorService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/service/Impl/AiPictureGeneratorServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/service/Impl/AiPictureGeneratorServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/controller/AiPictureGeneratorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/controller/AiPictureGeneratorController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/model/dto/gemini/GeminiRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/model/entity/ChatHistory.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,7 +24,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="203" />
+    <option name="cachedIndexableFilesCount" value="208" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
@@ -244,8 +250,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.AiPictureGeneratorServiceFactoryTest" />
         <item itemvalue="JUnit.AiPictureGeneratorServiceFactoryTest.aiPictureGeneratorService" />
+        <item itemvalue="JUnit.AiPictureGeneratorServiceFactoryTest" />
         <item itemvalue="应用程序.SoImageSearchApiFacade" />
         <item itemvalue="应用程序.GetSoImageUrlApi" />
         <item itemvalue="应用程序.GetSoImageListApi" />
@@ -327,7 +333,8 @@
       <workItem from="1767488877105" duration="11205000" />
       <workItem from="1767522985790" duration="424000" />
       <workItem from="1767577812238" duration="6870000" />
-      <workItem from="1767594542352" duration="4374000" />
+      <workItem from="1767594542352" duration="12957000" />
+      <workItem from="1767662537817" duration="6393000" />
     </task>
     <task id="LOCAL-00001" summary="Add thumbnail URL support and implement image cleanup after updates">
       <option name="closed" value="true" />
@@ -401,7 +408,23 @@
       <option name="project" value="LOCAL" />
       <updated>1766989763881</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="添加 AI 图片生成控制器与对话历史功能&#10;&#10;- 新增 `AiPictureGeneratorController`，提供基于文本或文本+图片生成 AI 图片的 API。&#10;- 增加 `ChatHistory` 实体类，设计并实现支持对话历史记录。&#10;- 更新服务逻辑以优化 Gemini 配置管理，增强生成图片任务的灵活性。&#10;- 扩展数据库，新增 `chat_history` 表存储对话历史，包含索引优化。&#10;- 添加相关 OpenSpec 文档，定义 AI 图片生成集成和配置标准。">
+      <option name="closed" value="true" />
+      <created>1767600109686</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1767600109686</updated>
+    </task>
+    <task id="LOCAL-00011" summary="添加 AI 图片生成控制器与对话历史功能&#10;&#10;- 新增 `AiPictureGeneratorController`，提供基于文本或文本+图片生成 AI 图片的 API。&#10;- 增加 `ChatHistory` 实体类，设计并实现支持对话历史记录。&#10;- 更新服务逻辑以优化 Gemini 配置管理，增强生成图片任务的灵活性。&#10;- 扩展数据库，新增 `chat_history` 表存储对话历史，包含索引优化。&#10;- 添加相关 OpenSpec 文档，定义 AI 图片生成集成和配置标准。">
+      <option name="closed" value="true" />
+      <created>1767600116998</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1767600116998</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -419,7 +442,9 @@
     <MESSAGE value="新增按颜色搜索图片功能&#10;&#10;- 添加 `/search/color` 接口，可通过主色调筛选图片。&#10;- 实现服务方法 `searchPictureByColor`，可按空间 ID 和颜色筛选图片，返回相似颜色图片列表。&#10;- 新增工具类 `ColorSimilarUtils`，用于计算颜色相似度。&#10;- 创建 DTO `SearchPictureByColorRequest`，用于封装颜色搜索请求参数。" />
     <MESSAGE value="移除未使用的工具类 `GetCalerMethodNameUtil`" />
     <MESSAGE value="优化代码和清理未使用的导入&#10;&#10;- 添加 `@Serial` 注解至 `SearchPictureByColorRequest` 类，确保序列化兼容性。&#10;- 删除未使用的 `ColorUtil` 和 `Data` 导入，提高代码整洁性。" />
-    <option name="LAST_COMMIT_MESSAGE" value="优化代码和清理未使用的导入&#10;&#10;- 添加 `@Serial` 注解至 `SearchPictureByColorRequest` 类，确保序列化兼容性。&#10;- 删除未使用的 `ColorUtil` 和 `Data` 导入，提高代码整洁性。" />
+    <MESSAGE value="实现 AI 图片生成服务&#10;&#10;- 添加 `AiPictureGeneratorServiceImpl` 类，实现基于文字和图片输入生成 AI 图片的功能。&#10;- 集成 Gemini 客户端支持，构建图片生成和多模态对话逻辑。&#10;- 支持上传、存储和返回生成的图片，并优化文件扩展名处理逻辑。&#10;- 提高用户验证和错误处理的完善性，增强代码可读性和扩展性。" />
+    <MESSAGE value="添加 AI 图片生成控制器与对话历史功能&#10;&#10;- 新增 `AiPictureGeneratorController`，提供基于文本或文本+图片生成 AI 图片的 API。&#10;- 增加 `ChatHistory` 实体类，设计并实现支持对话历史记录。&#10;- 更新服务逻辑以优化 Gemini 配置管理，增强生成图片任务的灵活性。&#10;- 扩展数据库，新增 `chat_history` 表存储对话历史，包含索引优化。&#10;- 添加相关 OpenSpec 文档，定义 AI 图片生成集成和配置标准。" />
+    <option name="LAST_COMMIT_MESSAGE" value="添加 AI 图片生成控制器与对话历史功能&#10;&#10;- 新增 `AiPictureGeneratorController`，提供基于文本或文本+图片生成 AI 图片的 API。&#10;- 增加 `ChatHistory` 实体类，设计并实现支持对话历史记录。&#10;- 更新服务逻辑以优化 Gemini 配置管理，增强生成图片任务的灵活性。&#10;- 扩展数据库，新增 `chat_history` 表存储对话历史，包含索引优化。&#10;- 添加相关 OpenSpec 文档，定义 AI 图片生成集成和配置标准。" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -1,21 +1,28 @@
 package com.wuzhenhua.yunpicturebackend.api.gemini.service;
 
+import com.wuzhenhua.yunpicturebackend.api.gemini.model.AiGenerateResponse;
+import com.wuzhenhua.yunpicturebackend.api.gemini.model.CreateChatRequest;
 import com.wuzhenhua.yunpicturebackend.api.gemini.model.CreateImageRequest;
 import com.wuzhenhua.yunpicturebackend.api.gemini.model.ImageResponse;
-import dev.langchain4j.data.image.Image;
-import dev.langchain4j.model.output.Response;
+import com.wuzhenhua.yunpicturebackend.api.gemini.model.PrepareImageResponse;
 import jakarta.servlet.http.HttpServletRequest;
-
-import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface AiPictureGeneratorService {
 
+
     /**
-     * Generates AI images based on the provided request.
-     *
-     * @param request The request containing image generation parameters.
-     * @param httpServletRequest The HTTP servlet request.
-     * @return The generated image response.
+     * 原有方法（保持向后兼容）
      */
+    @Deprecated
     ImageResponse generateImages(CreateImageRequest request, HttpServletRequest httpServletRequest);
+
+    /**
+     * Generates an AI-created image based on the provided request.
+     *
+     * @param request the request containing the prompt and optional image details
+     * @param httpServletRequest the HTTP servlet request
+     * @return an AiGenerateResponse containing the AI-generated image and associated chat history
+     */
+    AiGenerateResponse generateAiImage(CreateChatRequest request, HttpServletRequest httpServletRequest);
 }

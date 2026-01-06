@@ -108,19 +108,31 @@ CREATE INDEX idx_spaceId ON picture (space_id);
 ALTER TABLE picture
     ADD COLUMN pic_color varchar(16) null comment '图片主色调';
 -- 对话历史表
+
+-- auto-generated definition
 create table if not exists chat_history
 (
-    id                  bigint auto_increment comment 'id' primary key,
-    message             text                               not null comment '消息',
-    message_type        varchar(32)                        not null comment '消息类型 user/ai',
-    upload_picture_id   bigint                             null comment '原图 ID',
-    generate_picture_id bigint                             null comment '生成图 ID',
-    user_id             bigint                             not null comment '创建用户 id',
-    create_time         datetime default CURRENT_TIMESTAMP not null comment '创建时间',
-    update_time         datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
-    is_delete           tinyint  default 0                 not null comment '是否删除',
-    INDEX idx_upload_picture_id (upload_picture_id),       -- 提升基于原图的查询性能
-    INDEX idx_generate_picture_id (generate_picture_id),   -- 提升基于生成图的查询性能
-    INDEX idx_user_id (user_id),                           -- 提升基于用户的查询性能
-    INDEX idx_create_time (create_time)                    -- 提升基于时间的查询性能
-) comment '对话历史' collate = utf8mb4_unicode_ci;
+    id           bigint auto_increment comment 'id'
+        primary key,
+    message      text                               not null comment '消息',
+    message_type varchar(32)                        not null comment '消息类型 user/ai',
+    picture_id   bigint                             null comment '原图 ID',
+    user_id      bigint                             not null comment '创建用户 id',
+    create_time  datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+    update_time  datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    is_delete    tinyint  default 0                 not null comment '是否删除',
+    session_id   bigint                             not null comment '对话id'
+)
+    comment '对话历史' collate = utf8mb4_unicode_ci;
+
+create index chat_history_session_id_index
+    on chat_history (session_id);
+
+create index idx_create_time
+    on chat_history (create_time);
+
+create index idx_picture_id
+    on chat_history (picture_id);
+
+create index idx_user_id
+    on chat_history (user_id);
