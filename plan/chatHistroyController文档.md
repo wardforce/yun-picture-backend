@@ -1,13 +1,22 @@
-# 概述 
+# 概述
 
-现在我们有新的需求，要实现对话的管理、新增、删除。需要实现怎么几个方法controller。你可以参考我之前的实现来完成这个任务 
+现在我们有新的需求，要实现对话的管理、新增、删除。需要实现怎么几个方法controller。你可以参考我之前的实现来完成这个任务
 
-# 具体需求 
+# 具体需求
 
-1. 查询对话session_id列表（每个session_id只显示最早聊天时间的那一次，不显示重复的session_id，显示内容包括全部内容）,要求这个列表只有admin能看。而且理论上对每个字段能进行查询，还能选择排序字段和升序降序 
-2.  根据用户id来查询session_id列表，这个主要是给当前用户自己看的·，可以根据除开user_id之外的字段进行查询，同样每个session_id只显示一次， 
-3. 显示同一session_id下的全部信息，这个只能管理员或者聊天用户自己看，同样可以查询除了session_id和user_id之外的全部字段，还可以选择特定字段进行排序 
-4. 根据session_id删除全部session_id聊天，只能是管理员或者当前登陆者的userId与session_id的user_id一致的人才能进行删除 
-5. 根据id删除该id的聊天聊天，只能是管理员或者当前登陆者的userId与id的user_id一致的人才能进行删除 
+1.
+
+查询对话session_id列表（每个session_id只显示最早聊天时间的那一次，不显示重复的session_id，显示内容包括最早创建时间,第一条promot,所属用户id）,要求这个列表只有admin能看。而且能够通过时间段和session_id进行查询，还能选择排序字段和升序降序
+
+2. 根据用户id来查询session_id列表，显示每个session_id最早的聊天时间和第一条prompt，这个主要是给当前用户自己看的，可以根据时间段进行查询，同样每个session_id只显示一次。
+3.
+
+显示同一session_id下的全部信息包括chat_histrory_picture（chat_history_picture.chat_history_id与chat_history.id是相关联的）里面的信息，这个只能管理员或者聊天用户自己看，同样可以查询除了session_id和user_id之外的全部字段，还可以选择特定字段进行排序
+
+4.
+
+根据session_id删除全部与session_id有关的聊天记录（包括有关的chat_histrory_picture（chat_history_picture.chat_history_id与chat_history.id是相关联的）），只能是管理员或者当前登陆者的userId与session_id的user_id一致的人才能进行删除
+
+5. 根据id删除该id的聊天记录，包括与该id相关的chat_histrory_picture，只能是管理员或者当前登陆者的userId与id的user_id一致的人才能进行删除
 
 # 以上就是这一次的开发要求，现在先写开发计划文档吧

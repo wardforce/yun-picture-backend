@@ -14,10 +14,69 @@
             <result property="createTime" column="create_time" />
             <result property="updateTime" column="update_time" />
             <result property="isDelete" column="is_delete" />
+        <result property="spaceId" column="space_id"/>
+    </resultMap>
+
+    <resultMap id="SessionSummaryResultMap" type="com.wuzhenhua.yunpicturebackend.model.vo.ChatHistorySessionVO">
+        <result property="sessionId" column="session_id"/>
+        <result property="firstChatTime" column="first_chat_time"/>
+        <result property="firstPrompt" column="first_prompt"/>
+        <result property="userId" column="user_id"/>
+        <result property="spaceId" column="space_id"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,message,message_type,picture_id,user_id,session_id,create_time,
-        update_time,is_delete
+        update_time,is_delete,space_id
     </sql>
+
+    <!-- 查询会话摘要列表 -->
+    <select id="listSessionSummary" resultMap="SessionSummaryResultMap">
+        SELECT
+        ch.session_id,
+        MIN(ch.create_time) as first_chat_time,
+        ch.user_id,
+        (SELECT sub.space_id
+        FROM chat_history sub
+        WHERE sub.session_id = ch.session_id
+        AND sub.message_type = 'user'
+        AND sub.is_delete = 0
+        ORDER BY sub.create_time ASC
+        LIMIT 1) as space_id,
+        (SELECT sub.message
+        FROM chat_history sub
+        WHERE sub.session_id = ch.session_id
+        AND sub.message_type = 'user'
+        AND sub.is_delete = 0
+        ORDER BY sub.create_time ASC
+        LIMIT 1) as first_prompt
+        FROM chat_history ch
+        WHERE ch.is_delete = 0
+        <if test="sessionId != null">
+            AND ch.session_id = #{sessionId}
+        </if>
+        <if test="userId != null">
+            AND ch.user_id = #{userId}
+        </if>
+        <if test="startTime != null">
+            AND ch.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND ch.create_time &lt;= #{endTime}
+        </if>
+        <if test="spaceId != null">
+            AND EXISTS (
+            SELECT 1 FROM chat_history sub2
+            WHERE sub2.session_id = ch.session_id
+            AND sub2.space_id = #{spaceId}
+            AND sub2.is_delete = 0
+            )
+        </if>
+        GROUP BY ch.session_id, ch.user_id
+        <if test="filterDeleted">
+            HAVING first_prompt IS NOT NULL
+        </if>
+        ORDER BY first_chat_time DESC
+    </select>
+
 </mapper>

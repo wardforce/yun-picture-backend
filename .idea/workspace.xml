@@ -5,18 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="180595f5-f4b4-4bc3-9132-53808042d8e9" name="更改" comment="添加 AI 图片生成控制器与对话历史功能&#10;&#10;- 新增 `AiPictureGeneratorController`，提供基于文本或文本+图片生成 AI 图片的 API。&#10;- 增加 `ChatHistory` 实体类，设计并实现支持对话历史记录。&#10;- 更新服务逻辑以优化 Gemini 配置管理，增强生成图片任务的灵活性。&#10;- 扩展数据库，新增 `chat_history` 表存储对话历史，包含索引优化。&#10;- 添加相关 OpenSpec 文档，定义 AI 图片生成集成和配置标准。">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/model/CreateChatRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.claude/commands/openspec/apply.md" beforeDir="false" afterPath="$PROJECT_DIR$/.claude/commands/openspec/apply.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/mybatisx/templates.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/mybatisx/templates.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/openspec/project.md" beforeDir="false" afterPath="$PROJECT_DIR$/openspec/project.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/openspec/AGENTS.md" beforeDir="false" afterPath="$PROJECT_DIR$/openspec/AGENTS.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/openspec/specs/ai-picture-generation/spec.md" beforeDir="false" afterPath="$PROJECT_DIR$/openspec/specs/ai-picture-generation/spec.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plan/chatHistroyController文档.md" beforeDir="false" afterPath="$PROJECT_DIR$/plan/chatHistroyController文档.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sql/create_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql/create_table.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/model/CreateImageRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/model/CreateImageRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/model/ImageResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/model/ImageResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/service/AiPictureGeneratorService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/service/AiPictureGeneratorService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/model/AiGenerateResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/model/AiGenerateResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/model/CreateChatRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/model/CreateChatRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/service/Impl/AiPictureGeneratorServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/service/Impl/AiPictureGeneratorServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/controller/AiPictureGeneratorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/controller/AiPictureGeneratorController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/model/dto/gemini/GeminiRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/model/entity/ChatHistory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/config/JsonConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/config/JsonConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/mapper/ChatHistoryMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/mapper/ChatHistoryMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/model/entity/ChatHistory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/model/entity/ChatHistory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/service/ChatHistoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/service/ChatHistoryService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/service/impl/ChatHistoryServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/service/impl/ChatHistoryServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/service/impl/PictureServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/service/impl/PictureServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/ChatHistoryMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/ChatHistoryMapper.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,7 +29,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="208" />
+    <option name="cachedIndexableFilesCount" value="241" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
@@ -61,6 +66,8 @@
 }</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="jar://$PROJECT_DIR$/../../Maven/repository/com/baomidou/mybatis-plus-core/3.5.14/mybatis-plus-core-3.5.14.jar!/com/baomidou/mybatisplus/core/conditions/AbstractWrapper.class" root0="SKIP_INSPECTION" />
+    <setting file="jar://$PROJECT_DIR$/../../Maven/repository/com/baomidou/mybatis-plus-extension/3.5.14/mybatis-plus-extension-3.5.14.jar!/com/baomidou/mybatisplus/extension/plugins/pagination/Page.class" root0="SKIP_INSPECTION" />
+    <setting file="jar://$PROJECT_DIR$/../../Maven/repository/com/baomidou/mybatis-plus-extension/3.5.14/mybatis-plus-extension-3.5.14.jar!/com/baomidou/mybatisplus/extension/repository/IRepository.class" root0="SKIP_INSPECTION" />
     <setting file="jar://$PROJECT_DIR$/../../Maven/repository/dev/langchain4j/langchain4j-google-ai-gemini-spring-boot-starter/1.10.0-beta18/langchain4j-google-ai-gemini-spring-boot-starter-1.10.0-beta18.jar!/dev/langchain4j/googleaigemini/spring/ChatModelProperties.class" root0="SKIP_INSPECTION" />
   </component>
   <component name="KubernetesApiPersistence">{}</component>
@@ -94,6 +101,7 @@
   &quot;keyToString&quot;: {
     &quot;JUnit.AiPictureGeneratorServiceFactoryTest.aiPictureGeneratorService.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.AiPictureGeneratorServiceFactoryTest.executor&quot;: &quot;Run&quot;,
+    &quot;Maven. [clean,compile].executor&quot;: &quot;Run&quot;,
     &quot;Maven.yun-picture-backend [org.apache.maven.plugins:maven-clean-plugin:3.4.1:clean].executor&quot;: &quot;Run&quot;,
     &quot;Maven.yun-picture-backend [org.apache.maven.plugins:maven-compiler-plugin:3.14.1:compile].executor&quot;: &quot;Run&quot;,
     &quot;Maven.yun-picture-backend [org.apache.maven.plugins:maven-install-plugin:3.1.4:install].executor&quot;: &quot;Run&quot;,
@@ -127,7 +135,7 @@
     &quot;project.structure.last.edited&quot;: &quot;模块&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.31954023&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;ml.llm.AIAssistantPromptsLibrary&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.anthropic.code.plugin.settings&quot;,
     &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;,
     &quot;应用程序.GetImagePageUrlApi.executor&quot;: &quot;Run&quot;,
@@ -261,8 +269,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-30f59d01ecdd-26cb7f24e5b0-intellij.indexing.shared.core-IU-253.29346.138" />
-        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.29346.138" />
+        <option value="bundled-jdk-30f59d01ecdd-26cb7f24e5b0-intellij.indexing.shared.core-IU-253.29346.240" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.29346.240" />
       </set>
     </attachedChunks>
   </component>
@@ -334,7 +342,21 @@
       <workItem from="1767522985790" duration="424000" />
       <workItem from="1767577812238" duration="6870000" />
       <workItem from="1767594542352" duration="12957000" />
-      <workItem from="1767662537817" duration="6393000" />
+      <workItem from="1767662537817" duration="7847000" />
+      <workItem from="1767678836458" duration="11780000" />
+      <workItem from="1767693736603" duration="896000" />
+      <workItem from="1767715903678" duration="1269000" />
+      <workItem from="1767750798427" duration="3700000" />
+      <workItem from="1767772565464" duration="9926000" />
+      <workItem from="1767836480775" duration="937000" />
+      <workItem from="1767838393953" duration="19083000" />
+      <workItem from="1767926094442" duration="331000" />
+      <workItem from="1767926595661" duration="11176000" />
+      <workItem from="1767971499148" duration="119000" />
+      <workItem from="1767971665481" duration="129000" />
+      <workItem from="1767971823554" duration="60000" />
+      <workItem from="1767971918512" duration="4088000" />
+      <workItem from="1768047650277" duration="6160000" />
     </task>
     <task id="LOCAL-00001" summary="Add thumbnail URL support and implement image cleanup after updates">
       <option name="closed" value="true" />

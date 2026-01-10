@@ -26,6 +26,7 @@ import com.wuzhenhua.yunpicturebackend.model.entity.User;
 import com.wuzhenhua.yunpicturebackend.model.enums.PictureReviewStatusEnum;
 import com.wuzhenhua.yunpicturebackend.model.vo.PictureVO;
 import com.wuzhenhua.yunpicturebackend.model.vo.UserVO;
+import com.wuzhenhua.yunpicturebackend.service.ChatHistoryService;
 import com.wuzhenhua.yunpicturebackend.service.PictureService;
 import com.wuzhenhua.yunpicturebackend.service.UserService;
 import com.wuzhenhua.yunpicturebackend.service.SpaceService;
@@ -77,6 +78,7 @@ public class PictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
     private TransactionTemplate transactionTemplate;
     @Autowired
     private AliYunAiApi aliYunAiApi;
+
 
     /**
      * 上传图片
@@ -553,10 +555,10 @@ public class PictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
         //校验权限
         checkPictureAuth(oldPicture, loginUser);
 
-
         transactionTemplate.executeWithoutResult(status -> {
             boolean result = this.removeById(pictureId);
-            ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR, "图片上传失败");
+            ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR, "图片删除失败");
+//            chatHistoryService.deleteByPictureId(pictureId);
             //更新空间的使用额度，释放额度
             if (oldPicture.getSpaceId() != null) {
                 boolean update = spaceService.lambdaUpdate()
@@ -567,6 +569,8 @@ public class PictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
                 ThrowUtils.throwIf(!update, ErrorCode.OPERATION_ERROR, "更新空间使用额度失败");
             }
         });
+
+
         //清理图片资源
         this.clearPictureFile(oldPicture);
     }

@@ -8,7 +8,7 @@
             <option name="annotationType" value="MYBATIS_PLUS3" />
             <option name="basePackage" value="generator" />
             <option name="basePath" value="src/main/java" />
-            <option name="classNameStrategy" value="same as tablename" />
+            <option name="classNameStrategy" value="camel" />
             <option name="encoding" value="UTF-8" />
             <option name="extraClassSuffix" value="" />
             <option name="ignoreFieldPrefix" value="" />
@@ -61,6 +61,7 @@
                 </ModuleInfoGo>
               </list>
             </option>
+            <option name="needSerializable" value="true" />
             <option name="needsComment" value="true" />
             <option name="needsModel" value="true" />
             <option name="relativePackage" value="domain" />
@@ -68,8 +69,8 @@
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="space" />
-                  <option name="tableName" value="space" />
+                  <option name="className" value="ChatHistory" />
+                  <option name="tableName" value="chat_history" />
                 </TableUIInfo>
               </list>
             </option>
