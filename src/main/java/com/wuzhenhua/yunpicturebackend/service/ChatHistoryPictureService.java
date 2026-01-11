@@ -34,4 +34,11 @@ public interface ChatHistoryPictureService extends IService<ChatHistoryPicture> 
      * @return 图片关联列表
      */
     List<ChatHistoryPicture> getByChatHistoryId(Long chatHistoryId);
+
+    /**
+     * 根据图片ID删除关联
+     * @param pictureId
+     * @return
+     */
+    boolean deleteByPictureId(Long pictureId);
 }

@@ -26,10 +26,7 @@ import com.wuzhenhua.yunpicturebackend.model.entity.User;
 import com.wuzhenhua.yunpicturebackend.model.enums.PictureReviewStatusEnum;
 import com.wuzhenhua.yunpicturebackend.model.vo.PictureVO;
 import com.wuzhenhua.yunpicturebackend.model.vo.UserVO;
-import com.wuzhenhua.yunpicturebackend.service.ChatHistoryService;
-import com.wuzhenhua.yunpicturebackend.service.PictureService;
-import com.wuzhenhua.yunpicturebackend.service.UserService;
-import com.wuzhenhua.yunpicturebackend.service.SpaceService;
+import com.wuzhenhua.yunpicturebackend.service.*;
 import com.wuzhenhua.yunpicturebackend.utils.ColorSimilarUtils;
 import com.wuzhenhua.yunpicturebackend.utils.ColorTransformUtils;
 import com.wuzhenhua.yunpicturebackend.utils.ThrowUtils;
@@ -78,6 +75,9 @@ public class PictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
     private TransactionTemplate transactionTemplate;
     @Autowired
     private AliYunAiApi aliYunAiApi;
+
+    @Autowired
+    private ChatHistoryPictureService chatHistoryPictureService;
 
 
     /**
@@ -554,11 +554,10 @@ public class PictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
         ThrowUtils.throwIf(oldPicture == null, ErrorCode.NOT_FOUND_ERROR);
         //校验权限
         checkPictureAuth(oldPicture, loginUser);
-
         transactionTemplate.executeWithoutResult(status -> {
             boolean result = this.removeById(pictureId);
             ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR, "图片删除失败");
-//            chatHistoryService.deleteByPictureId(pictureId);
+            ThrowUtils.throwIf(!chatHistoryPictureService.deleteByPictureId(pictureId),ErrorCode.OPERATION_ERROR,"删除图片聊天记录失败");
             //更新空间的使用额度，释放额度
             if (oldPicture.getSpaceId() != null) {
                 boolean update = spaceService.lambdaUpdate()

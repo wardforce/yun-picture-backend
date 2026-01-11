@@ -204,6 +204,9 @@ public class UserController {
         return ResultUtils.success(true);
     }
 
+    /**
+     * Updates user information; enforces email format; requires same user
+     */
     @PostMapping("/update/themself")
     @Operation(summary = "用户编辑自己的信息", description = "管理员更新用户")
     @ApiResponses(value = {

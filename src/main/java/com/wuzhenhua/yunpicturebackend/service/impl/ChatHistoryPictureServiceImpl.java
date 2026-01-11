@@ -1,5 +1,6 @@
 package com.wuzhenhua.yunpicturebackend.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuzhenhua.yunpicturebackend.mapper.ChatHistoryPictureMapper;
 import com.wuzhenhua.yunpicturebackend.model.entity.ChatHistoryPicture;
@@ -31,6 +32,12 @@ public class ChatHistoryPictureServiceImpl extends ServiceImpl<ChatHistoryPictur
     @Override
     public List<ChatHistoryPicture> getByChatHistoryId(Long chatHistoryId) {
         return baseMapper.selectByChatHistoryId(chatHistoryId);
+    }
+
+    @Override
+    public boolean deleteByPictureId(Long pictureId) {
+        return this.remove(new LambdaQueryWrapper<ChatHistoryPicture>()
+                .eq(ChatHistoryPicture::getPictureId, pictureId));
     }
 
     private void savePictures(Long chatHistoryId, List<Long> pictureIds, String pictureType) {

@@ -4,24 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="180595f5-f4b4-4bc3-9132-53808042d8e9" name="更改" comment="添加 AI 图片生成控制器与对话历史功能&#10;&#10;- 新增 `AiPictureGeneratorController`，提供基于文本或文本+图片生成 AI 图片的 API。&#10;- 增加 `ChatHistory` 实体类，设计并实现支持对话历史记录。&#10;- 更新服务逻辑以优化 Gemini 配置管理，增强生成图片任务的灵活性。&#10;- 扩展数据库，新增 `chat_history` 表存储对话历史，包含索引优化。&#10;- 添加相关 OpenSpec 文档，定义 AI 图片生成集成和配置标准。">
-      <change beforePath="$PROJECT_DIR$/.claude/commands/openspec/apply.md" beforeDir="false" afterPath="$PROJECT_DIR$/.claude/commands/openspec/apply.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/mybatisx/templates.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/mybatisx/templates.xml" afterDir="false" />
+    <list default="true" id="180595f5-f4b4-4bc3-9132-53808042d8e9" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/openspec/AGENTS.md" beforeDir="false" afterPath="$PROJECT_DIR$/openspec/AGENTS.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/openspec/specs/ai-picture-generation/spec.md" beforeDir="false" afterPath="$PROJECT_DIR$/openspec/specs/ai-picture-generation/spec.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plan/chatHistroyController文档.md" beforeDir="false" afterPath="$PROJECT_DIR$/plan/chatHistroyController文档.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sql/create_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql/create_table.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/model/AiGenerateResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/model/AiGenerateResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/model/CreateChatRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/model/CreateChatRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/service/Impl/AiPictureGeneratorServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/api/gemini/service/Impl/AiPictureGeneratorServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/config/JsonConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/config/JsonConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/mapper/ChatHistoryMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/mapper/ChatHistoryMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/model/entity/ChatHistory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/model/entity/ChatHistory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/service/ChatHistoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/service/ChatHistoryService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/service/impl/ChatHistoryServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/service/impl/ChatHistoryServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/service/ChatHistoryPictureService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/service/ChatHistoryPictureService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/service/impl/ChatHistoryPictureServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/service/impl/ChatHistoryPictureServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/service/impl/PictureServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/service/impl/PictureServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/ChatHistoryMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/ChatHistoryMapper.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,7 +17,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="241" />
+    <option name="cachedIndexableFilesCount" value="246" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
@@ -135,7 +123,7 @@
     &quot;project.structure.last.edited&quot;: &quot;模块&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.31954023&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.anthropic.code.plugin.settings&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;ml.llm.LLMConfigurable&quot;,
     &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;,
     &quot;应用程序.GetImagePageUrlApi.executor&quot;: &quot;Run&quot;,
@@ -356,7 +344,8 @@
       <workItem from="1767971665481" duration="129000" />
       <workItem from="1767971823554" duration="60000" />
       <workItem from="1767971918512" duration="4088000" />
-      <workItem from="1768047650277" duration="6160000" />
+      <workItem from="1768047650277" duration="13040000" />
+      <workItem from="1768107466561" duration="5606000" />
     </task>
     <task id="LOCAL-00001" summary="Add thumbnail URL support and implement image cleanup after updates">
       <option name="closed" value="true" />
@@ -446,7 +435,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767600116998</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="feat: Add chat history management functionality with session query and deletion capabilities">
+      <option name="closed" value="true" />
+      <created>1768054118263</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1768054118263</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -466,7 +463,8 @@
     <MESSAGE value="优化代码和清理未使用的导入&#10;&#10;- 添加 `@Serial` 注解至 `SearchPictureByColorRequest` 类，确保序列化兼容性。&#10;- 删除未使用的 `ColorUtil` 和 `Data` 导入，提高代码整洁性。" />
     <MESSAGE value="实现 AI 图片生成服务&#10;&#10;- 添加 `AiPictureGeneratorServiceImpl` 类，实现基于文字和图片输入生成 AI 图片的功能。&#10;- 集成 Gemini 客户端支持，构建图片生成和多模态对话逻辑。&#10;- 支持上传、存储和返回生成的图片，并优化文件扩展名处理逻辑。&#10;- 提高用户验证和错误处理的完善性，增强代码可读性和扩展性。" />
     <MESSAGE value="添加 AI 图片生成控制器与对话历史功能&#10;&#10;- 新增 `AiPictureGeneratorController`，提供基于文本或文本+图片生成 AI 图片的 API。&#10;- 增加 `ChatHistory` 实体类，设计并实现支持对话历史记录。&#10;- 更新服务逻辑以优化 Gemini 配置管理，增强生成图片任务的灵活性。&#10;- 扩展数据库，新增 `chat_history` 表存储对话历史，包含索引优化。&#10;- 添加相关 OpenSpec 文档，定义 AI 图片生成集成和配置标准。" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加 AI 图片生成控制器与对话历史功能&#10;&#10;- 新增 `AiPictureGeneratorController`，提供基于文本或文本+图片生成 AI 图片的 API。&#10;- 增加 `ChatHistory` 实体类，设计并实现支持对话历史记录。&#10;- 更新服务逻辑以优化 Gemini 配置管理，增强生成图片任务的灵活性。&#10;- 扩展数据库，新增 `chat_history` 表存储对话历史，包含索引优化。&#10;- 添加相关 OpenSpec 文档，定义 AI 图片生成集成和配置标准。" />
+    <MESSAGE value="feat: Add chat history management functionality with session query and deletion capabilities" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: Add chat history management functionality with session query and deletion capabilities" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
