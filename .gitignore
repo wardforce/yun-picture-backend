@@ -34,4 +34,4 @@ build/
 .aider*
 .trae*
 
-application-local.yml
+application-local.yml.idea/workspace.xml
