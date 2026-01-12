@@ -6,10 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="180595f5-f4b4-4bc3-9132-53808042d8e9" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/service/ChatHistoryPictureService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/service/ChatHistoryPictureService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/service/impl/ChatHistoryPictureServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/service/impl/ChatHistoryPictureServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/service/impl/PictureServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wuzhenhua/yunpicturebackend/service/impl/PictureServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -345,7 +341,7 @@
       <workItem from="1767971823554" duration="60000" />
       <workItem from="1767971918512" duration="4088000" />
       <workItem from="1768047650277" duration="13040000" />
-      <workItem from="1768107466561" duration="5606000" />
+      <workItem from="1768107466561" duration="6374000" />
     </task>
     <task id="LOCAL-00001" summary="Add thumbnail URL support and implement image cleanup after updates">
       <option name="closed" value="true" />
@@ -443,7 +439,15 @@
       <option name="project" value="LOCAL" />
       <updated>1768054118263</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="feat: Add support for chat history picture management and enhance user information update functionality">
+      <option name="closed" value="true" />
+      <created>1768115340788</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1768115340788</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -464,7 +468,8 @@
     <MESSAGE value="实现 AI 图片生成服务&#10;&#10;- 添加 `AiPictureGeneratorServiceImpl` 类，实现基于文字和图片输入生成 AI 图片的功能。&#10;- 集成 Gemini 客户端支持，构建图片生成和多模态对话逻辑。&#10;- 支持上传、存储和返回生成的图片，并优化文件扩展名处理逻辑。&#10;- 提高用户验证和错误处理的完善性，增强代码可读性和扩展性。" />
     <MESSAGE value="添加 AI 图片生成控制器与对话历史功能&#10;&#10;- 新增 `AiPictureGeneratorController`，提供基于文本或文本+图片生成 AI 图片的 API。&#10;- 增加 `ChatHistory` 实体类，设计并实现支持对话历史记录。&#10;- 更新服务逻辑以优化 Gemini 配置管理，增强生成图片任务的灵活性。&#10;- 扩展数据库，新增 `chat_history` 表存储对话历史，包含索引优化。&#10;- 添加相关 OpenSpec 文档，定义 AI 图片生成集成和配置标准。" />
     <MESSAGE value="feat: Add chat history management functionality with session query and deletion capabilities" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: Add chat history management functionality with session query and deletion capabilities" />
+    <MESSAGE value="feat: Add support for chat history picture management and enhance user information update functionality" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: Add support for chat history picture management and enhance user information update functionality" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
