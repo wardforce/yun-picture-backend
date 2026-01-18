@@ -65,7 +65,7 @@ public abstract class PictureUploadTemplate {
      * @return an {@code UploadPictureResult} object containing details of the uploaded picture such as URL, name, size, dimensions, scale, and format
      * @throws BusinessException if the image is invalid, upload fails, or any system error occurs
      */
-    public UploadPictureResult uploadPicture(Object inputSource, String UploadPathPrefix) {
+    public UploadPictureResult  uploadPicture(Object inputSource, String UploadPathPrefix) {
         //校验图片
         validPicture(inputSource);
         //图片上传地址
