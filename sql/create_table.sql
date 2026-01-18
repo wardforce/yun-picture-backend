@@ -29,10 +29,12 @@ create table if not exists user
     constraint user_phone_number_uindex unique (phone_number),
     constraint user_pk_2 unique (email),
     constraint user_share_code_uindex unique (share_code),
-    constraint vipCode_pk unique (vip_code)
+    constraint vipCode_pk unique (vip_code),
+    constraint uk_email unique (email)
 ) comment '用户' collate = utf8mb4_unicode_ci;
 
 create index idx_userName on user (user_name);
+
 
 create index phone_country_code_pk on user (phone_country_code);
 -- 图片表

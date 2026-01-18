@@ -133,4 +133,25 @@ public interface UserService extends IService<User> {
      * @param request
      * @return
      */boolean userUpdatePassword(UserUpdatePasswordRequest userUpdatePasswordRequest, HttpServletRequest request);
+
+    /**
+     * 邮箱验证码登录
+     *
+     * @param email 邮箱
+     * @param code 验证码
+     * @param request 请求
+     * @return 登录用户信息
+     */
+    LoginUserVO emailLogin(String email, String code, HttpServletRequest request);
+
+    /**
+     * 邮箱验证码重置密码
+     *
+     * @param email 邮箱
+     * @param code 验证码
+     * @param newPassword 新密码
+     * @param checkPassword 确认密码
+     * @return 是否成功
+     */
+    boolean emailResetPassword(String email, String code, String newPassword, String checkPassword);
 }

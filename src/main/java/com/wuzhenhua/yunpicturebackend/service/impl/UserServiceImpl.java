@@ -23,11 +23,13 @@ import com.wuzhenhua.yunpicturebackend.model.enums.UserVIPLevelEnum;
 import com.wuzhenhua.yunpicturebackend.model.vo.LoginUserVO;
 import com.wuzhenhua.yunpicturebackend.model.vo.UserVO;
 import com.wuzhenhua.yunpicturebackend.service.UserService;
+import com.wuzhenhua.yunpicturebackend.service.VerificationCodeService;
 import com.wuzhenhua.yunpicturebackend.utils.ThrowUtils;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,6 +41,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+
+    @Resource
+    private VerificationCodeService verificationCodeService;
 
     /**
      * 加密密码
@@ -371,6 +376,53 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         ThrowUtils.throwIf(!result, ErrorCode.PARAMS_ERROR, "旧密码错误或密码未变更");
 
         return true;
+    }
+
+    @Override
+    public LoginUserVO emailLogin(String email, String code, HttpServletRequest request) {
+        // 1.参数校验
+        if (StrUtil.isBlank(email) || StrUtil.isBlank(code)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
+        }
+        // 2.校验验证码
+        verificationCodeService.validateCode(email, code, "LOGIN");
+        // 3.根据邮箱查询用户
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(User::getEmail, email);
+        User user = this.baseMapper.selectOne(queryWrapper);
+        if (user == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "该邮箱未注册");
+        }
+        // 4.标记验证码已使用
+        verificationCodeService.markCodeAsUsed(email, "LOGIN");
+        // 5.保存登录状态
+        request.getSession().setAttribute(UserConstant.USER_LOGIN_STATE, user);
+        return this.getLoginUserVO(user);
+    }
+
+    @Override
+    public boolean emailResetPassword(String email, String code, String newPassword, String checkPassword) {
+        // 1.参数校验
+        if (StrUtil.isBlank(email) || StrUtil.isBlank(code) || StrUtil.isBlank(newPassword) || StrUtil.isBlank(checkPassword)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
+        }
+        ThrowUtils.throwIf(newPassword.length() < 8, ErrorCode.PARAMS_ERROR, "密码长度不能小于8位");
+        ThrowUtils.throwIf(!newPassword.equals(checkPassword), ErrorCode.PARAMS_ERROR, "两次输入的密码不一致");
+        // 2.校验验证码
+        verificationCodeService.validateCode(email, code, "RESET_PASSWORD");
+        // 3.根据邮箱查询用户
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(User::getEmail, email);
+        User user = this.baseMapper.selectOne(queryWrapper);
+        if (user == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "该邮箱未注册");
+        }
+        // 4.标记验证码已使用
+        verificationCodeService.markCodeAsUsed(email, "RESET_PASSWORD");
+        // 5.更新密码
+        String encodePassword = getEncodePassword(newPassword);
+        user.setUserPassword(encodePassword);
+        return this.updateById(user);
     }
 
 }

@@ -14,11 +14,13 @@ import com.wuzhenhua.yunpicturebackend.exception.ErrorCode;
 import com.wuzhenhua.yunpicturebackend.model.dto.picture.PictureUploadRequest;
 import com.wuzhenhua.yunpicturebackend.model.entity.ChatHistory;
 import com.wuzhenhua.yunpicturebackend.model.entity.User;
+
 import com.wuzhenhua.yunpicturebackend.model.enums.UserRoleEnum;
 import com.wuzhenhua.yunpicturebackend.model.vo.PictureVO;
 import com.wuzhenhua.yunpicturebackend.service.ChatHistoryService;
 import com.wuzhenhua.yunpicturebackend.service.PictureService;
 import com.wuzhenhua.yunpicturebackend.service.UserService;
+
 import com.wuzhenhua.yunpicturebackend.utils.ThrowUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;

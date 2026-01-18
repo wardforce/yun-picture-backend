@@ -1,10 +1,12 @@
 package com.wuzhenhua.yunpicturebackend.controller;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuzhenhua.yunpicturebackend.annotation.AuthCheck;
 import com.wuzhenhua.yunpicturebackend.common.BaseResponse;
 import com.wuzhenhua.yunpicturebackend.common.DeleteRequest;
+
 import com.wuzhenhua.yunpicturebackend.constant.UserConstant;
 import com.wuzhenhua.yunpicturebackend.exception.BusinessException;
 import com.wuzhenhua.yunpicturebackend.exception.ErrorCode;
@@ -13,6 +15,8 @@ import com.wuzhenhua.yunpicturebackend.model.entity.User;
 import com.wuzhenhua.yunpicturebackend.model.vo.LoginUserVO;
 import com.wuzhenhua.yunpicturebackend.model.vo.UserVO;
 import com.wuzhenhua.yunpicturebackend.service.UserService;
+import com.wuzhenhua.yunpicturebackend.service.VerificationCodeService;
+
 import com.wuzhenhua.yunpicturebackend.utils.ResultUtils;
 import com.wuzhenhua.yunpicturebackend.utils.ThrowUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,6 +30,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @Tag(name = "UserController", description = "用户相关接口")
 @RestController
@@ -33,6 +38,9 @@ import java.util.List;
 public class UserController {
     @Resource
     private UserService userService;
+
+    @Resource
+    private VerificationCodeService verificationCodeService;
 
     /**
      * 用户注册
@@ -225,6 +233,18 @@ public class UserController {
         if (!user.getId().equals(loginUser.getId())) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "非本人无法修改");
         }
+        String email = userUpdateRequest.getEmail();
+        if (StrUtil.isNotBlank(email)) {
+            //检查邮箱是否被使用
+            // 修正：直接调用 .one() 获取结果，而不是将 query 对象传给 getOne
+            User oldUser = userService.lambdaQuery()
+                    .eq(User::getEmail, email)
+                    .ne(User::getId, user.getId())
+                    .one();
+            if (oldUser != null) {
+                throw new BusinessException(ErrorCode.PARAMS_ERROR, "邮箱已被使用");
+            }
+        }
         // 邮箱格式验证
         if (user.getEmail() != null && !user.getEmail().trim().isEmpty()) {
             String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
@@ -279,6 +299,69 @@ public class UserController {
         List<UserVO> userVOList = userService.getUserVOList(userPage.getRecords());
         userVOPage.setRecords(userVOList);
         return ResultUtils.success(userVOPage);
+    }
+
+    /**
+     * 发送邮箱验证码
+     */
+    @PostMapping("/email/sendCode")
+    @Operation(summary = "发送邮箱验证码", description = "发送邮箱验证码用于登录或重置密码")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "0", description = "ok"),
+            @ApiResponse(responseCode = "40000", description = "参数错误"),
+            @ApiResponse(responseCode = "50001", description = "操作失败"),
+    })
+    public BaseResponse<Boolean> sendEmailCode(@RequestBody EmailSendCodeRequest emailSendCodeRequest) {
+        ThrowUtils.throwIf(emailSendCodeRequest == null, ErrorCode.PARAMS_ERROR);
+        String email = emailSendCodeRequest.getEmail();
+        String codeType = emailSendCodeRequest.getCodeType();
+        ThrowUtils.throwIf(StrUtil.isBlank(email), ErrorCode.PARAMS_ERROR, "邮箱不能为空");
+        ThrowUtils.throwIf(StrUtil.isBlank(codeType), ErrorCode.PARAMS_ERROR, "验证码类型不能为空");
+        ThrowUtils.throwIf(!codeType.equals("LOGIN") && !codeType.equals("RESET_PASSWORD"),
+                ErrorCode.PARAMS_ERROR, "验证码类型错误");
+        // 检查邮箱是否存在
+        User user = userService.lambdaQuery().eq(User::getEmail, email).one();
+        ThrowUtils.throwIf(user == null, ErrorCode.PARAMS_ERROR, "该邮箱未注册");
+        verificationCodeService.generateAndSendCode(email, codeType);
+        return ResultUtils.success(true);
+    }
+
+    /**
+     * 邮箱验证码登录
+     */
+    @PostMapping("/email/login")
+    @Operation(summary = "邮箱验证码登录", description = "使用邮箱和验证码进行登录")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "0", description = "ok"),
+            @ApiResponse(responseCode = "40000", description = "参数错误"),
+            @ApiResponse(responseCode = "50000", description = "系统内部异常"),
+    })
+    public BaseResponse<LoginUserVO> emailLogin(@RequestBody EmailLoginRequest emailLoginRequest, HttpServletRequest request) {
+        ThrowUtils.throwIf(emailLoginRequest == null, ErrorCode.PARAMS_ERROR);
+        String email = emailLoginRequest.getEmail();
+        String code = emailLoginRequest.getCode();
+        LoginUserVO loginUserVO = userService.emailLogin(email, code, request);
+        return ResultUtils.success(loginUserVO);
+    }
+
+    /**
+     * 邮箱验证码重置密码
+     */
+    @PostMapping("/email/resetPassword")
+    @Operation(summary = "邮箱验证码重置密码", description = "使用邮箱验证码重置密码")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "0", description = "ok"),
+            @ApiResponse(responseCode = "40000", description = "参数错误"),
+            @ApiResponse(responseCode = "50001", description = "操作失败"),
+    })
+    public BaseResponse<Boolean> emailResetPassword(@RequestBody EmailResetPasswordRequest emailResetPasswordRequest) {
+        ThrowUtils.throwIf(emailResetPasswordRequest == null, ErrorCode.PARAMS_ERROR);
+        String email = emailResetPasswordRequest.getEmail();
+        String code = emailResetPasswordRequest.getCode();
+        String newPassword = emailResetPasswordRequest.getNewPassword();
+        String checkPassword = emailResetPasswordRequest.getCheckPassword();
+        boolean result = userService.emailResetPassword(email, code, newPassword, checkPassword);
+        return ResultUtils.success(result);
     }
 
 }

@@ -91,12 +91,15 @@ knife4j:
 #          auth: true
 #          starttls:
 #            enable: true
-#gemini:
-#  baseUrl: https://generativelanguage.googleapis.com/v1beta2/models/gemini-pro:generateContent
-#  apikey:
-#  modelName:
+
+# 阿里云 AI 配置
+#langchain4j:
+#  google-ai-gemini:
+#    chat-model:
+#      base-url: http://127.0.0.1:8045
+#      api-key:
+#      model-name: gemini-3-pro-image
 
 # 阿里云 AI 配置
 #aliYunAi:
-#  apiKey: xxxx
-
+#  apiKey:

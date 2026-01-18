@@ -5,7 +5,9 @@
       "mcp__mcp_route4claude__zhi",
       "mcp__mcp_route4claude__ji",
       "mcp__mcp_route4claude__codebase-retrieval",
-      "Skill(collaborating-with-gemini)"
+      "Skill(collaborating-with-gemini)",
+      "Bash(openspec archive update-list-my-session-response:*)",
+      "Bash(npx openspec:*)"
     ]
   }
 }
