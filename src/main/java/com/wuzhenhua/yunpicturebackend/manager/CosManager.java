@@ -84,6 +84,35 @@ public class CosManager {
         putObjectRequest.setPicOperations(picOperations);
         return cosClient.putObject(putObjectRequest);
     }
+
+    /**
+     * 上传并解析图片的方法
+     *
+     * @param key  唯一键
+     * @param file 文件
+     */
+    public PutObjectResult putUrlPictureObject(String key, File file) {
+        PutObjectRequest putObjectRequest = new PutObjectRequest(cosClientConfig.getBucket(), key,
+                file);
+        //获取图片的基本信息
+        PicOperations picOperations = new PicOperations();
+        //返回原始信息
+        picOperations.setIsPicInfo(1);
+        //图片处理规则列表
+        List<PicOperations.Rule> rules = new ArrayList<>();
+        //1.图片压缩
+        String webpKey = FileUtil.mainName(key) + ".webp";
+        PicOperations.Rule compressRule = new PicOperations.Rule();
+        compressRule.setFileId(webpKey);
+        compressRule.setBucket(cosClientConfig.getBucket());
+        compressRule.setRule("imageMogr2/format/webp");
+        rules.add(compressRule);
+
+        //构造处理函数
+        picOperations.setRules(rules);
+        putObjectRequest.setPicOperations(picOperations);
+        return cosClient.putObject(putObjectRequest);
+    }
     public void deleteObject(String key) {
         cosClient.deleteObject(cosClientConfig.getBucket(),key);
     }

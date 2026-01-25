@@ -14,6 +14,7 @@ import com.wuzhenhua.yunpicturebackend.model.dto.user.*;
 import com.wuzhenhua.yunpicturebackend.model.entity.User;
 import com.wuzhenhua.yunpicturebackend.model.vo.LoginUserVO;
 import com.wuzhenhua.yunpicturebackend.model.vo.UserVO;
+import com.wuzhenhua.yunpicturebackend.service.AvatarUploadService;
 import com.wuzhenhua.yunpicturebackend.service.UserService;
 import com.wuzhenhua.yunpicturebackend.service.VerificationCodeService;
 
@@ -27,7 +28,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.BeanUtils;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
@@ -41,6 +44,9 @@ public class UserController {
 
     @Resource
     private VerificationCodeService verificationCodeService;
+
+    @Resource
+    private AvatarUploadService avatarUploadService;
 
     /**
      * 用户注册
@@ -362,6 +368,51 @@ public class UserController {
         String checkPassword = emailResetPasswordRequest.getCheckPassword();
         boolean result = userService.emailResetPassword(email, code, newPassword, checkPassword);
         return ResultUtils.success(result);
+    }
+
+    /**
+     * 上传头像（文件）
+     */
+    @PostMapping(value = "/avatar/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "上传用户头像", description = "用户通过文件上传头像")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "0", description = "ok"),
+            @ApiResponse(responseCode = "40000", description = "参数错误"),
+            @ApiResponse(responseCode = "40100", description = "未登录"),
+            @ApiResponse(responseCode = "50000", description = "系统内部异常"),
+    })
+    public BaseResponse<String> uploadAvatar(@RequestPart("file") MultipartFile file, HttpServletRequest request) {
+        User loginUser = userService.getLoginUser(request);
+        String oldAvatarUrl = loginUser.getUserAvatar();
+        String newAvatarUrl = avatarUploadService.uploadAvatarFromFile(file, loginUser.getId());
+        loginUser.setUserAvatar(newAvatarUrl);
+        boolean result = userService.updateById(loginUser);
+        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+        avatarUploadService.deleteOldAvatar(oldAvatarUrl);
+        return ResultUtils.success(newAvatarUrl);
+    }
+
+    /**
+     * 上传头像（URL）
+     */
+    @PostMapping("/avatar/upload/url")
+    @Operation(summary = "通过URL上传用户头像", description = "用户通过URL上传头像")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "0", description = "ok"),
+            @ApiResponse(responseCode = "40000", description = "参数错误"),
+            @ApiResponse(responseCode = "40100", description = "未登录"),
+            @ApiResponse(responseCode = "50000", description = "系统内部异常"),
+    })
+    public BaseResponse<String> uploadAvatarByUrl(@RequestBody UploadAvatarRequest uploadAvatarRequest, HttpServletRequest request) {
+        ThrowUtils.throwIf(uploadAvatarRequest == null, ErrorCode.PARAMS_ERROR);
+        User loginUser = userService.getLoginUser(request);
+        String oldAvatarUrl = loginUser.getUserAvatar();
+        String newAvatarUrl = avatarUploadService.uploadAvatarFromUrl(uploadAvatarRequest.getFileUrl(), loginUser.getId());
+        loginUser.setUserAvatar(newAvatarUrl);
+        boolean result = userService.updateById(loginUser);
+        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+        avatarUploadService.deleteOldAvatar(oldAvatarUrl);
+        return ResultUtils.success(newAvatarUrl);
     }
 
 }
