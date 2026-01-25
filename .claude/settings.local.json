@@ -7,7 +7,19 @@
       "mcp__mcp_route4claude__codebase-retrieval",
       "Skill(collaborating-with-gemini)",
       "Bash(openspec archive update-list-my-session-response:*)",
-      "Bash(npx openspec:*)"
+      "Bash(npx openspec:*)",
+      "Bash(git push:*)",
+      "Bash(tree:*)",
+      "mcp__mcp_route4claude__sou",
+      "Bash(mvn clean compile:*)",
+      "Bash(curl:*)",
+      "Bash(python -m json.tool:*)",
+      "mcp__mcp_route4claude__browser_press_key",
+      "mcp__mcp_route4claude__browser_snapshot",
+      "mcp__mcp_route4claude__browser_click",
+      "mcp__mcp_route4claude__browser_run_code",
+      "mcp__mcp_route4claude__browser_type",
+      "mcp__mcp_route4claude__browser_wait_for"
     ]
   }
 }
