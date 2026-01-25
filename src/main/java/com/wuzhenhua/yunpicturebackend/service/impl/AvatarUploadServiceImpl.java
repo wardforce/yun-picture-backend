@@ -50,16 +50,11 @@ public class AvatarUploadServiceImpl implements AvatarUploadService {
 
     @Override
     public String uploadAvatarFromFile(MultipartFile file, Long userId) {
-       
         validPicture(file);
-        
-
         String originalFilename = file.getOriginalFilename();
         String extension = FileUtil.getSuffix(originalFilename);
         String uuid = RandomUtil.randomString(16);
-
         String uploadPath = String.format("avatar/%d_%d.%s", userId, System.currentTimeMillis(), extension);
-//        String filename = String.format("avatar/%d_%d.%s", userId, System.currentTimeMillis(), extension);
         String filename = String.format("%d_%d.%s", userId, System.currentTimeMillis(), extension);
         File tempFile=null;
         try {
@@ -110,25 +105,63 @@ public class AvatarUploadServiceImpl implements AvatarUploadService {
     @Override
     public String uploadAvatarFromUrl(String fileUrl, Long userId) {
         validUrlPicture(fileUrl);
+
+        File tempFile = null;
         try {
             URL url = new URL(fileUrl);
             String path = url.getPath();
             String extension = FileUtil.getSuffix(path);
-            File tempFile = File.createTempFile("avatar_url_", "." + extension);
+
+            // 如果URL没有扩展名，默认jpg
+            if (StrUtil.isBlank(extension)) {
+                extension = "jpg";
+            }
+
+            String uploadPath = String.format("avatar/%d_%d.%s", userId, System.currentTimeMillis(), extension);
+            tempFile = File.createTempFile("avatar_url_", "." + extension);
+
             try (InputStream in = url.openStream()) {
                 Files.copy(in, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
             }
-            String filename = String.format("avatar/%d_%d.%s", userId, System.currentTimeMillis(), extension);
-            cosManager.putPictureObject(filename, tempFile);
-            FileUtil.del(tempFile);
 
-            String webpKey = FileUtil.mainName(filename) + ".webp";
-            return cosClientConfig.getHost() + "/" + webpKey;
+            log.info("从URL下载文件完成, size: {} bytes", tempFile.length());
+
+            // 使用带图片处理的上传方法
+            PutObjectResult putObjectResult = cosManager.putUrlPictureObject(uploadPath, tempFile);
+
+            // 获取图片处理结果
+            ProcessResults processResults = putObjectResult.getCiUploadResult().getProcessResults();
+            List<CIObject> objectList = processResults.getObjectList();
+
+            String key;
+            if (CollUtil.isNotEmpty(objectList)) {
+                // 压缩成功，使用webp
+                CIObject ciObject = objectList.get(0);
+                key = ciObject.getKey();
+                try {
+                    cosClient.deleteObject(cosClientConfig.getBucket(), uploadPath);
+                    log.info("原图已删除：{}", uploadPath);
+                } catch (Exception e) {
+                    log.warn("原图删除失败：{}, error={}", uploadPath, e.getMessage());
+                }
+            } else {
+                // 压缩失败，保留原图
+                key = uploadPath;
+                log.warn("图片压缩失败，保留原图：{}", uploadPath);
+            }
+
+            return cosClientConfig.getHost() + "/" + key;
         } catch (BusinessException e) {
             throw e;
         } catch (Exception e) {
             log.error("从URL上传头像失败: {}", fileUrl, e);
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "上传失败");
+        } finally {
+            // 确保临时文件清理
+            if (tempFile != null && tempFile.exists()) {
+                FileUtil.del(tempFile);
+                log.info("临时文件已删除: {}", tempFile.getAbsolutePath());
+            }
         }
     }
 
