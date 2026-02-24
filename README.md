@@ -1,4 +1,4 @@
-# 狐仙 AI 云端素材库后端 (Huxian AI Cloud Material Library Backend)
+# 狐仙云图后端 (Huxian yun picture Backend)
 
 <div align="center">
 
@@ -8,6 +8,7 @@
 ![License](https://img.shields.io/badge/License-Apache%202.0-blue)
 
 An innovative enterprise-level intelligent collaborative cloud image library platform backend service based on Spring Boot
+一个基于 Spring Boot 的现代化云图库管理系统后端服务
 
 </div>
 
@@ -15,15 +16,15 @@ An innovative enterprise-level intelligent collaborative cloud image library pla
 
 ## Project Overview
 
-**狐仙 AI 云端素材库** is an innovative enterprise-level intelligent collaborative cloud image library platform focused on providing efficient and convenient cloud-based image material services. The platform integrates cutting-edge **AIGC (AI-Generated Content)** technology, supporting text-to-image generation, image-to-image transformation, image enhancement, public image libraries, private image libraries, and team-shared image libraries.
+**Huxian yun picture** is an innovative enterprise-level intelligent collaborative cloud image library platform focused on providing efficient and convenient cloud-based image material services. The platform integrates cutting-edge **AIGC (AI-Generated Content)** technology, supporting text-to-image generation, image-to-image transformation, image enhancement, public image libraries, private image libraries, and team-shared image libraries.
 
 ### English Description
 
-Huxian AI Cloud Material Library is an innovative enterprise-level intelligent collaborative cloud image library platform, focused on providing efficient and convenient cloud image material services. The platform integrates cutting-edge **AIGC (Artificial Intelligence Generated Content)** technology, supporting text-to-image generation, image-to-image generation, image enhancement, public image libraries, private image libraries, and team-shared image libraries.
+Huxian yun picture is an innovative enterprise-level intelligent collaborative cloud image library platform, focused on providing efficient and convenient cloud image material services. The platform integrates cutting-edge **AIGC (Artificial Intelligence Generated Content)** technology, supporting text-to-image generation, image-to-image generation, image enhancement, public image libraries, private image libraries, and team-shared image libraries.
 
 ### 中文描述
 
-狐仙 AI 云端素材库是一款创新的企业级智能协同云图库平台，专注于为提供高效便捷的云端图片素材服务。平台集成了前沿的 AIGC（人工智能生成内容）技术，支持文生图、图生图、图像增强及公共图库、私人图库、团队共享图库等功能。
+狐仙云图是一款创新的企业级智能协同云图库平台，专注于为提供高效便捷的云端图片素材服务。平台集成了前沿的 AIGC（人工智能生成内容）技术，支持文生图、图生图、图像增强及公共图库、私人图库、团队共享图库等功能。
 
 ---
 
@@ -186,7 +187,7 @@ aliYunAi:
 
 ### 安装和运行 / Installation and Running
 
-1. **Clone the project / 克隆项目**
+1. **Clone project / 克隆项目**
 ```bash
 git clone https://github.com/wardforce/yun-picture-backend.git
 cd yun-picture-backend
@@ -396,8 +397,8 @@ Do not hardcode sensitive information in configuration files in production. Reco
 
 ## 前端项目 / Frontend Project
 
-狐仙 AI 云端素材库前端项目地址：
-Huxian AI Cloud Material Library Frontend Project:
+狐仙云图前端项目地址：
+Huxian yun picture Frontend Project:
 https://github.com/wardforce/yun-picture-frontend
 
 ---
@@ -418,7 +419,7 @@ Welcome to submit Issues and Pull Requests!
 
 <div align="center">
 
-**狐仙 AI 云端素材库 / Huxian AI Cloud Material Library**
+**狐仙云图 / Huxian yun picture**
 
 Enterprise-Level Intelligent Collaborative Cloud Image Library Platform
 创新的企业级智能协同云图库平台
