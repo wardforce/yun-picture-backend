@@ -1,0 +1,114 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1771936761161,
+  "projectRoot": "E:\\project\\yun-picture\\yun-picture-backend",
+  "techStack": {
+    "languages": [
+      {
+        "name": "JavaScript/TypeScript",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "package.json"
+        ]
+      },
+      {
+        "name": "Java",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "pom.xml"
+        ]
+      }
+    ],
+    "frameworks": [],
+    "packageManager": "npm",
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "src"
+    ],
+    "gitBranches": null
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "openspec": {
+      "path": "openspec",
+      "purpose": null,
+      "fileCount": 2,
+      "lastAccessed": 1771936761101,
+      "keyFiles": [
+        "AGENTS.md",
+        "project.md"
+      ]
+    },
+    "plan": {
+      "path": "plan",
+      "purpose": null,
+      "fileCount": 7,
+      "lastAccessed": 1771936761102,
+      "keyFiles": [
+        "ALIGNMENT_ChatHistoryController.md",
+        "chatHistroyController文档.md",
+        "CONSENSUS_ChatHistoryController.md",
+        "DESIGN_ChatHistoryController.md",
+        "MIGRATION_ChatHistoryPicture.md"
+      ]
+    },
+    "sql": {
+      "path": "sql",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1771936761113,
+      "keyFiles": [
+        "create_table.sql"
+      ]
+    },
+    "src": {
+      "path": "src",
+      "purpose": "Source code",
+      "fileCount": 0,
+      "lastAccessed": 1771936761114,
+      "keyFiles": []
+    },
+    "target": {
+      "path": "target",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1771936761114,
+      "keyFiles": []
+    },
+    "src\\test": {
+      "path": "src\\test",
+      "purpose": "Test files",
+      "fileCount": 0,
+      "lastAccessed": 1771936761116,
+      "keyFiles": []
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "src\\main\\java\\com\\wuzhenhua\\yunpicturebackend\\service\\impl\\SpaceAnalyzeServiceImpl.java",
+      "accessCount": 2,
+      "lastAccessed": 1771938829081,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}

@@ -5,11 +5,9 @@ import com.wuzhenhua.yunpicturebackend.exception.ErrorCode;
 import com.wuzhenhua.yunpicturebackend.model.dto.space.analyze.SpaceCategoryAnalyzeRequest;
 import com.wuzhenhua.yunpicturebackend.model.dto.space.analyze.SpaceTagAnalyzeRequest;
 import com.wuzhenhua.yunpicturebackend.model.dto.space.analyze.SpaceUsageAnalyzeRequest;
+import com.wuzhenhua.yunpicturebackend.model.dto.space.analyze.SpaceUserAnalyzeRequest;
 import com.wuzhenhua.yunpicturebackend.model.entity.User;
-import com.wuzhenhua.yunpicturebackend.model.vo.space.analyze.SpaceCategoryAnalyzeResponse;
-import com.wuzhenhua.yunpicturebackend.model.vo.space.analyze.SpaceSizeAnalyzeRequest;
-import com.wuzhenhua.yunpicturebackend.model.vo.space.analyze.SpaceSizeAnalyzeResponse;
-import com.wuzhenhua.yunpicturebackend.model.vo.space.analyze.SpaceTagAnalyzeResponse;
+import com.wuzhenhua.yunpicturebackend.model.vo.space.analyze.*;
 import com.wuzhenhua.yunpicturebackend.service.SpaceAnalyzeService;
 import com.wuzhenhua.yunpicturebackend.service.UserService;
 import com.wuzhenhua.yunpicturebackend.utils.ResultUtils;
@@ -82,5 +80,12 @@ public class SpaceAnalyzeController {
         List<SpaceSizeAnalyzeResponse> resultList = spaceAnalyzeService.getSpaceSizeAnalyze(spaceSizeAnalyzeRequest, loginUser);
         return ResultUtils.success(resultList);
     }
-
+    @PostMapping("/user")
+    @Operation(summary = "空间用户分析", description = "统计空间内用户的活跃度，返回各用户的上传图片数量和最后一次上传时间")
+    public BaseResponse<List<SpaceUserAnalyzeResponse>> getSpaceUserAnalyze(@RequestBody SpaceUserAnalyzeRequest spaceUserAnalyzeRequest, HttpServletRequest request) {
+        ThrowUtils.throwIf(spaceUserAnalyzeRequest == null, ErrorCode.PARAMS_ERROR);
+        User loginUser = userService.getLoginUser(request);
+        List<SpaceUserAnalyzeResponse> resultList = spaceAnalyzeService.getSpaceUserAnalyze(spaceUserAnalyzeRequest, loginUser);
+        return ResultUtils.success(resultList);
+    }
 }

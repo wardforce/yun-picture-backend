@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -230,17 +229,45 @@ public class SpaceAnalyzeServiceImpl extends ServiceImpl<SpaceMapper, Space> imp
     }
 
     @Override
-    public List<SpaceUserAnalyzeRequest> getSpaceUserAnalyze(SpaceUserAnalyzeRequest spaceUserAnalyzeRequest, User loginUser) {
+    public List<SpaceUserAnalyzeResponse> getSpaceUserAnalyze(SpaceUserAnalyzeRequest spaceUserAnalyzeRequest, User loginUser) {
         ThrowUtils.throwIf(spaceUserAnalyzeRequest==null, ErrorCode.PARAMS_ERROR,"请求参数不能为空");
         //校验权限
         checkSpaceAnalyzeAuth(spaceUserAnalyzeRequest, loginUser);
         //构造查询条件
-        LambdaQueryWrapper<Picture> pictureQueryWrapper = new LambdaQueryWrapper<>();
-        fillSpaceBySpaceLevel(spaceUserAnalyzeRequest, pictureQueryWrapper);
+        QueryWrapper<Picture> pictureQueryWrapper = new QueryWrapper<>();
+        fillAnalyzeQueryWrapper(spaceUserAnalyzeRequest, pictureQueryWrapper);
         //补充用户id查询
         Long userId = spaceUserAnalyzeRequest.getUserId();
-        pictureQueryWrapper.eq(ObjUtil::isNotNull(userId),,loginUser.getId());
-        return List.of();
+        pictureQueryWrapper.eq(ObjUtil.isNotNull(userId), "userId", loginUser.getId());
+        //补充分析维度，每日，每周，每月
+        String timeDimension=spaceUserAnalyzeRequest.getTimeDimension();
+        switch (timeDimension) {
+            case "day":
+                pictureQueryWrapper.select("DATE_FORMAT(createTime, '%Y-%m-%d') as period, COUNT(*) as count");
+                break;
+            case "week":
+                pictureQueryWrapper.select("YEARWEEK(createTime) AS period", "COUNT(*) AS count");
+                break;
+            case "month":
+                pictureQueryWrapper.select("DATE_FORMAT(createTime, '%Y-%m') AS period", "COUNT(*) AS count");
+                break;
+            default:
+                ThrowUtils.throwIf(true,ErrorCode.PARAMS_ERROR,"时间维度错误");
+        }
+        //分组排序
+        pictureQueryWrapper.groupBy("period").orderByAsc("period");
+        //查询并封装返回结果
+        List<Map<String, Object>> maps = pictureService.getBaseMapper().selectMaps(pictureQueryWrapper);
+        return maps.stream()
+                .map(result->{
+                    String period = (String) result.get("period");
+                    Long count = (Long) result.get("count");
+                    SpaceUserAnalyzeResponse categoryData = new SpaceUserAnalyzeResponse();
+                    categoryData.setPeriod(period);
+                    categoryData.setCount(count);
+                    return categoryData;
+                })
+                .collect(Collectors.toList());
     }
 
 }
