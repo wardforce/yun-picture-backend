@@ -1,4 +1,4 @@
-# 狐仙云图后端 (yun-picture-backend)
+# 狐仙 AI 云端素材库后端 (Huxian AI Cloud Material Library Backend)
 
 <div align="center">
 
@@ -7,15 +7,41 @@
 ![MyBatis Plus](https://img.shields.io/badge/MyBatis%20Plus-3.5.14-blue)
 ![License](https://img.shields.io/badge/License-Apache%202.0-blue)
 
-一个基于 Spring Boot 的现代化图床管理系统后端服务
+An innovative enterprise-level intelligent collaborative cloud image library platform backend service based on Spring Boot
 
 </div>
 
-## 项目简介
+---
 
-狐仙云图是一个前后端分离的图片管理平台，提供图片上传、存储、管理、AI 生成和空间管理等功能。
+## Project Overview
 
-### 核心特性
+**狐仙 AI 云端素材库** is an innovative enterprise-level intelligent collaborative cloud image library platform focused on providing efficient and convenient cloud-based image material services. The platform integrates cutting-edge **AIGC (AI-Generated Content)** technology, supporting text-to-image generation, image-to-image transformation, image enhancement, public image libraries, private image libraries, and team-shared image libraries.
+
+### English Description
+
+Huxian AI Cloud Material Library is an innovative enterprise-level intelligent collaborative cloud image library platform, focused on providing efficient and convenient cloud image material services. The platform integrates cutting-edge **AIGC (Artificial Intelligence Generated Content)** technology, supporting text-to-image generation, image-to-image generation, image enhancement, public image libraries, private image libraries, and team-shared image libraries.
+
+### 中文描述
+
+狐仙 AI 云端素材库是一款创新的企业级智能协同云图库平台，专注于为提供高效便捷的云端图片素材服务。平台集成了前沿的 AIGC（人工智能生成内容）技术，支持文生图、图生图、图像增强及公共图库、私人图库、团队共享图库等功能。
+
+---
+
+## 核心特性 / Key Features
+
+### 英文 / English
+
+- **Image Management**: Support local file and URL upload, batch operations, editing, and deletion
+- **AI Features**: Integration with Google Gemini and Alibaba Tongyi Qianwen, supporting AI image generation, outpainting, and image search
+- **Space Management**: Support for private and public spaces with different space levels and quota management
+- **User Permissions**: Role-based permission control (Admin/User) and VIP level system
+- **Object Storage**: Integration with Tencent Cloud COS, supporting image compression and thumbnail generation
+- **Caching System**: Local cache (Caffeine) + Redis distributed cache
+- **Review Mechanism**: Image review workflow
+- **Email Service**: Email verification code login and password reset
+- **Image Search**: Search by color and image content
+
+### 中文 / Chinese
 
 - **图片管理**：支持本地文件和 URL 上传、批量操作、编辑、删除
 - **AI 功能**：集成 Google Gemini 和阿里通义千问，支持 AI 图片生成、扩图、以图搜图
@@ -27,88 +53,98 @@
 - **邮箱服务**：邮箱验证码登录和密码重置
 - **以图搜图**：基于颜色和图片内容的搜索
 
-## 技术栈
+---
 
-### 后端框架
-- **Spring Boot 3.5.7** - 核心框架
-- **Spring Session + Redis** - 会话管理
-- **MyBatis Plus 3.5.14** - 数据库 ORM
-- **MySQL 8.0+** - 关系型数据库
-- **Redis** - 缓存和会话存储
+## 技术栈 / Tech Stack
 
-### 工具库
-- **Hutool 5.8.40** - Java 工具库
-- **Lombok** - 减少样板代码
-- **Caffeine 3.2.0** - 本地高性能缓存
-- **OkHttp 4.12.0** - HTTP 客户端
-- **Jsoup 1.21.2** - HTML 解析
+### 后端框架 / Backend Framework
 
-### 第三方服务
-- **腾讯云 COS** - 对象存储
-- **Google Gemini AI** - AI 图片生成
-- **阿里通义千问** - AI 扩图功能
-- **So Image Search** - 以图搜图
+- **Spring Boot 3.5.7** - Core framework
+- **Spring Session + Redis** - Session management
+- **MyBatis Plus 3.5.14** - Database ORM
+- **MySQL 8.0+** - Relational database
+- **Redis** - Cache and session storage
 
-### 文档工具
-- **Knife4j 4.4.0** - API 文档（Swagger 增强版）
-- **Springdoc OpenAPI 2.7.0** - OpenAPI 规范生成
+### 工具库 / Utility Libraries
 
-## 项目结构
+- **Hutool 5.8.40** - Java utility library
+- **Lombok** - Reduce boilerplate code
+- **Caffeine 3.2.0** - Local high-performance cache
+- **OkHttp 4.12.0** - HTTP client
+- **Jsoup 1.21.2** - HTML parser
+
+### 第三方服务 / Third-party Services
+
+- **Tencent Cloud COS** - Object storage
+- **Google Gemini AI** - AI image generation
+- **Alibaba Tongyi Qianwen** - AI outpainting functionality
+- **So Image Search** - Image search by image
+
+### 文档工具 / Documentation Tools
+
+- **Knife4j 4.4.0** - API documentation (Swagger enhanced)
+- **Springdoc OpenAPI 2.7.0** - OpenAPI specification generation
+
+---
+
+## 项目结构 / Project Structure
 
 ```
 yun-picture-backend/
 ├── src/main/java/com/wuzhenhua/yunpicturebackend/
-│   ├── annotation/              # 自定义注解（@AuthCheck, @VipLevelCheck）
-│   ├── aop/                   # AOP 切面（权限拦截、VIP 等级检查）
-│   ├── api/                   # 外部 API 调用
+│   ├── annotation/              # Custom annotations (@AuthCheck, @VipLevelCheck)
+│   ├── aop/                   # AOP aspects (permission interception, VIP level check)
+│   ├── api/                   # External API calls
 │   │   ├── gemini/           # Google Gemini AI
-│   │   ├── aliyun/           # 阿里云 AI
-│   │   └── imagesearch/      # 图片搜索
-│   ├── common/                # 通用类（BaseResponse, PageRequest 等）
-│   ├── config/                # 配置类（COS, Redis, MyBatis, Knife4j）
-│   ├── constant/              # 常量类（用户角色等）
-│   ├── controller/            # REST API 控制器
+│   │   ├── aliyun/           # Alibaba Cloud AI
+│   │   └── imagesearch/      # Image search
+│   ├── common/                # Common classes (BaseResponse, PageRequest, etc.)
+│   ├── config/                # Configuration classes (COS, Redis, MyBatis, Knife4j)
+│   ├── constant/              # Constant classes (user roles, etc.)
+│   ├── controller/            # REST API controllers
 │   │   ├── UserController.java
 │   │   ├── PictureController.java
 │   │   ├── SpaceController.java
 │   │   ├── AiPictureGeneratorController.java
 │   │   └── ...
-│   ├── exception/             # 异常处理
+│   ├── exception/             # Exception handling
 │   │   ├── BusinessException.java
 │   │   ├── ErrorCode.java
 │   │   └── GlobalExceptionHandler.java
-│   ├── manager/               # Manager 层（外部服务封装）
+│   ├── manager/               # Manager layer (external service encapsulation)
 │   │   ├── CosManager.java
 │   │   ├── FileManager.java
-│   │   └── upload/          # 图片上传策略
-│   ├── mapper/               # MyBatis Mapper 接口
+│   │   └── upload/          # Image upload strategies
+│   ├── mapper/               # MyBatis Mapper interfaces
 │   ├── model/
-│   │   ├── dto/             # 数据传输对象
-│   │   ├── entity/          # 数据库实体类
-│   │   ├── enums/           # 枚举类
-│   │   └── vo/             # 视图对象
-│   ├── service/             # Service 接口和实现
-│   ├── utils/               # 工具类
+│   │   ├── dto/             # Data transfer objects
+│   │   ├── entity/          # Database entity classes
+│   │   ├── enums/           # Enum classes
+│   │   └── vo/             # View objects
+│   ├── service/             # Service interfaces and implementations
+│   ├── utils/               # Utility classes
 │   └── YunPictureBackendApplication.java
 └── src/main/resources/
-    ├── application.yml       # 主配置
-    ├── application-local.yml # 本地开发配置
-    ├── application-dev.yml   # 开发环境配置
-    └── application-prod.yml # 生产环境配置
+    ├── application.yml       # Main configuration
+    ├── application-local.yml # Local development configuration
+    ├── application-dev.yml   # Development environment configuration
+    └── application-prod.yml # Production environment configuration
 ```
 
-## 快速开始
+---
 
-### 环境要求
+## 快速开始 / Quick Start
+
+### 环境要求 / Environment Requirements
 
 - JDK 17+
 - Maven 3.6+
 - MySQL 8.0+
 - Redis
 
-### 配置说明
+### 配置说明 / Configuration
 
-在运行项目前，需要配置以下敏感信息（在 `application-local.yml` 或环境变量中）：
+Before running the project, configure the following sensitive information (in `application-local.yml` or environment variables):
 
 ```yaml
 spring:
@@ -148,24 +184,24 @@ aliYunAi:
   apiKey: your_aliyun_api_key
 ```
 
-### 安装和运行
+### 安装和运行 / Installation and Running
 
-1. **克隆项目**
+1. **Clone the project / 克隆项目**
 ```bash
 git clone https://github.com/wardforce/yun-picture-backend.git
 cd yun-picture-backend
 ```
 
-2. **配置数据库**
-创建数据库并执行 SQL 脚本（如有）：
+2. **Configure database / 配置数据库**
+Create database and execute SQL script (if available):
 ```sql
 CREATE DATABASE yun_picture CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
-3. **修改配置**
-编辑 `src/main/resources/application-local.yml`，填入你的配置信息。
+3. **Modify configuration / 修改配置**
+Edit `src/main/resources/application-local.yml` and fill in your configuration information.
 
-4. **启动服务**
+4. **Start service / 启动服务**
 ```bash
 # Unix/Linux/macOS
 ./mvnw spring-boot:run
@@ -174,123 +210,131 @@ CREATE DATABASE yun_picture CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 mvnw.cmd spring-boot:run
 ```
 
-5. **访问 API 文档**
-服务启动后，访问：
+5. **Access API documentation / 访问 API 文档**
+After service starts, access:
 - **Knife4j**: http://localhost:8081/api/doc.html
 - **OpenAPI**: http://localhost:8081/api/v3/api-docs/default
 
-### 构建项目
+### 构建项目 / Build Project
 
 ```bash
 ./mvnw clean package
 ```
 
-生成的 JAR 文件位于 `target/yun-picture-backend-0.0.1-SNAPSHOT.jar`。
+The generated JAR file is located at `target/yun-picture-backend-0.0.1-SNAPSHOT.jar`.
 
-### 运行测试
+### 运行测试 / Run Tests
 
 ```bash
 ./mvnw test
 ```
 
-## API 文档
+---
 
-项目使用 **Knife4j** 提供在线 API 文档，包含：
-- 接口分组和描述
-- 请求参数说明
-- 响应示例
-- 在线调试功能
+## API 文档 / API Documentation
 
-### 主要接口
+The project uses **Knife4j** to provide online API documentation, including:
+- Interface groups and descriptions
+- Request parameter descriptions
+- Response examples
+- Online debugging functionality
 
-| 模块 | 路径前缀 | 说明 |
+### 主要接口 / Main APIs
+
+| 模块 / Module | 路径前缀 / Path Prefix | 说明 / Description |
 |-----|---------|------|
-| 用户管理 | `/user` | 注册、登录、信息管理 |
-| 图片管理 | `/picture` | 上传、查询、编辑、删除 |
-| 空间管理 | `/space` | 空间创建、管理、分析 |
-| AI 生成 | `/ai/generator` | AI 图片生成 |
-| 文件管理 | `/file` | 文件上传、头像管理 |
-| 聊天历史 | `/chat` | AI 聊天会话管理 |
+| 用户管理 / User Management | `/user` | Registration, login, user info management / 注册、登录、信息管理 |
+| 图片管理 / Image Management | `/picture` | Upload, query, edit, delete / 上传、查询、编辑、删除 |
+| 空间管理 / Space Management | `/space` | Space creation, management, analysis / 空间创建、管理、分析 |
+| AI 生成 / AI Generation | `/ai/generator` | AI image generation / AI 图片生成 |
+| 文件管理 / File Management | `/file` | File upload, avatar management / 文件上传、头像管理 |
+| 聊天历史 / Chat History | `/chat` | AI chat session management / AI 聊天会话管理 |
 
-## 核心功能
+---
 
-### 1. 图片管理
+## 核心功能 / Core Features
 
-- **上传**：支持本地文件和 URL 上传
-- **批量操作**：批量上传、编辑
-- **图片处理**：自动 WebP 压缩、缩略图生成
-- **搜索**：按颜色、标签、分类搜索
-- **以图搜图**：基于图片内容的相似度搜索
+### 1. 图片管理 / Image Management
 
-### 2. AI 功能
+- **Upload / 上传**: Support local file and URL upload
+- **Batch Operations / 批量操作**: Batch upload and edit
+- **Image Processing / 图片处理**: Automatic WebP compression and thumbnail generation
+- **Search / 搜索**: Search by color, tags, and categories
+- **Image Search by Image / 以图搜图**: Similarity search based on image content
 
-- **图片生成**：通过 Google Gemini 生成 AI 图片
-- **扩图**：使用阿里通义千问进行图片扩展
-- **图片聊天**：基于图片的 AI 对话
+### 2. AI 功能 / AI Features
 
-### 3. 空间管理
+- **Image Generation / 图片生成**: Generate AI images via Google Gemini
+- **Outpainting / 扩图**: Image extension using Alibaba Tongyi Qianwen
+- **Image Chat / 图片聊天**: AI dialogue based on images
 
-- **空间类型**：私人空间、公共空间
-- **配额管理**：不同等级的空间有不同的存储上限
-- **权限控制**：空间访问权限校验
+### 3. 空间管理 / Space Management
 
-### 4. 用户系统
+- **Space Types / 空间类型**: Private spaces and public spaces
+- **Quota Management / 配额管理**: Different space levels have different storage limits
+- **Permission Control / 权限控制**: Space access permission verification
 
-- **角色系统**：管理员、普通用户
-- **VIP 等级**：支持多级 VIP，不同等级享受不同权益
-- **邮箱验证**：邮箱验证码登录
-- **密码重置**：通过邮箱重置密码
+### 4. 用户系统 / User System
 
-### 5. 审核机制
+- **Role System / 角色系统**: Admin and regular users
+- **VIP Levels / VIP 等级**: Support for multiple VIP levels with different benefits
+- **Email Verification / 邮箱验证**: Email verification code login
+- **Password Reset / 密码重置**: Reset password via email
 
-- **审核流程**：图片上传后需管理员审核
-- **审核状态**：待审核、审核通过、审核拒绝
+### 5. 审核机制 / Review Mechanism
 
-## 架构设计
+- **Review Process / 审核流程**: Images require admin review after upload
+- **Review Status / 审核状态**: Pending review, approved, rejected
 
-### 分层架构
+---
+
+## 架构设计 / Architecture Design
+
+### 分层架构 / Layered Architecture
 
 ```
-Controller → Service → Mapper (数据库)
+Controller → Service → Mapper (Database)
                ↓
-            Manager (外部服务: COS, AI, 邮件等)
+            Manager (External Services: COS, AI, Email, etc.)
 ```
 
-### 职责划分
+### 职责划分 / Responsibility Division
 
-| 层级 | 职责 |
+| 层级 / Layer | 职责 / Responsibility |
 |-----|------|
-| **Controller** | HTTP 请求处理、参数验证、返回响应 |
-| **Service** | 业务逻辑处理、数据校验、事务管理 |
-| **Manager** | 第三方服务封装（COS、AI、邮件） |
-| **Mapper** | MyBatis 数据访问层，纯数据访问 |
+| **Controller** | HTTP request handling, parameter validation, return response |
+| **Service** | Business logic processing, data validation, transaction management |
+| **Manager** | Third-party service encapsulation (COS, AI, email) |
+| **Mapper** | MyBatis data access layer, pure data access |
 
-### 安全机制
+### 安全机制 / Security Mechanism
 
-- **认证**：Spring Session + Redis 会话管理
-- **授权**：AOP + 自定义注解（@AuthCheck, @VipLevelCheck）
-- **数据校验**：统一异常处理和错误码规范
+- **Authentication / 认证**: Spring Session + Redis session management
+- **Authorization / 授权**: AOP + custom annotations (@AuthCheck, @VipLevelCheck)
+- **Data Validation / 数据校验**: Unified exception handling and error code specifications
 
-### 缓存策略
+### 缓存策略 / Caching Strategy
 
-- **本地缓存（Caffeine）**：高频访问数据，5 分钟过期
-- **分布式缓存（Redis）**：会话存储、图片列表缓存
+- **Local Cache (Caffeine) / 本地缓存**: High-frequency access data, 5 minutes expiration
+- **Distributed Cache (Redis) / 分布式缓存**: Session storage, image list cache
 
-## 开发指南
+---
 
-### 添加新模块
+## 开发指南 / Development Guide
 
-1. 创建 Entity：`model/entity/YourEntity.java`
-2. 创建 Mapper：`mapper/YourEntityMapper.java`
-3. 创建 Service 接口和实现：`service/YourEntityService.java` + `service/impl/YourEntityServiceImpl.java`
-4. 创建 Controller：`controller/YourEntityController.java`
-5. 创建 DTO：`model/dto/yourmodule/YourEntityAddRequest.java` 等
-6. 创建 VO：`model/vo/YourEntityVO.java`
-7. 添加 Knife4j 注解
+### 添加新模块 / Adding New Modules
 
-### 代码规范
+1. Create Entity: `model/entity/YourEntity.java`
+2. Create Mapper: `mapper/YourEntityMapper.java`
+3. Create Service interface and implementation: `service/YourEntityService.java` + `service/impl/YourEntityServiceImpl.java`
+4. Create Controller: `controller/YourEntityController.java`
+5. Create DTO: `model/dto/yourmodule/YourEntityAddRequest.java` etc.
+6. Create VO: `model/vo/YourEntityVO.java`
+7. Add Knife4j annotations
 
-- **命名约定**：
+### 代码规范 / Code Standards
+
+- **Naming Conventions / 命名约定**:
   - Entity: `{Name}`
   - Mapper: `{Name}Mapper`
   - Service: `{Name}Service`
@@ -298,69 +342,86 @@ Controller → Service → Mapper (数据库)
   - DTO Request: `{Name}{Action}Request`
   - VO: `{Name}VO`
 
-- **Lombok 注解**：广泛使用 `@Data`、`@Slf4j`、`@AllArgsConstructor` 等减少样板代码
+- **Lombok Annotations / Lombok 注解**: Extensive use of `@Data`, `@Slf4j`, `@AllArgsConstructor` to reduce boilerplate code
 
-- **异常处理**：使用 `BusinessException` + `GlobalExceptionHandler` 统一处理异常
+- **Exception Handling / 异常处理**: Use `BusinessException` + `GlobalExceptionHandler` for unified exception handling
 
-- **权限校验**：使用 `@AuthCheck` 注解，不要在 Controller 中写权限逻辑
+- **Permission Validation / 权限校验**: Use `@AuthCheck` annotation, don't write permission logic in Controller
 
-## 部署
+---
 
-### 生产环境配置
+## 部署 / Deployment
 
-1. 修改 `application-prod.yml` 中的生产环境配置
-2. 激活生产环境 profile：
+### 生产环境配置 / Production Environment Configuration
+
+1. Modify production environment configuration in `application-prod.yml`
+2. Activate production environment profile:
 ```yaml
 spring:
   profiles:
     active: prod
 ```
 
-3. 构建并打包：
+3. Build and package:
 ```bash
 ./mvnw clean package -DskipTests
 ```
 
-4. 运行 JAR 文件：
+4. Run JAR file:
 ```bash
 java -jar target/yun-picture-backend-0.0.1-SNAPSHOT.jar
 ```
 
-## 常见问题
+---
 
-### Windows 端口占用错误
+## 常见问题 / FAQ
 
-如果遇到 `EACCES permission denied` 错误：
+### Windows Port Occupancy Error / Windows 端口占用错误
+
+If you encounter `EACCES permission denied` error:
 
 ```cmd
 net stop winnat
 net start winnat
 ```
 
-### 配置敏感信息
+### Sensitive Information Configuration / 配置敏感信息
 
-生产环境请勿在配置文件中硬编码敏感信息，建议：
-- 使用环境变量
-- 使用配置中心（如 Nacos、Apollo）
-- 使用密钥管理服务（如 AWS Secrets Manager）
+Do not hardcode sensitive information in configuration files in production. Recommended:
+- Use environment variables
+- Use configuration centers (such as Nacos, Apollo)
+- Use key management services (such as AWS Secrets Manager)
 
-## 前端项目
+---
 
-狐仙云图前端项目地址：https://github.com/wardforce/yun-picture-frontend
+## 前端项目 / Frontend Project
 
-## 许可证
+狐仙 AI 云端素材库前端项目地址：
+Huxian AI Cloud Material Library Frontend Project:
+https://github.com/wardforce/yun-picture-frontend
 
+---
+
+## 许可证 / License
+
+This project is licensed under the [Apache License 2.0](LICENSE).
 本项目采用 [Apache License 2.0](LICENSE) 开源协议。
 
-## 贡献
+---
 
+## 贡献 / Contributing
+
+Welcome to submit Issues and Pull Requests!
 欢迎提交 Issue 和 Pull Request！
 
 ---
 
 <div align="center">
 
-**狐仙云图** - 让图片管理更简单
+**狐仙 AI 云端素材库 / Huxian AI Cloud Material Library**
+
+Enterprise-Level Intelligent Collaborative Cloud Image Library Platform
+创新的企业级智能协同云图库平台
 
 Made with ❤️ by wardforce
 
