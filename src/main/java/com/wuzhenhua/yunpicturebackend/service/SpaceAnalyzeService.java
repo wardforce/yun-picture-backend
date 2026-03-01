@@ -16,7 +16,7 @@ public interface SpaceAnalyzeService extends IService<Space> {
      * @param spaceAnalyzeRequest
      * @return
      */
-    SpaceUsageAnalyzeRequest getSpaceUsageAnalyze(User user, SpaceAnalyzeRequest spaceAnalyzeRequest);
+    SpaceUsageAnalyzeResponse getSpaceUsageAnalyze(User user, SpaceAnalyzeRequest spaceAnalyzeRequest);
 
     /**
      * Get space category analyze
@@ -45,4 +45,8 @@ public interface SpaceAnalyzeService extends IService<Space> {
      * @return
      */
     List<SpaceUserAnalyzeResponse> getSpaceUserAnalyze(SpaceUserAnalyzeRequest spaceUserAnalyzeRequest, User loginUser);
+    /**
+     * 获取空间排行分析，仅管理员
+     */
+    List<Space> getSpaceRankByUsage(SpaceRankAnalyzeRequest spaceRankAnalyzeRequest, User loginUser);
 }

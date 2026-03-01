@@ -37,3 +37,9 @@ build/
 .coding-aider-plans
 /src/main/resources/application-local.yml
 /src/main/resources/application-prod.yml
+
+### Claude Code ###
+.omc/
+*.log
+cookies.txt
+tmpclaude-*

@@ -104,7 +104,7 @@ public class SpaceAnalyzeServiceImpl extends ServiceImpl<SpaceMapper, Space> imp
 
 
     @Override
-    public SpaceUsageAnalyzeRequest getSpaceUsageAnalyze(User loginUser, SpaceAnalyzeRequest spaceAnalyzeRequest) {
+    public SpaceUsageAnalyzeResponse getSpaceUsageAnalyze(User loginUser, SpaceAnalyzeRequest spaceAnalyzeRequest) {
         //校验参数
         //全空间或公共图库，需要从Picture表中查询
         if (spaceAnalyzeRequest.isQueryAll()|| spaceAnalyzeRequest.isQueryPublic()){
@@ -163,7 +163,7 @@ public class SpaceAnalyzeServiceImpl extends ServiceImpl<SpaceMapper, Space> imp
         return pictureService.getBaseMapper().selectMaps(pictureQueryWrapper).stream()
                 .map(result->{
                     String category = (String) result.get("category");
-                    Long count = (Long) result.get("count");
+                    Long count = ((Number) result.get("count")).longValue();
                     Long totalSize = (Long) result.get("totalSize");
                     SpaceCategoryAnalyzeResponse categoryData = new SpaceCategoryAnalyzeResponse();
                     categoryData.setCategory(category);
@@ -238,7 +238,7 @@ public class SpaceAnalyzeServiceImpl extends ServiceImpl<SpaceMapper, Space> imp
         fillAnalyzeQueryWrapper(spaceUserAnalyzeRequest, pictureQueryWrapper);
         //补充用户id查询
         Long userId = spaceUserAnalyzeRequest.getUserId();
-        pictureQueryWrapper.eq(ObjUtil.isNotNull(userId), "userId", loginUser.getId());
+        pictureQueryWrapper.eq(ObjUtil.isNotNull(userId), "userId", userId);
         //补充分析维度，每日，每周，每月
         String timeDimension=spaceUserAnalyzeRequest.getTimeDimension();
         switch (timeDimension) {
@@ -260,14 +260,27 @@ public class SpaceAnalyzeServiceImpl extends ServiceImpl<SpaceMapper, Space> imp
         List<Map<String, Object>> maps = pictureService.getBaseMapper().selectMaps(pictureQueryWrapper);
         return maps.stream()
                 .map(result->{
-                    String period = (String) result.get("period");
-                    Long count = (Long) result.get("count");
+                    String period = (String) result.get("period").toString();
+                    Long count = ((Number) result.get("count")).longValue();
                     SpaceUserAnalyzeResponse categoryData = new SpaceUserAnalyzeResponse();
                     categoryData.setPeriod(period);
                     categoryData.setCount(count);
                     return categoryData;
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Space> getSpaceRankByUsage(SpaceRankAnalyzeRequest spaceRankAnalyzeRequest, User loginUser) {
+        ThrowUtils.throwIf(spaceRankAnalyzeRequest==null, ErrorCode.PARAMS_ERROR,"请求参数不能为空");
+        //校验权限，仅管理员可以访问
+        ThrowUtils.throwIf(!userService.isAdmin(loginUser), ErrorCode.NO_AUTH_ERROR,"只有管理员才能分析空间排行");
+        //查询空间使用排行，按照总大小排序
+         LambdaQueryWrapper<Space> spaceQueryWrapper = new LambdaQueryWrapper<>();
+         spaceQueryWrapper.select(Space::getId, Space::getSpaceName, Space::getUserId,Space::getTotalSize)
+                 .orderByDesc(Space::getTotalSize)
+                 .last("LIMIT " + spaceRankAnalyzeRequest.getTopN());//取前n个
+        return spaceService.list(spaceQueryWrapper);
     }
 
 }

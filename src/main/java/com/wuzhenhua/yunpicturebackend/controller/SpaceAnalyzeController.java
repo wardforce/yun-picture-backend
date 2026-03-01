@@ -2,10 +2,8 @@ package com.wuzhenhua.yunpicturebackend.controller;
 
 import com.wuzhenhua.yunpicturebackend.common.BaseResponse;
 import com.wuzhenhua.yunpicturebackend.exception.ErrorCode;
-import com.wuzhenhua.yunpicturebackend.model.dto.space.analyze.SpaceCategoryAnalyzeRequest;
-import com.wuzhenhua.yunpicturebackend.model.dto.space.analyze.SpaceTagAnalyzeRequest;
-import com.wuzhenhua.yunpicturebackend.model.dto.space.analyze.SpaceUsageAnalyzeRequest;
-import com.wuzhenhua.yunpicturebackend.model.dto.space.analyze.SpaceUserAnalyzeRequest;
+import com.wuzhenhua.yunpicturebackend.model.dto.space.analyze.*;
+import com.wuzhenhua.yunpicturebackend.model.entity.Space;
 import com.wuzhenhua.yunpicturebackend.model.entity.User;
 import com.wuzhenhua.yunpicturebackend.model.vo.space.analyze.*;
 import com.wuzhenhua.yunpicturebackend.service.SpaceAnalyzeService;
@@ -40,13 +38,13 @@ public class SpaceAnalyzeController {
      */
     @Operation(summary = "获取空间使用状态", description = "查询指定空间的使用情况，包括已用容量、剩余容量、使用百分比等信息")
     @PostMapping("/usage")
-    public BaseResponse<SpaceUsageAnalyzeRequest> getSpaceUsageAnalyze(
+    public BaseResponse<SpaceUsageAnalyzeResponse> getSpaceUsageAnalyze(
             @RequestBody SpaceUsageAnalyzeRequest spaceUsageAnalyzeRequest,
             HttpServletRequest request
     ) {
         ThrowUtils.throwIf(spaceUsageAnalyzeRequest == null, ErrorCode.PARAMS_ERROR);
         User loginUser = userService.getLoginUser(request);
-        SpaceUsageAnalyzeRequest spaceUsageAnalyze = spaceAnalyzeService.getSpaceUsageAnalyze(loginUser, spaceUsageAnalyzeRequest);
+        SpaceUsageAnalyzeResponse spaceUsageAnalyze = spaceAnalyzeService.getSpaceUsageAnalyze(loginUser, spaceUsageAnalyzeRequest);
         return ResultUtils.success(spaceUsageAnalyze);
     }
     /**
@@ -86,6 +84,14 @@ public class SpaceAnalyzeController {
         ThrowUtils.throwIf(spaceUserAnalyzeRequest == null, ErrorCode.PARAMS_ERROR);
         User loginUser = userService.getLoginUser(request);
         List<SpaceUserAnalyzeResponse> resultList = spaceAnalyzeService.getSpaceUserAnalyze(spaceUserAnalyzeRequest, loginUser);
+        return ResultUtils.success(resultList);
+    }
+    @PostMapping("/rank")
+    @Operation(summary = "空间排行分析", description = "获取空间排行分析结果，仅管理员可访问，返回排名前 N 的空间列表")
+    public  BaseResponse<List<Space>> getSpaceRankAnalyze(@RequestBody SpaceRankAnalyzeRequest spaceRankAnalyzeRequest, HttpServletRequest request) {
+        ThrowUtils.throwIf(spaceRankAnalyzeRequest == null, ErrorCode.PARAMS_ERROR);
+        User loginUser = userService.getLoginUser(request);
+        List<Space> resultList = spaceAnalyzeService.getSpaceRankByUsage(spaceRankAnalyzeRequest, loginUser);
         return ResultUtils.success(resultList);
     }
 }
