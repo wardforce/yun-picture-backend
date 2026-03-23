@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * @author ward
- * @description 针对表【chat_history_picture(对话历史图片关联表)】的数据库操作Service
+ *  针对表【chat_history_picture(对话历史图片关联表)】的数据库操作Service
  */
 public interface ChatHistoryPictureService extends IService<ChatHistoryPicture> {
 
@@ -41,4 +41,6 @@ public interface ChatHistoryPictureService extends IService<ChatHistoryPicture> 
      * @return
      */
     boolean deleteByPictureId(Long pictureId);
+
+
 }

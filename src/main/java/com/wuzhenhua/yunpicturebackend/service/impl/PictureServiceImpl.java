@@ -20,6 +20,7 @@ import com.wuzhenhua.yunpicturebackend.manager.upload.UrlPictureUpload;
 import com.wuzhenhua.yunpicturebackend.mapper.pictureMapper;
 import com.wuzhenhua.yunpicturebackend.model.dto.file.UploadPictureResult;
 import com.wuzhenhua.yunpicturebackend.model.dto.picture.*;
+import com.wuzhenhua.yunpicturebackend.model.entity.ChatHistoryPicture;
 import com.wuzhenhua.yunpicturebackend.model.entity.Picture;
 import com.wuzhenhua.yunpicturebackend.model.entity.Space;
 import com.wuzhenhua.yunpicturebackend.model.entity.User;
@@ -557,7 +558,14 @@ public class PictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
         transactionTemplate.executeWithoutResult(status -> {
             boolean result = this.removeById(pictureId);
             ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR, "图片删除失败");
-            ThrowUtils.throwIf(!chatHistoryPictureService.deleteByPictureId(pictureId),ErrorCode.OPERATION_ERROR,"删除图片聊天记录失败");
+
+            // 检查是否有对应的聊天记录，有则删除
+            long count = chatHistoryPictureService.lambdaQuery()
+                    .eq(ChatHistoryPicture::getPictureId, pictureId)
+                    .count();
+            if (count > 0) {
+                ThrowUtils.throwIf(!chatHistoryPictureService.deleteByPictureId(pictureId), ErrorCode.OPERATION_ERROR, "删除图片聊天记录失败");
+            }
             //更新空间的使用额度，释放额度
             if (oldPicture.getSpaceId() != null) {
                 boolean update = spaceService.lambdaUpdate()

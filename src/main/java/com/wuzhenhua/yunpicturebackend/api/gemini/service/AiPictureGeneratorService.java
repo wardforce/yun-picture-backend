@@ -4,9 +4,9 @@ import com.wuzhenhua.yunpicturebackend.api.gemini.model.AiGenerateResponse;
 import com.wuzhenhua.yunpicturebackend.api.gemini.model.CreateChatRequest;
 import com.wuzhenhua.yunpicturebackend.api.gemini.model.CreateImageRequest;
 import com.wuzhenhua.yunpicturebackend.api.gemini.model.ImageResponse;
-import com.wuzhenhua.yunpicturebackend.api.gemini.model.PrepareImageResponse;
+
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.web.multipart.MultipartFile;
+
 
 public interface AiPictureGeneratorService {
 
@@ -25,4 +25,5 @@ public interface AiPictureGeneratorService {
      * @return an AiGenerateResponse containing the AI-generated image and associated chat history
      */
     AiGenerateResponse generateAiImage(CreateChatRequest request, HttpServletRequest httpServletRequest);
+
 }
