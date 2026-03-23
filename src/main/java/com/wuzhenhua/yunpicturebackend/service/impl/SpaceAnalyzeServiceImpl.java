@@ -18,6 +18,8 @@ import com.wuzhenhua.yunpicturebackend.service.PictureService;
 import com.wuzhenhua.yunpicturebackend.service.SpaceAnalyzeService;
 import com.wuzhenhua.yunpicturebackend.service.SpaceService;
 import com.wuzhenhua.yunpicturebackend.service.UserService;
+import com.wuzhenhua.yunpicturebackend.utils.NumberCastUtils;
+import com.wuzhenhua.yunpicturebackend.utils.SpaceAnalyzeScopeUtils;
 import com.wuzhenhua.yunpicturebackend.utils.ThrowUtils;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -48,19 +50,16 @@ public class SpaceAnalyzeServiceImpl extends ServiceImpl<SpaceMapper, Space> imp
      */
     public void checkSpaceAnalyzeAuth(SpaceAnalyzeRequest spaceAnalyzeRequest, User loginUser) {
         Long spaceId = spaceAnalyzeRequest.getSpaceId();
-        boolean queryPublic = spaceAnalyzeRequest.isQueryPublic();
-        boolean queryAll = spaceAnalyzeRequest.isQueryAll();
         //全空间分析或公共图库，仅管理员可以看到
-        if(queryPublic && queryAll) {
-            Space space = this.getById(spaceId);
-            ThrowUtils.throwIf(!userService.isAdmin(loginUser), ErrorCode.NO_AUTH_ERROR,"只有管理员才能分析私密空间");
-        }else{
-            //分析指定空间,仅本人和管理员可以访问
-            ThrowUtils.throwIf(spaceId==null, ErrorCode.PARAMS_ERROR,"空间ID不能为空");
-            Space space = spaceService.getById(spaceId);
-            ThrowUtils.throwIf(space==null, ErrorCode.NOT_FOUND_ERROR,"空间不存在");
-            spaceService.checkSpaceAuth(loginUser, space);
+        if (SpaceAnalyzeScopeUtils.isGlobalScope(spaceAnalyzeRequest)) {
+            ThrowUtils.throwIf(!userService.isAdmin(loginUser), ErrorCode.NO_AUTH_ERROR, "只有管理员才能分析公共图库或全部空间");
+            return;
         }
+        //分析指定空间,仅本人和管理员可以访问
+        ThrowUtils.throwIf(spaceId==null, ErrorCode.PARAMS_ERROR,"空间ID不能为空");
+        Space space = spaceService.getById(spaceId);
+        ThrowUtils.throwIf(space==null, ErrorCode.NOT_FOUND_ERROR,"空间不存在");
+        spaceService.checkSpaceAuth(loginUser, space);
     }
     /**
      * 根据请求参数填充空间分析的范围过滤条件
@@ -71,11 +70,9 @@ public class SpaceAnalyzeServiceImpl extends ServiceImpl<SpaceMapper, Space> imp
      */
     private void fillSpaceBySpaceLevel(SpaceAnalyzeRequest spaceAnalyzeRequest, LambdaQueryWrapper<Picture> pictureLambdaQueryWrapper) {
         Long spaceId = spaceAnalyzeRequest.getSpaceId();
-        boolean queryPublic = spaceAnalyzeRequest.isQueryPublic();
-        boolean queryAll = spaceAnalyzeRequest.isQueryAll();
         //全空间分析或公共图库
-        if (queryAll) return;
-        if (queryPublic) {
+        if (spaceAnalyzeRequest.isQueryAll()) return;
+        if (spaceAnalyzeRequest.isQueryPublic()) {
             pictureLambdaQueryWrapper.isNull(Picture::getSpaceId);
             return;
         }
@@ -91,23 +88,22 @@ public class SpaceAnalyzeServiceImpl extends ServiceImpl<SpaceMapper, Space> imp
             return;
         }
         if (spaceAnalyzeRequest.isQueryPublic()) {
-            queryWrapper.isNull("spaceId");
+            queryWrapper.isNull("space_id");
             return;
         }
         Long spaceId = spaceAnalyzeRequest.getSpaceId();
         if (spaceId != null) {
-            queryWrapper.eq("spaceId", spaceId);
+            queryWrapper.eq("space_id", spaceId);
             return;
         }
         throw new BusinessException(ErrorCode.PARAMS_ERROR, "未指定查询范围");
     }
 
-
     @Override
     public SpaceUsageAnalyzeResponse getSpaceUsageAnalyze(User loginUser, SpaceAnalyzeRequest spaceAnalyzeRequest) {
         //校验参数
         //全空间或公共图库，需要从Picture表中查询
-        if (spaceAnalyzeRequest.isQueryAll()|| spaceAnalyzeRequest.isQueryPublic()){
+        if (SpaceAnalyzeScopeUtils.isGlobalScope(spaceAnalyzeRequest)){
             //校验，仅仅管理员可以使用
             checkSpaceAnalyzeAuth(spaceAnalyzeRequest, loginUser);
             //统计图库的使用空间
@@ -116,7 +112,7 @@ public class SpaceAnalyzeServiceImpl extends ServiceImpl<SpaceMapper, Space> imp
             //补充查询范围
             fillSpaceBySpaceLevel(spaceAnalyzeRequest, pictureLambdaQueryWrapper);
             List<Object> pictureObjList = pictureService.getBaseMapper().selectObjs(pictureLambdaQueryWrapper);
-            long usedSize = pictureObjList.stream().mapToLong(result -> result instanceof Long ? (Long) result : 0).sum();
+            long usedSize = pictureObjList.stream().mapToLong(NumberCastUtils::toLongValue).sum();
             long usedCount = pictureObjList.size();
             SpaceUsageAnalyzeResponse spaceUsageAnalyzeResponse = new SpaceUsageAnalyzeResponse();
             spaceUsageAnalyzeResponse.setUsedSize(usedSize);
@@ -126,7 +122,8 @@ public class SpaceAnalyzeServiceImpl extends ServiceImpl<SpaceMapper, Space> imp
             spaceUsageAnalyzeResponse.setUsedCount(usedCount);
             spaceUsageAnalyzeResponse.setMaxCount(null);
             spaceUsageAnalyzeResponse.setCountUsageRatio(null);
-        }else{
+            return spaceUsageAnalyzeResponse;
+        } else {
             //分析特定空间，需要从Space表中查询
             Long spaceId = spaceAnalyzeRequest.getSpaceId();
             ThrowUtils.throwIf(spaceId==null||spaceId<=0, ErrorCode.PARAMS_ERROR,"空间ID不能为空");
@@ -143,9 +140,8 @@ public class SpaceAnalyzeServiceImpl extends ServiceImpl<SpaceMapper, Space> imp
             spaceUsageAnalyzeResponse.setUsedCount(space.getTotalCount());
             spaceUsageAnalyzeResponse.setMaxCount(space.getMaxCount());
             spaceUsageAnalyzeResponse.setCountUsageRatio(countUsageRatio);
+            return spaceUsageAnalyzeResponse;
         }
-
-        return null;
     }
 
     @Override
@@ -157,14 +153,14 @@ public class SpaceAnalyzeServiceImpl extends ServiceImpl<SpaceMapper, Space> imp
         QueryWrapper<Picture> pictureQueryWrapper = new QueryWrapper<>();
         fillAnalyzeQueryWrapper(spaceCategoryAnalyzeRequest, pictureQueryWrapper);
         //使用Mybatis-Plus的分组查询
-        pictureQueryWrapper.select("category", "COUNT(*) as count", "SUM(picSize) as totalSize")
+        pictureQueryWrapper.select("category", "COUNT(*) as count", "SUM(pic_size) as totalSize")
                 .groupBy("category");
         //查询
         return pictureService.getBaseMapper().selectMaps(pictureQueryWrapper).stream()
                 .map(result->{
                     String category = (String) result.get("category");
-                    Long count = ((Number) result.get("count")).longValue();
-                    Long totalSize = (Long) result.get("totalSize");
+                    Long count = NumberCastUtils.toLongValue(result.get("count"));
+                    Long totalSize = NumberCastUtils.toLongValue(result.get("totalSize"));
                     SpaceCategoryAnalyzeResponse categoryData = new SpaceCategoryAnalyzeResponse();
                     categoryData.setCategory(category);
                     categoryData.setCount(count);
@@ -238,18 +234,18 @@ public class SpaceAnalyzeServiceImpl extends ServiceImpl<SpaceMapper, Space> imp
         fillAnalyzeQueryWrapper(spaceUserAnalyzeRequest, pictureQueryWrapper);
         //补充用户id查询
         Long userId = spaceUserAnalyzeRequest.getUserId();
-        pictureQueryWrapper.eq(ObjUtil.isNotNull(userId), "userId", userId);
+        pictureQueryWrapper.eq(ObjUtil.isNotNull(userId), "user_id", userId);
         //补充分析维度，每日，每周，每月
         String timeDimension=spaceUserAnalyzeRequest.getTimeDimension();
         switch (timeDimension) {
             case "day":
-                pictureQueryWrapper.select("DATE_FORMAT(createTime, '%Y-%m-%d') as period, COUNT(*) as count");
+                pictureQueryWrapper.select("DATE_FORMAT(create_time, '%Y-%m-%d') as period, COUNT(*) as count");
                 break;
             case "week":
-                pictureQueryWrapper.select("YEARWEEK(createTime) AS period", "COUNT(*) AS count");
+                pictureQueryWrapper.select("YEARWEEK(create_time) AS period", "COUNT(*) AS count");
                 break;
             case "month":
-                pictureQueryWrapper.select("DATE_FORMAT(createTime, '%Y-%m') AS period", "COUNT(*) AS count");
+                pictureQueryWrapper.select("DATE_FORMAT(create_time, '%Y-%m') AS period", "COUNT(*) AS count");
                 break;
             default:
                 ThrowUtils.throwIf(true,ErrorCode.PARAMS_ERROR,"时间维度错误");
@@ -261,7 +257,7 @@ public class SpaceAnalyzeServiceImpl extends ServiceImpl<SpaceMapper, Space> imp
         return maps.stream()
                 .map(result->{
                     String period = (String) result.get("period").toString();
-                    Long count = ((Number) result.get("count")).longValue();
+                    Long count = NumberCastUtils.toLongValue(result.get("count"));
                     SpaceUserAnalyzeResponse categoryData = new SpaceUserAnalyzeResponse();
                     categoryData.setPeriod(period);
                     categoryData.setCount(count);
