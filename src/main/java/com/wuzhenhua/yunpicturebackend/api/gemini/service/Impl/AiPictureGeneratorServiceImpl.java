@@ -20,6 +20,7 @@ import com.wuzhenhua.yunpicturebackend.model.vo.PictureVO;
 import com.wuzhenhua.yunpicturebackend.service.ChatHistoryService;
 import com.wuzhenhua.yunpicturebackend.service.PictureService;
 import com.wuzhenhua.yunpicturebackend.service.UserService;
+import com.wuzhenhua.yunpicturebackend.service.impl.AiChatSpaceBindingUtils;
 
 import com.wuzhenhua.yunpicturebackend.utils.ThrowUtils;
 import jakarta.annotation.Resource;
@@ -51,16 +52,16 @@ public class AiPictureGeneratorServiceImpl implements AiPictureGeneratorService 
     @Override
     @Deprecated
     public ImageResponse generateImages(CreateImageRequest request, HttpServletRequest httpServletRequest) {
-        // 1.检验用户
+        // 1.婵☆偀鍋撳Δ鐘茬灱閺併倝骞?
         User loginUser = userService.getLoginUser(httpServletRequest);
-        ThrowUtils.throwIf(loginUser == null, ErrorCode.NO_AUTH_ERROR, "用户不能为空");
+        ThrowUtils.throwIf(loginUser == null, ErrorCode.NO_AUTH_ERROR, "User must be logged in");
         String prompt = request.getPrompt();
         log.info("Prompt: {}", prompt);
-        // 判断图片
+        // 闁告帇鍊栭弻鍥炊閸撗冾暬
         MultipartFile file = request.getFile();
         ImageResponse imageResponse = new ImageResponse();
 
-        // 配置 Gemini 生成内容
+        // 闂佹澘绉堕悿?Gemini 闁汇垻鍠愰崹姘跺礃閸涱収鍟?
         GenerateContentConfig config = GenerateContentConfig.builder()
                 .responseModalities(ImmutableList.of("IMAGE", "TEXT"))
                 .build();
@@ -68,32 +69,32 @@ public class AiPictureGeneratorServiceImpl implements AiPictureGeneratorService 
         try {
             List<Content> contents;
             if (file == null) {
-                // 仅文字生成图片
-                log.info("发送纯文本请求到 Gemini API, prompt length: {}", prompt.length());
+                // 濞寸姴鎳忛弸鍐偓娑欘殘閺佹捇骞嬮幇顒佺闁?
+                log.info("闁告瑦鍨块埀顑胯兌閸戜粙寮崶銊︽嫳閻犲洭鏀遍惇浼村礆?Gemini API, prompt length: {}", prompt.length());
                 contents = ImmutableList.of(Content.builder()
                         .role("user")
                         .parts(ImmutableList.of(Part.fromText(prompt)))
                         .build());
             } else {
-                // 图片+文字生成新图片
-                // 1. 先上传到 COS，获取压缩后的图片
+                // 闁搞儱澧芥晶?闁哄倸娲ら悺褔鎮介悢绋跨亣闁哄倹婢樺ù姗€鎮?
+                // 1. 闁稿繐鐗呯粭鍌涘閻樻彃鐓?COS闁挎稑鐭侀獮蹇涘矗閺嵮冪缂傚倵鏅涢幃妤呮儍閸曨偅绂堥柣?
                 PictureUploadRequest pictureUploadRequest = new PictureUploadRequest();
                 PictureVO uploadPicture = pictureService.uploadPicture(
                         file, pictureUploadRequest, loginUser);
                 imageResponse.setUploadPicture(uploadPicture);
 
-                // 2. 优先使用 thumbnailUrl，如果没有则降级使用 url
+                // 2. 濞村吋锚閸樻稒鎷呯捄銊︽殢 thumbnailUrl闁挎稑鑻々褔寮稿鍕⒕闁哄牆顦崹顖炴⒔瀹ュ洭鐛撳ù锝堟硶閺?url
                 String imageUrl = uploadPicture.getThumbnailUrl();
                 if (imageUrl == null || imageUrl.isEmpty()) {
                     imageUrl = uploadPicture.getUrl();
-                    log.warn("图片 {} 没有缩略图，使用原图 URL", uploadPicture.getId());
+                    log.warn("闁搞儱澧芥晶?{} 婵炲备鍓濆﹢浣虹磽閳哄啯娈ｉ柛銉︽嫕缁辨繃鎷呯捄銊︽殢闁告鍠庡ù?URL", uploadPicture.getId());
                 }
                 byte[] compressedImageBytes = downloadImageFromUrl(imageUrl);
 
-                log.info("发送图片+文本请求到 Gemini API, 原始大小: {} bytes, 压缩后: {} bytes, prompt length: {}",
+                log.info("闁告瑦鍨块埀顑跨濞存﹢鎮?闁哄倸娲﹀﹢鎵嫚闁垮婀撮柛?Gemini API, 闁告鍠庨～鎰緞瑜嶉惃? {} bytes, 闁告ê顑囩紓澶愬触? {} bytes, prompt length: {}",
                         file.getSize(), compressedImageBytes.length, prompt.length());
 
-                // 3. 构建包含图片和文字的请求内容
+                // 3. 闁哄瀚紓鎾诲礌閸涱厽鍎撻柛銉ュ⒔婢ф牠宕仦鐐€悗娑欘殘濞堟垹鎷犻柨瀣勾闁告劕鎳庨?
                 contents = ImmutableList.of(Content.builder()
                         .role("user")
                         .parts(ImmutableList.of(
@@ -102,15 +103,15 @@ public class AiPictureGeneratorServiceImpl implements AiPictureGeneratorService 
                         .build());
             }
 
-            // 调用 Gemini API（使用非流式接口，避免 SDK 流式解析 bug）
+            // 閻犲鍟伴弫?Gemini API闁挎稑鐗呮繛鍥偨閵娾晜濮滄繛缈犵缁憋繝骞掗妷銉ョ稉闁挎稑鐭傛导鈺呭礂?SDK 婵炵繝绀佺槐锛勬喆閿濆棛鈧?bug闁?
             GenerateContentResponse response = gemini.client.models.generateContent(gemini.modelName, contents, config);
 
-            // 处理 Gemini 返回的响应
+            // 濠㈣泛瀚幃?Gemini 閺夆晜鏌ㄥú鏍儍閸曨偅鎯欓幖?
             if (response.candidates().isPresent() && !response.candidates().get().isEmpty()) {
                 List<Part> parts = response.candidates().get().get(0).content().get().parts().get();
                 for (Part part : parts) {
                     if (part.inlineData().isPresent()) {
-                        // 处理图片数据
+                        // 濠㈣泛瀚幃濠囧炊閸撗冾暬闁轰胶澧楀畵?
                         Blob inlineData = part.inlineData().get();
                         if (inlineData.data().isPresent()) {
                             byte[] generatedImageBytes = inlineData.data().get();
@@ -118,10 +119,10 @@ public class AiPictureGeneratorServiceImpl implements AiPictureGeneratorService 
                             String fileName = "ai_generated_" + UUID.randomUUID()
                                     + getExtensionFromMimeType(generatedMimeType);
 
-                            log.info("收到 Gemini 生成的图片, size: {} bytes, mimeType: {}",
+                            log.info("闁衡偓鐠哄搫鐓?Gemini 闁汇垻鍠愰崹姘舵儍閸曨偅绂堥柣? size: {} bytes, mimeType: {}",
                                     generatedImageBytes.length, generatedMimeType);
 
-                            // 创建 MultipartFile 并上传到 COS
+                            // 闁告帗绋戠紓?MultipartFile 妤犵偞婀圭粭鍌涘閻樻彃鐓?COS
                             MultipartFile generatedFile = new Base64DecodedMultipartFile(
                                     generatedImageBytes, fileName, generatedMimeType);
 
@@ -131,94 +132,92 @@ public class AiPictureGeneratorServiceImpl implements AiPictureGeneratorService 
                             imageResponse.setGeneratePicture(generatePicture);
                         }
                     } else if (part.text().isPresent()) {
-                        // 处理文本数据
+                        // 濠㈣泛瀚幃濠囧棘閸ャ劍鎷遍柡浣哄瀹?
                         String text = part.text().get();
-                        log.info("收到 Gemini 文本响应: {}", text);
+                        log.info("闁衡偓鐠哄搫鐓?Gemini 闁哄倸娲﹀﹢浼村传瀹ュ懐瀹? {}", text);
                         imageResponse.setText(text);
                     }
                 }
             }
 
-            log.info("Gemini API 响应处理完成");
+            log.info("Gemini API response handled successfully");
             return imageResponse;
 
         } catch (IOException e) {
-            log.error("图片处理失败", e);
-            throw new BusinessException(ErrorCode.OPERATION_ERROR, "图片处理失败:" + e.getMessage());
+            log.error("Image processing failed", e);
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "Image processing failed: " + e.getMessage());
         } catch (Exception e) {
-            log.error("Gemini API 调用失败", e);
-            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "Gemini API 调用失败:" + e.getMessage());
+            log.error("Gemini API 閻犲鍟伴弫銈嗗緞鏉堫偉袝", e);
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "Gemini API 閻犲鍟伴弫銈嗗緞鏉堫偉袝:" + e.getMessage());
         }
     }
 
     @Override
     public AiGenerateResponse generateAiImage(CreateChatRequest request, HttpServletRequest httpServletRequest) {
-        // 1. 验证用户
+        // 1. 濡ょ姴鐭侀惁澶愭偨閵婏箑鐓?
         User loginUser = userService.getLoginUser(httpServletRequest);
-        ThrowUtils.throwIf(loginUser == null, ErrorCode.NO_AUTH_ERROR, "用户不能为空");
+        ThrowUtils.throwIf(loginUser == null, ErrorCode.NO_AUTH_ERROR, "User must be logged in");
         String prompt = request.getPrompt();
         List<Long> pictureIds = request.getPictureIds();
         Long requestSpaceId = request.getSpaceId();
+        Long existingSessionSpaceId = getExistingSessionSpaceId(request.getSessionId(), loginUser.getId());
+        Long effectiveChatSpaceId = AiChatSpaceBindingUtils.resolveChatSpaceId(
+                requestSpaceId, existingSessionSpaceId, request.getSessionId() != null);
 
-        Long aigeneratedPictureSpaceId = null;
-        if (ObjUtil.isNotNull(requestSpaceId)) {
-            aigeneratedPictureSpaceId = requestSpaceId;
-        }
-
-        // 2. 校验图片数量（最多14张）
+        // 2. 闁哄稄绻濋悰娆撳炊閸撗冾暬闁轰椒鍗抽崳娲晬閸喐浠樺?4鐎殿喚濯寸槐?
         if (pictureIds != null && pictureIds.size() > 14) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "最多支持14张参考图片");
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "Too many reference pictures");
         }
         ChatHistory userChatHistory = null;
 
-        if (requestSpaceId == null || ObjUtil.isNull(requestSpaceId)) {
-            // 3. 保存用户消息到 chat_history（支持多图片）
+        if (effectiveChatSpaceId == null || ObjUtil.isNull(effectiveChatSpaceId)) {
+            // 3. 濞ｅ洦绻傞悺銊╂偨閵婏箑鐓曟繛鎴濈墛娴煎懘宕?chat_history闁挎稑鐗婇弫顕€骞愭担鍓叉▼闁搞儱澧芥晶鏍晬?
             userChatHistory = chatHistoryService.saveUserMessage(
                     loginUser.getId(), prompt, pictureIds, request.getSessionId());
-            log.info("generateAiImage - 用户消息已保存, chatHistoryId: {}", userChatHistory.getId());
+            log.info("generateAiImage - 闁活潿鍔嶉崺娑樷槈閸喍绱栫€规瓕寮撶换姘扁偓? chatHistoryId: {}", userChatHistory.getId());
         } else {
-            // 3. 保存用户消息到 chat_history（支持多图片）
+            // 3. 濞ｅ洦绻傞悺銊╂偨閵婏箑鐓曟繛鎴濈墛娴煎懘宕?chat_history闁挎稑鐗婇弫顕€骞愭担鍓叉▼闁搞儱澧芥晶鏍晬?
             userChatHistory = chatHistoryService.saveUserMessage(
-                    loginUser.getId(), prompt, pictureIds, request.getSessionId(), requestSpaceId);
-            log.info("generateAiImage - 用户消息已保存, chatHistoryId: {}", userChatHistory.getId());
+                    loginUser.getId(), prompt, pictureIds, request.getSessionId(), effectiveChatSpaceId);
+            log.info("generateAiImage - 闁活潿鍔嶉崺娑樷槈閸喍绱栫€规瓕寮撶换姘扁偓? chatHistoryId: {}", userChatHistory.getId());
         }
 
         AiGenerateResponse response = new AiGenerateResponse();
 
-        // 配置 Gemini 生成内容
+        // 闂佹澘绉堕悿?Gemini 闁汇垻鍠愰崹姘跺礃閸涱収鍟?
         GenerateContentConfig config = GenerateContentConfig.builder()
                 .responseModalities(ImmutableList.of("IMAGE", "TEXT"))
                 .systemInstruction(
                         Content.fromParts(Part.fromText("""
-                                # 角色与目标
+                                # 閻熸瑦甯熸竟濠冪▔鎼达絾绐楅柡?
                                 
-                                你是一位高级 AI 艺术总监和图像生成专家。你的目标是基于用户的【文字描述】和配置的【参考图片】，合成一张画面统一、高质量的图像。
+                                濞达絿濮靛Σ鍛婄▔閳ь剚鎷呭澶屽蒋缂?AI 闁煎湱鍎ゅ﹢鎶藉箑閼姐倖纾ч柛婊冭嫰濞存﹢宕撹箛鏇熸櫢闁瑰瓨鍔掔粭鎾垛偓纭呯堪閳ь剙鍊风紞姗€鎯冮崟顓熺獥闁哄秴娲﹀Σ鎼佸春鏉炴壆鑹鹃柣顫妽閸╂盯鎯冮崟鈹惧亾閹邦厽鐎悗娑欘殕瀵寧娼婚懜顑藉亾閹存繃瀚查梺鏉跨Ф閻ゅ棝鎯冮崟鈹惧亾閹邦剙妫橀柤鏉垮暙濞存﹢鎮ч崶銉㈠亾閹搭垳绀夐柛姘墛閸ㄦ碍绋夐埀顒€顕ｉ悩鍨毎闂傚牄鍨荤划鐑樼▔閳ь剟濡存笟鈧悵顔炬嫻閵娾晛娅ら柣銊ュ濞存﹢宕撹箛瀣у亾?
                                 
-                                # 输入数据
+                                # 閺夊牊鎸搁崣鍡涘极閻楀牆绁?
                                 
-                                - **用户描述**: 
-                                - **参考图片**: 附件中的图片（最多14张）是关键的视觉风格指南。
+                                - **闁活潿鍔嶉崺娑㈠箵韫囨艾鐗?*: 
+                                - **闁告瑥鍊介埀顒€鍟ù姗€鎮?*: 闂傚嫬瀚▎銏＄▔椤撶姵鐣遍柛銉ュ⒔婢ф牠鏁嶉崼鐔镐粯濠?4鐎殿喚濯寸槐姘跺及椤栨艾褰犻梺娆惧枤濞堟垹鎲撮崱姘兼綍濡炲瀛╅悧鎼佸箰閸パ冪闁?
                                 
-                                # 执行指令
+                                # 闁圭瑳鍡╂斀闁圭娲ｉ幎?
                                 
-                                1. **深度分析参考图**: 仔细分析附件中的参考图片，提取以下要素：
-                                    - *视觉风格*: 艺术媒介（如油画、3D渲染、摄影）、线条处理和阴影风格。
-                                    - *色彩板*: 主色调、光照色温和饱和度。
-                                    - *氛围*: 整体情绪（如空灵、赛博朋克、极简主义）。
-                                2. **合成生成**: 将【用户描述】中定义的具体**主体内容**，与从【参考图片】中提取的**样式和氛围**相结合。
-                                    - *优先级规则*: 【用户描述】决定“画什么”（内容），【参考图片】决定“怎么画”（形式/风格）。
-                                3. **技术规范**:
-                                    - 确保高保真度，人体解剖比例正确，光照逻辑一致。
-                                    - 如果参考图片风格相互冲突，请优先参考前 3 张图片的风格。
-                                    - 输出分辨率：高（确保细节密度符合专业标准）。
+                                1. **婵烇絽宕€规娊宕氶崱妯尖偓浠嬪矗閸屾績鍋撻崘銊︾**: 濞寸姵姊荤划蹇涘礆閸℃鈧粙姊介崟顏咁偨濞戞搩鍘惧▓鎴﹀矗閸屾績鍋撻崘銊︾闁绘娴勭槐婵嬪箵閹邦剙绲垮ù鐘劙缁楀懐鎲版担铏诡槺闁?
+                                    - *閻熸瑥妫滈～搴㈩槹鎼淬垻澹?: 闁煎湱鍎ゅ﹢铏垔閹哄秶鐭欓柨娑樼墕椤┭冣柦閸︻厽鏆伴柕?D婵炴挸寮堕悡瀣Υ娴ｈ鍟旂憸鐗堝敾缁辨岸濡存担鍝勬疇闁哄鈧剚妲遍柣鐐叉閹蜂即姊奸弶鎴濐殯濡炲瀛╅悧鎼佸Υ?
+                                    - *闁艰褰冮崓鐢稿级?: 濞戞挻妲掓竟濠勬嫬閸愶腹鍋撴担绋垮辅闁绘挆鍡楊棌婵炴挴鏅涢幏鐗堫殰閸楃偞瀚查幖杈捐礋閳?
+                                    - *婵ɑ绋戝ú?: 闁轰胶绻濈紞瀣箚閸涱垰宕曢柨娑樼墕椤┭呯矚閾忛€涚触闁靛棔娴囩粋宀勫础濮橆厽绠欓柛蹇擃儍閳ь兛鐒﹂悗顒傜不閳ь剚绋夌拋宕囩枀闁挎稑顦埀?
+                                2. **闁告艾鐗婇崹姘舵偨閻旂鐏?*: 閻忓繐妫庨埀顒佸姉閺併倝骞嬮柨瀣紟閺夆晞鍩囬埀顒佸灣閼垫垹鈧鐭粻鐔兼儍閸曨偄寰斿ù?*濞戞捁顔婄紞瀣礃閸涱収鍟?*闁挎稑濂旂粭灞剧鎼存稈鍋撻幇顒€妫橀柤鏉垮暙濞存﹢鎮ч崶銉㈠亾閹存粏鍘柟缁樺姇瑜板洭鎯?*闁哄秴鍢茬槐锟犲椽鐏炲墽姣ら柛?*闁烩晛鎽滅划銊╁触閸稈鍋?
+                                    - *濞村吋锚閸樻稓鐥椤宕?: 闁靛棙鍔楅弫銈夊箣闁垮浼庨弶鈺勫焽閳ь剚鍨甸崰鍛偓瑙勫焹閳ь剚绮庨弫鐐閳ь剚绋婇崼姘ｅ亾濠垫挾绀勯柛鎰噹椤旀劙鏁嶆径娑氱闁靛棙鍔曞顒勬嚀閸愩劍绂堥柣妤€娲㈤埀顒佸灥閸犲懐鈧鍩冮埀顒佺矋閳ь剙绨肩粻鐐烘偨閻戔斁鍋撳┑鎾剁鐟滆埇鍨圭槐?濡炲瀛╅悧鎼佹晬婢跺牃鍋?
+                                3. **闁瑰灈鍋撻柡鍫灥椤鎳?*:
+                                    - 缁绢収鍠曠换姘殗濡湱绠介柣顏嗗枎鐎规娊鏁嶇仦鍏肩溄濞达絾鎹佽闁告挻鐗楅惁顔界瑹鐎ｎ偒鍔€缁绢収鍣槐婵嬪礂婢跺苯寮鹃梺顐ｆ缁额偅绋夐埀顒勬嚊濞ｎ兘鍋?
+                                    - 濠碘€冲€归悘澶愬矗閸屾績鍋撻崘銊︾闁绘娲ˉ鎾诲冀閼测晜绁插ù婊勫笒閸熻法绮ｆ笟濠勭閻犲洩娓圭槐顓㈠礂閸繂妫橀柤鏉垮暙婢?3 鐎殿喚濮村ù姗€鎮ч崶鈺傜暠濡炲瀛╅悧鎼佸Υ?
+                                    - 閺夊牊鎸搁崵顓㈠礆閸℃岸鍝洪柣婊冩祫缁辩増顨囧鍫㈢缁绢収鍠曠换姘辩磼閸℃艾螡閻庨潧妫楃€瑰磭绮敃鈧幃搴㈢▔閹捐尙鐟归柡宥呮搐閸ｎ垶鏁嶆径鍫氬亾?
                                 
-                                # 生成命令
+                                # 闁汇垻鍠愰崹姘跺川閹存帗濮?
                                 
-                                立即生成图像，严格遵循参考图片的视觉语言，并应用于以下描述的场景：
-                                【用户描述】: %s
+                                缂佹柨顑呭畵鍡涙偨閻旂鐏囬柛銉﹀劤閸庢岸鏁嶇仦鐓庣船闁哄秴銈告导鎺戭嚗椤忓嫬妫橀柤鏉垮暙濞存﹢鎮ч崶鈺傜暠閻熸瑥妫滈～搴ｆ嫚椤撯檧鏋呴柨娑樿嫰閼荤喐鎯旈弮鍌涙殢濞存粌绨兼禍鎺撶▔鐎ｎ偄浼庨弶鈺傚濞堟垿宕烽悜妯荤彲闁?
+                                闁靛棙鍔楅弫銈夊箣闁垮浼庨弶鈺勫焽閳? %s
                                 
                                 --
-                                *保持自然的光照、符合物理规律的阴影，以及参考图片中确切的纹理质感。*
+                                *濞ｅ洦绻冪€垫棃鎳涢鍡楀Ё闁汇劌瀚崢婊堟偂瑜嬮埀顑胯兌椤戜線宕ラ崼銏犫挅闁荤偛妫滈～澶婎嚗鐎ｎ剚鐣遍梻鍐╂綑婵傛牠鏁嶇仦闂寸鞍闁告瑥锕ゅ顒勬嚀閸愩劍绂堥柣妤€娲ｉ懙鎴犳兜椤旂厧鐎奸柣銊ュ濮规鎮堕崱姘獩闁规壆鍠嗛埀?
                                 """)))
                 .build();
 
@@ -226,61 +225,58 @@ public class AiPictureGeneratorServiceImpl implements AiPictureGeneratorService 
             List<Content> contents;
 
             if (pictureIds == null || pictureIds.isEmpty()) {
-                // 仅文字生成图片
-                log.info("generateAiImage - 发送纯文本请求到 Gemini API");
+                // 濞寸姴鎳忛弸鍐偓娑欘殘閺佹捇骞嬮幇顒佺闁?
+                log.info("generateAiImage - 闁告瑦鍨块埀顑胯兌閸戜粙寮崶銊︽嫳閻犲洭鏀遍惇浼村礆?Gemini API");
                 contents = ImmutableList.of(Content.builder()
                         .role("user")
                         .parts(ImmutableList.of(Part.fromText(prompt)))
                         .build());
             } else {
-                // 多图片+文字生成新图片
+                // 濠㈣埖鑹惧ù姗€鎮?闁哄倸娲ら悺褔鎮介悢绋跨亣闁哄倹婢樺ù姗€鎮?
                 List<Part> partsList = new ArrayList<>();
                 partsList.add(Part.fromText(prompt));
 
-                // 下载并添加所有图片
+                // 濞戞挸顑堝ù鍥嵁閼搁潧娼戦柛鏃傚У婢у秹寮垫径濠冪闁?
                 for (Long pictureId : pictureIds) {
-                    // 空值检查：确保图片存在
+                    // 缂佸苯鎼埀顒€鍚嬮ˉ鍛村蓟閵夘垳绐楃痪顓у枙缁绘岸宕堕崜褍顣婚悗娑櫭﹢?
                     var pictureEntity = pictureService.getById(pictureId);
                     if (pictureEntity == null) {
                         throw new BusinessException(ErrorCode.NOT_FOUND_ERROR,
-                                "图片不存在, pictureId: " + pictureId);
+                                "闁搞儱澧芥晶鏍ㄧ▔瀹ュ懐鎽犻柛? pictureId: " + pictureId);
                     }
 
                     Long pictureSpaceId = pictureEntity.getSpaceId();
 
-                    // 如果图片属于某个空间，进行权限检查
+                    // 濠碘€冲€归悘澶愬炊閸撗冾暬閻忕偟鍋樼花顒勫蓟閹邦亪鍤嬬紒灞炬そ濡潡鏁嶅畝鍐閻炴稑鏈鍫ユ⒔閹邦収姊鹃柡?
                     if (ObjUtil.isNotNull(pictureSpaceId)) {
-                        // 非管理员用户只能使用自己的空间图片
+                        // 闂傚牏鍋熼鎼佹偠閸℃鍠呴柣顫妽閸╂盯宕ｉ鍥у幋濞达綀娉曢弫銈夋嚊椤忓嫮绠掗柣銊ュ閳规牠姊婚弶鎴炵闁?
                         if (!UserRoleEnum.ADMIN.getValue().equals(loginUser.getUserRole())) {
                             ThrowUtils.throwIf(!loginUser.getId().equals(pictureEntity.getUserId()),
-                                    ErrorCode.NO_AUTH_ERROR, "无权使用他人空间的图片");
+                                    ErrorCode.NO_AUTH_ERROR, "Cannot use pictures from other users spaces");
                         }
-                        // 如果任一图片有 spaceId，生成的图片也放到该空间
-                        if (aigeneratedPictureSpaceId == null) {
-                            aigeneratedPictureSpaceId = pictureSpaceId;
-                        }
+                        // 濠碘€冲€归悘澶嬬鐠佸磭顏遍柛銉ュ⒔婢ф牠寮?spaceId闁挎稑鐬奸弫鎾诲箣閹邦喗鐣遍柛銉ュ⒔婢ф牗绋婇悢鍛婃澒闁告帗濯介姘辩矚濞差亝锛?
                     }
 
                     PictureVO picture = pictureService.getPictureVO(pictureEntity, httpServletRequest);
                     if (picture == null) {
                         throw new BusinessException(ErrorCode.NOT_FOUND_ERROR,
-                                "无法获取图片信息, pictureId: " + pictureId);
+                                "闁哄啰濮电涵鍫曟嚔瀹勬澘绲块柛銉ュ⒔婢ф牗绌遍埄鍐х礀, pictureId: " + pictureId);
                     }
-                    // 优先使用 thumbnailUrl，如果没有则降级使用 url
+                    // 濞村吋锚閸樻稒鎷呯捄銊︽殢 thumbnailUrl闁挎稑鑻々褔寮稿鍕⒕闁哄牆顦崹顖炴⒔瀹ュ洭鐛撳ù锝堟硶閺?url
                     String imageUrl = picture.getThumbnailUrl();
                     if (imageUrl == null || imageUrl.isEmpty()) {
                         imageUrl = picture.getUrl();
-                        log.warn("图片 {} 没有缩略图，使用原图 URL", pictureId);
+                        log.warn("闁搞儱澧芥晶?{} 婵炲备鍓濆﹢浣虹磽閳哄啯娈ｉ柛銉︽嫕缁辨繃鎷呯捄銊︽殢闁告鍠庡ù?URL", pictureId);
                     }
                     if (imageUrl == null || imageUrl.isEmpty()) {
                         throw new BusinessException(ErrorCode.OPERATION_ERROR,
-                                "图片 URL 为空, pictureId: " + pictureId);
+                                "闁搞儱澧芥晶?URL 濞戞捁娅ｉ埞? pictureId: " + pictureId);
                     }
                     byte[] imageBytes = downloadImageFromUrl(imageUrl);
                     partsList.add(Part.fromBytes(imageBytes, "image/webp"));
                 }
 
-                log.info("generateAiImage - 发送{}张图片+文本请求到 Gemini API", pictureIds.size());
+                log.info("generateAiImage - 闁告瑦鍨块埀顑跨盀}鐎殿喚濮村ù姗€鎮?闁哄倸娲﹀﹢鎵嫚闁垮婀撮柛?Gemini API", pictureIds.size());
 
                 contents = ImmutableList.of(Content.builder()
                         .role("user")
@@ -288,14 +284,14 @@ public class AiPictureGeneratorServiceImpl implements AiPictureGeneratorService 
                         .build());
             }
 
-            // 调用 Gemini API
+            // 閻犲鍟伴弫?Gemini API
             GenerateContentResponse geminiResponse = gemini.client.models.generateContent(
                     gemini.modelName, contents, config);
 
             String aiText = null;
             List<PictureVO> generatedPictures = new ArrayList<>();
 
-            // 处理 Gemini 返回的响应
+            // 濠㈣泛瀚幃?Gemini 閺夆晜鏌ㄥú鏍儍閸曨偅鎯欓幖?
             if (geminiResponse.candidates().isPresent() && !geminiResponse.candidates().get().isEmpty()) {
                 List<Part> parts = geminiResponse.candidates().get().get(0).content().get().parts().get();
                 for (Part part : parts) {
@@ -307,15 +303,15 @@ public class AiPictureGeneratorServiceImpl implements AiPictureGeneratorService 
                             String fileName = "ai_generated_" + UUID.randomUUID()
                                     + getExtensionFromMimeType(generatedMimeType);
 
-                            log.info("generateAiImage - 收到 Gemini 生成的图片, size: {} bytes",
+                            log.info("generateAiImage - 闁衡偓鐠哄搫鐓?Gemini 闁汇垻鍠愰崹姘舵儍閸曨偅绂堥柣? size: {} bytes",
                                     generatedImageBytes.length);
 
                             MultipartFile generatedFile = new Base64DecodedMultipartFile(
                                     generatedImageBytes, fileName, generatedMimeType);
 
                             PictureUploadRequest pictureUploadRequest = new PictureUploadRequest();
-                            if (aigeneratedPictureSpaceId != null) {
-                                pictureUploadRequest.setSpaceId(aigeneratedPictureSpaceId);
+                            if (effectiveChatSpaceId != null) {
+                                pictureUploadRequest.setSpaceId(effectiveChatSpaceId);
                             }
                             PictureVO generatedPicture = pictureService.uploadPicture(
                                     generatedFile, pictureUploadRequest, loginUser);
@@ -323,47 +319,61 @@ public class AiPictureGeneratorServiceImpl implements AiPictureGeneratorService 
                         }
                     } else if (part.text().isPresent()) {
                         aiText = part.text().get();
-                        log.info("generateAiImage - 收到 Gemini 文本响应: {}", aiText);
+                        log.info("generateAiImage - 闁衡偓鐠哄搫鐓?Gemini 闁哄倸娲﹀﹢浼村传瀹ュ懐瀹? {}", aiText);
                     }
                 }
             }
 
-            // 保存 AI 消息到 chat_history（支持多图片）
+            // 濞ｅ洦绻傞悺?AI 婵炴垵鐗婃导鍛村礆?chat_history闁挎稑鐗婇弫顕€骞愭担鍓叉▼闁搞儱澧芥晶鏍晬?
             List<Long> generatedPictureIds = generatedPictures.stream()
                     .map(PictureVO::getId)
                     .toList();
             Long userSessionId = userChatHistory.getSessionId();
 
             ChatHistory aiChatHistory = null;
-            if (aigeneratedPictureSpaceId == null || ObjUtil.isNull(aigeneratedPictureSpaceId)) {
+            if (effectiveChatSpaceId == null || ObjUtil.isNull(effectiveChatSpaceId)) {
                 aiChatHistory = chatHistoryService.saveAiMessage(
                         loginUser.getId(), aiText != null ? aiText : "", generatedPictureIds, userSessionId);
             } else
                 aiChatHistory = chatHistoryService.saveAiMessage(
                         loginUser.getId(), aiText != null ? aiText : "", generatedPictureIds, userSessionId,
-                        aigeneratedPictureSpaceId);
+                        effectiveChatSpaceId);
 
-            // 设置响应
+            // 閻犱礁澧介悿鍡涘传瀹ュ懐瀹?
             response.setChatHistory(aiChatHistory);
             response.setPictureVOs(generatedPictures);
             response.setAiText(aiText);
 
-            log.info("generateAiImage - AI 消息已保存, chatHistoryId: {}, 生成图片数: {}",
+            log.info("generateAiImage - AI 婵炴垵鐗婃导鍛啅闊厾绠介悗? chatHistoryId: {}, 闁汇垻鍠愰崹姘跺炊閸撗冾暬闁? {}",
                     aiChatHistory.getId(), generatedPictures.size());
             return response;
 
         } catch (IOException e) {
-            log.error("图片处理失败", e);
-            throw new BusinessException(ErrorCode.OPERATION_ERROR, "图片处理失败:" + e.getMessage());
+            log.error("Image processing failed", e);
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "Image processing failed: " + e.getMessage());
         } catch (Exception e) {
-            log.error("Gemini API 调用失败", e);
-            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "Gemini API 调用失败:" + e.getMessage());
+            log.error("Gemini API 閻犲鍟伴弫銈嗗緞鏉堫偉袝", e);
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "Gemini API 閻犲鍟伴弫銈嗗緞鏉堫偉袝:" + e.getMessage());
         }
     }
 
     /**
-     * 根据 MIME 类型获取文件扩展名
+     * 闁哄秷顫夊畵?MIME 缂侇偉顕ч悗鐑芥嚔瀹勬澘绲块柡鍌氭矗濞嗐垽骞嶉埡浣烘綌闁?
      */
+    private Long getExistingSessionSpaceId(Long sessionId, Long userId) {
+        if (sessionId == null) {
+            return null;
+        }
+        ChatHistory sessionAnchor = chatHistoryService.lambdaQuery()
+                .eq(ChatHistory::getSessionId, sessionId)
+                .eq(ChatHistory::getUserId, userId)
+                .orderByAsc(ChatHistory::getId)
+                .last("limit 1")
+                .one();
+        ThrowUtils.throwIf(sessionAnchor == null, ErrorCode.NOT_FOUND_ERROR, "Chat session not found");
+        return sessionAnchor.getSpaceId();
+    }
+
     private String getExtensionFromMimeType(String mimeType) {
         if (mimeType == null) {
             return ".png";
@@ -378,7 +388,7 @@ public class AiPictureGeneratorServiceImpl implements AiPictureGeneratorService 
     }
 
     /**
-     * 从 URL 下载图片
+     * 濞?URL 濞戞挸顑堝ù鍥炊閸撗冾暬
      */
     private byte[] downloadImageFromUrl(String imageUrl) throws IOException {
         try (InputStream in = new URL(imageUrl).openStream()) {
@@ -387,8 +397,8 @@ public class AiPictureGeneratorServiceImpl implements AiPictureGeneratorService 
     }
 
     /**
-     * 将字节数组转换为 MultipartFile 的实现类
-     * 用于将 Gemini 返回的图片数据转换为可上传到 COS 的格式
+     * 閻忓繐妫楅悺褔鎳為崒娑欐缂備礁瀚ù鍡涘箲椤叀绀?MultipartFile 闁汇劌瀚悿鍕偝閹殿喛顫?
+     * 闁活潿鍔嬬花顒備焊?Gemini 閺夆晜鏌ㄥú鏍儍閸曨偅绂堥柣妤€娲﹂弳鐔煎箲椤旀寧绁柟璇℃線鐠愮喖宕ｉ娆戠憪濞磋偐濮撮崺?COS 闁汇劌瀚悧绋款嚕?
      */
     private static class Base64DecodedMultipartFile implements MultipartFile {
 

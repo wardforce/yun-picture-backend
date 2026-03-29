@@ -94,7 +94,8 @@ public class PictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
         //校验图片
         ThrowUtils.throwIf(loginUser == null, ErrorCode.NO_AUTH_ERROR, "用户不能为空");
         //校验空间是否存在
-        Long spaceId = pictureUploadRequest.getSpaceId();
+        PictureUploadRequest safeUploadRequest = pictureUploadRequest != null ? pictureUploadRequest : new PictureUploadRequest();
+        Long spaceId = safeUploadRequest.getSpaceId();
         if (spaceId != null) {
             Space space = spaceService.getById(spaceId);
             ThrowUtils.throwIf(space == null, ErrorCode.NOT_FOUND_ERROR, "空间不存在");
@@ -105,9 +106,9 @@ public class PictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
         }
         //判断是新增还是删除
         Long pictureId = null;
-        if (pictureUploadRequest != null) {
+        if (safeUploadRequest != null) {
             // 从请求中获取图片 id（如果有则为更新，无则为新增）
-            pictureId = pictureUploadRequest.getId();
+            pictureId = safeUploadRequest.getId();
         }
         Picture oldPicture = null;
         //如果是更新，还要判断图片是否存在
@@ -120,21 +121,13 @@ public class PictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
             //没有spaceId,则复用原来的图片的spaceId
             if (spaceId == null) {
                 spaceId = oldPicture.getSpaceId();
-                if (spaceId != null) {
-                    spaceId = oldPicture.getSpaceId();
-                }
             } else {
                 ThrowUtils.throwIf(ObjUtil.notEqual(spaceId, oldPicture.getSpaceId()), ErrorCode.PARAMS_ERROR, "空间不一致");
             }
         }
         //上传图片,得到图片信息
         //安装用户id划分目录
-        String uploadPathPrefix;
-        if (spaceId != null) {
-            uploadPathPrefix = String.format("public/%s", loginUser.getId());
-        } else {
-            uploadPathPrefix = String.format("space/%s/%s", spaceId, loginUser.getId());
-        }
+        String uploadPathPrefix = AiChatSpaceBindingUtils.buildUploadPathPrefix(spaceId, loginUser.getId());
         //根据inpotSource上传类型区分上传方式
         PictureUploadTemplate pictureUploadTemplate = filePictureUpload;
         if (inpurSource instanceof String) {
@@ -148,8 +141,8 @@ public class PictureServiceImpl extends ServiceImpl<pictureMapper, Picture>
         picture.setThumbnailUrl(uploadPicture.getThumbnailUrl());
         picture.setSpaceId(spaceId);
         //支持外层上传图片名称
-        if (pictureUploadRequest != null && StrUtil.isNotBlank(pictureUploadRequest.getPicName())) {
-            picture.setName(pictureUploadRequest.getPicName());
+        if (StrUtil.isNotBlank(safeUploadRequest.getPicName())) {
+            picture.setName(safeUploadRequest.getPicName());
         } else {
             picture.setName(uploadPicture.getPicName());
         }
