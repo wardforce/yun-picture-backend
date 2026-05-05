@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1771936761161,
+  "lastScanned": 1772652383430,
   "projectRoot": "E:\\project\\yun-picture\\yun-picture-backend",
   "techStack": {
     "languages": [
@@ -52,7 +52,7 @@
       "path": "openspec",
       "purpose": null,
       "fileCount": 2,
-      "lastAccessed": 1771936761101,
+      "lastAccessed": 1772652383363,
       "keyFiles": [
         "AGENTS.md",
         "project.md"
@@ -62,7 +62,7 @@
       "path": "plan",
       "purpose": null,
       "fileCount": 7,
-      "lastAccessed": 1771936761102,
+      "lastAccessed": 1772652383364,
       "keyFiles": [
         "ALIGNMENT_ChatHistoryController.md",
         "chatHistroyController文档.md",
@@ -75,7 +75,7 @@
       "path": "sql",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1771936761113,
+      "lastAccessed": 1772652383377,
       "keyFiles": [
         "create_table.sql"
       ]
@@ -84,31 +84,24 @@
       "path": "src",
       "purpose": "Source code",
       "fileCount": 0,
-      "lastAccessed": 1771936761114,
+      "lastAccessed": 1772652383378,
       "keyFiles": []
     },
     "target": {
       "path": "target",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1771936761114,
+      "lastAccessed": 1772652383378,
       "keyFiles": []
     },
     "src\\test": {
       "path": "src\\test",
       "purpose": "Test files",
       "fileCount": 0,
-      "lastAccessed": 1771936761116,
+      "lastAccessed": 1772652383380,
       "keyFiles": []
     }
   },
-  "hotPaths": [
-    {
-      "path": "src\\main\\java\\com\\wuzhenhua\\yunpicturebackend\\service\\impl\\SpaceAnalyzeServiceImpl.java",
-      "accessCount": 2,
-      "lastAccessed": 1771938829081,
-      "type": "file"
-    }
-  ],
+  "hotPaths": [],
   "userDirectives": []
 }

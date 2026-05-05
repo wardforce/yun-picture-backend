@@ -24,7 +24,7 @@ spring:
 #      timeout: 50000
 #      本地测试改为local
   profiles:
-    active: local
+    active: prod
   session:
     timeout: 2592000
 server:

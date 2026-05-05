@@ -10,4 +10,11 @@
       <excludeFolder url="file://$MODULE_DIR$/.serena" />
     </content>
   </component>
+  <component name="FacetManager">
+    <facet type="web" name="Web">
+      <configuration>
+        <webroots />
+      </configuration>
+    </facet>
+  </component>
 </module>

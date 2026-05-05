@@ -1,0 +1,39 @@
+{
+  "enabledPlugins": {
+    "jdtls-lsp@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true,
+    "commit-commands@claude-plugins-official": true,
+    "compound-engineering@every-marketplace": true,
+    "everything-claude-code@everything-claude-code": true,
+    "explanatory-output-style@claude-plugins-official": true,
+    "feature-dev@claude-plugins-official": true,
+    "hookify@claude-plugins-official": true,
+    "planning-with-files@planning-with-files": true,
+    "plugin-dev@claude-plugins-official": true,
+    "pr-review-toolkit@claude-plugins-official": true,
+    "ralph-loop@claude-plugins-official": true,
+    "security-guidance@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "learning-output-style@claude-plugins-official": true,
+    "claude-code-setup@claude-plugins-official": true,
+    "claude-code-notify@claude-code-notify": true,
+    "frontend-design@claude-plugins-official": true,
+    "ui-ux-pro-max@ui-ux-pro-max-skill": true,
+    "claude-mem@thedotmack": true
+  },
+  "mcpServers": {
+    "Apifox API 文档": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "apifox-mcp-server@latest",
+        "--project=6035671"
+      ],
+      "env": {
+        "APIFOX_ACCESS_TOKEN": "afxp_200853iyYT3XMhP5krSpVSiX3Nh7Kgb6OwbX"
+      }
+    }
+  }
+}
